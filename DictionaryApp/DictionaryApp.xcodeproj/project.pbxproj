@@ -9,12 +9,12 @@
 /* Begin PBXBuildFile section */
 		422A557D27A2E8B000B24B80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422A557C27A2E8B000B24B80 /* AppDelegate.swift */; };
 		422A557F27A2E8B000B24B80 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422A557E27A2E8B000B24B80 /* SceneDelegate.swift */; };
-		422A558127A2E8B000B24B80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422A558027A2E8B000B24B80 /* ViewController.swift */; };
+		422A558127A2E8B000B24B80 /* SearchBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422A558027A2E8B000B24B80 /* SearchBarViewController.swift */; };
 		422A558427A2E8B000B24B80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422A558227A2E8B000B24B80 /* Main.storyboard */; };
 		422A558627A2E8B100B24B80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 422A558527A2E8B100B24B80 /* Assets.xcassets */; };
 		422A558927A2E8B100B24B80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422A558727A2E8B100B24B80 /* LaunchScreen.storyboard */; };
-		42539D0527AAC22600E74B53 /* en_bg.dic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0327AAC22600E74B53 /* en_bg.dic.txt */; };
-		42539D0627AAC22600E74B53 /* bg_en.kyp.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0427AAC22600E74B53 /* bg_en.kyp.txt */; };
+		42539D0527AAC22600E74B53 /* en_bg.dic in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0327AAC22600E74B53 /* en_bg.dic */; };
+		42539D0627AAC22600E74B53 /* bg_en.kyp in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0427AAC22600E74B53 /* bg_en.kyp */; };
 		42539D0A27AACD9900E74B53 /* smallerEnBg.dic in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0927AACD9900E74B53 /* smallerEnBg.dic */; };
 		42CCDB7E27B1522100BB4647 /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CCDB7D27B1522100BB4647 /* FileReader.swift */; };
 		42CCDB8027B1525A00BB4647 /* DictionaryToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CCDB7F27B1525A00BB4647 /* DictionaryToken.swift */; };
@@ -24,13 +24,13 @@
 		422A557927A2E8B000B24B80 /* DictionaryApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DictionaryApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		422A557C27A2E8B000B24B80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		422A557E27A2E8B000B24B80 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		422A558027A2E8B000B24B80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		422A558027A2E8B000B24B80 /* SearchBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarViewController.swift; sourceTree = "<group>"; };
 		422A558327A2E8B000B24B80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		422A558527A2E8B100B24B80 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		422A558827A2E8B100B24B80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		422A558A27A2E8B100B24B80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		42539D0327AAC22600E74B53 /* en_bg.dic.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = en_bg.dic.txt; sourceTree = "<group>"; };
-		42539D0427AAC22600E74B53 /* bg_en.kyp.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bg_en.kyp.txt; sourceTree = "<group>"; };
+		42539D0327AAC22600E74B53 /* en_bg.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = en_bg.dic; sourceTree = "<group>"; };
+		42539D0427AAC22600E74B53 /* bg_en.kyp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bg_en.kyp; sourceTree = "<group>"; };
 		42539D0927AACD9900E74B53 /* smallerEnBg.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = smallerEnBg.dic; path = ../../../../../../Documents/smallerEnBg.dic; sourceTree = "<group>"; };
 		42CCDB7D27B1522100BB4647 /* FileReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileReader.swift; sourceTree = "<group>"; };
 		42CCDB7F27B1525A00BB4647 /* DictionaryToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryToken.swift; sourceTree = "<group>"; };
@@ -68,7 +68,7 @@
 			children = (
 				422A557C27A2E8B000B24B80 /* AppDelegate.swift */,
 				422A557E27A2E8B000B24B80 /* SceneDelegate.swift */,
-				422A558027A2E8B000B24B80 /* ViewController.swift */,
+				422A558027A2E8B000B24B80 /* SearchBarViewController.swift */,
 				422A558227A2E8B000B24B80 /* Main.storyboard */,
 				422A558527A2E8B100B24B80 /* Assets.xcassets */,
 				422A558727A2E8B100B24B80 /* LaunchScreen.storyboard */,
@@ -83,8 +83,8 @@
 		42539D0227AAC1FD00E74B53 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				42539D0427AAC22600E74B53 /* bg_en.kyp.txt */,
-				42539D0327AAC22600E74B53 /* en_bg.dic.txt */,
+				42539D0427AAC22600E74B53 /* bg_en.kyp */,
+				42539D0327AAC22600E74B53 /* en_bg.dic */,
 				42539D0927AACD9900E74B53 /* smallerEnBg.dic */,
 			);
 			path = Resources;
@@ -148,9 +148,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42539D0527AAC22600E74B53 /* en_bg.dic.txt in Resources */,
+				42539D0527AAC22600E74B53 /* en_bg.dic in Resources */,
 				42539D0A27AACD9900E74B53 /* smallerEnBg.dic in Resources */,
-				42539D0627AAC22600E74B53 /* bg_en.kyp.txt in Resources */,
+				42539D0627AAC22600E74B53 /* bg_en.kyp in Resources */,
 				422A558927A2E8B100B24B80 /* LaunchScreen.storyboard in Resources */,
 				422A558627A2E8B100B24B80 /* Assets.xcassets in Resources */,
 				422A558427A2E8B000B24B80 /* Main.storyboard in Resources */,
@@ -165,7 +165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42CCDB8027B1525A00BB4647 /* DictionaryToken.swift in Sources */,
-				422A558127A2E8B000B24B80 /* ViewController.swift in Sources */,
+				422A558127A2E8B000B24B80 /* SearchBarViewController.swift in Sources */,
 				422A557D27A2E8B000B24B80 /* AppDelegate.swift in Sources */,
 				42CCDB7E27B1522100BB4647 /* FileReader.swift in Sources */,
 				422A557F27A2E8B000B24B80 /* SceneDelegate.swift in Sources */,

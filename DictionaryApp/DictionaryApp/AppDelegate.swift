@@ -38,14 +38,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     
         if (!doHelperFilesExist()) {
-            if let freader = FileReader(filename: "smallerEnBg.dic") {
+            if let freader = FileReader(filename: "en_bg.dic") {
                 
                 let startChar = Unicode.Scalar("A").value
                 let endChar = Unicode.Scalar("Z").value
 
                 for alpha in startChar...endChar {
                     if let letter = Unicode.Scalar(alpha) {
-                        freader.createPlistForLetter(letter: String(letter))
+                        freader.createFileForLetter(letter: String(letter))
                     }
                 }
                 return true

@@ -60,12 +60,13 @@ class FileReader {
         }
     }
     
-    func createPlistForLetter(letter: String) {
+    func createFileForLetter(letter: String) {
         
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
         let cachesDirectoryUrl = urls[0]
         
+        // TODO: decide what extension
         let fileUrl = cachesDirectoryUrl.appendingPathComponent(letter)
         //print(fileUrl.absoluteString)
         
