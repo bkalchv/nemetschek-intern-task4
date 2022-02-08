@@ -21,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         for alpha in startChar...endChar {
             if let letter = Unicode.Scalar(alpha) {
-
                 
                 let fileUrl = cachesDirectoryUrl.appendingPathComponent(String(letter))
                 //print(fileUrl.absoluteString)
@@ -29,10 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let filePath = fileUrl.path
                 //print(filePath)
                 
-                if !fileManager.fileExists(atPath: filePath) {
-                    return false
-                }
-                
+                if !fileManager.fileExists(atPath: filePath) { return false }
             }
         }
         
@@ -48,7 +44,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let endChar = Unicode.Scalar("Z").value
 
                 for alpha in startChar...endChar {
-
                     if let letter = Unicode.Scalar(alpha) {
                         freader.createPlistForLetter(letter: String(letter))
                     }

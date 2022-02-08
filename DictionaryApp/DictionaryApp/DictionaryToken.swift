@@ -47,12 +47,4 @@ class DictionaryToken : CustomStringConvertible, Codable {
         word = readWord
         translation = readTranslation
     }
-    
-//    func encode(to encoder: Encoder) throws {
-//        <#code#>
-//    }
-//
-//    required init(from decoder: Decoder) throws {
-//        <#code#>
-//    }
 }

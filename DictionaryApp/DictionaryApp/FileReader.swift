@@ -74,7 +74,7 @@ class FileReader {
             
         let tokensForLetter = tokensStartingWithLetter(letter: letter)
         
-        let encoder = PropertyListEncoder()
+        let encoder = JSONEncoder()
         
         if !fileManager.fileExists(atPath: filePath) {
             do {
