@@ -10,29 +10,58 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func doHelperFilesExist() -> Bool {
         
-        if let freader = FileReader(filename: "smallerEnBg.dic") {
-            
-            let startChar = Unicode.Scalar("A").value
-            let endChar = Unicode.Scalar("Z").value
+        let fileManager = FileManager.default
+        let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
+        let cachesDirectoryUrl = urls[0]
+        
+        let startChar = Unicode.Scalar("A").value
+        let endChar = Unicode.Scalar("Z").value
+        
+        for alpha in startChar...endChar {
+            if let letter = Unicode.Scalar(alpha) {
 
-            for alpha in startChar...endChar {
-
-                if let letter = Unicode.Scalar(alpha) {
-                    freader.createPlistForLetter(letter: String(letter))
+                
+                let fileUrl = cachesDirectoryUrl.appendingPathComponent(String(letter))
+                //print(fileUrl.absoluteString)
+                
+                let filePath = fileUrl.path
+                //print(filePath)
+                
+                if !fileManager.fileExists(atPath: filePath) {
+                    return false
                 }
+                
             }
-            return true
-        } else {
-            return false
         }
-    }
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
         return true
     }
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+        if (!doHelperFilesExist()) {
+            if let freader = FileReader(filename: "smallerEnBg.dic") {
+                
+                let startChar = Unicode.Scalar("A").value
+                let endChar = Unicode.Scalar("Z").value
+
+                for alpha in startChar...endChar {
+
+                    if let letter = Unicode.Scalar(alpha) {
+                        freader.createPlistForLetter(letter: String(letter))
+                    }
+                }
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        return true
+}
+
 
     // MARK: UISceneSession Lifecycle
 
