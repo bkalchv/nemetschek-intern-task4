@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Item 2-->
+        <!--Settings-->
         <scene sceneID="QRg-ms-OGs">
             <objects>
                 <viewController id="YdP-nz-AQw" sceneMemberID="viewController">
@@ -18,11 +18,11 @@
                         <viewLayoutGuide key="safeArea" id="Gmk-g2-QKX"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item 2" id="Fs8-OE-lja"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="settings_black_24pt" id="Fs8-OE-lja"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CwS-9B-ORH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-484" y="-97"/>
+            <point key="canvasLocation" x="-484" y="-104"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Jle-1J-FTt">
@@ -42,7 +42,7 @@
             </objects>
             <point key="canvasLocation" x="-1371" y="-320"/>
         </scene>
-        <!--Item-->
+        <!--Translator-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="SearchBarViewController" customModule="DictionaryApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -78,7 +78,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="bu6-Zp-pxv"/>
+                    <tabBarItem key="tabBarItem" title="Translator" image="menu_book_black_24pt" id="bu6-Zp-pxv"/>
                     <connections>
                         <outlet property="searchBar" destination="62D-Os-PaN" id="bKx-TQ-QlO"/>
                         <outlet property="translationTextField" destination="Sm7-DA-h5a" id="Ebw-nF-pw6"/>
@@ -91,6 +91,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="menu_book_black_24pt" width="24" height="24"/>
+        <image name="settings_black_24pt" width="24" height="24"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
