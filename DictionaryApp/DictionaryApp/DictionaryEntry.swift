@@ -36,11 +36,6 @@ class DictionaryEntry : CustomStringConvertible, Codable {
         }
     }
     
-    init(_ keyWord: String,_ valueTranslation: String) {
-        word = keyWord
-        translation = valueTranslation
-    }
-    
     init(tokenAsString: String) {
         let readWord        = readWord(fromTokenAsString: tokenAsString)
         let readTranslation = readTranslation(fromTokenAsString: tokenAsString)
