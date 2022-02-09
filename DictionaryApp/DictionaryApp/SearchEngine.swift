@@ -9,15 +9,15 @@ import Foundation
 
 class SearchEngine {
     
-    var wordsDictionary: [String : [DictionaryToken]] = [String : [DictionaryToken]]()
+    var wordsDictionary: [String : [DictionaryEntry]] = [String : [DictionaryEntry]]()
     
-    func decodeFileForLetter(letter: String) -> [DictionaryToken] {
+    func decodeFileForLetter(letter: String) -> [DictionaryEntry] {
         
         // TODO: ask - should there be a check for the letter itself
         // or can we rely on the fact we call the function once we are sure that the
         // argument is a letter?
         
-        var result = [DictionaryToken]()
+        var result = [DictionaryEntry]()
 
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
@@ -32,7 +32,7 @@ class SearchEngine {
             do {
                 let data = try Data(contentsOf: fileUrl)
                 let decoder = JSONDecoder()
-                result = try decoder.decode([DictionaryToken].self, from: data)
+                result = try decoder.decode([DictionaryEntry].self, from: data)
                 print("DictionaryTokens at \(filePath) read.")
                 //print(dictionaryTokens)
             } catch {
@@ -49,11 +49,12 @@ class SearchEngine {
         return wordsDictionary.keys.contains(key)
     }
 
-    func containsWordsWithPrefix(withDictionaryTokenArray dictionaryTokensArray: [DictionaryToken], prefix: String) -> Bool {
+    func containsWordsWithPrefix(withDictionaryTokenArray dictionaryTokensArray: [DictionaryEntry], prefix: String) -> Bool {
         let dictionaryTokensWithPrefix = dictionaryTokensArray.filter( {return $0.word.hasPrefix(prefix)} )
         return !dictionaryTokensWithPrefix.isEmpty
     }
 
+    // TODO: optional nescesarry?
     func findLongestPrefixInWordsDictionary(ofWord word: String) -> String? {
 
         if let firstLetterOfWord = word.first, firstLetterOfWord.isLetter {
@@ -81,8 +82,9 @@ class SearchEngine {
             return nil
         }
     }
-
-    func findClosestMatchInWordsDictionary(toInput input: String) -> DictionaryToken? {
+    
+    // TODO: optional nescesarry?
+    func findClosestMatchInWordsDictionary(toInput input: String) -> DictionaryEntry? {
         
         if let firstLetterOfInput = input.first, firstLetterOfInput.isLetter {
             let firstLetterOfInputAsUppercasedString = firstLetterOfInput.uppercased()

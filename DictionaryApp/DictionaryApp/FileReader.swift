@@ -34,9 +34,9 @@ class FileReader {
         return entries
     }
     
-    var tokens: [DictionaryToken] {
+    var tokens: [DictionaryEntry] {
         let result = self.entries.map {
-            return DictionaryToken(tokenAsString: $0)
+            return DictionaryEntry(tokenAsString: $0)
         }
         return result
     }
@@ -52,11 +52,11 @@ class FileReader {
         }
     }
     
-    func tokensStartingWithLetter(letter: String) -> [DictionaryToken] {
+    func tokensStartingWithLetter(letter: String) -> [DictionaryEntry] {
         if (isLetterFromAlphabet(letter: letter)) {
             return tokens.filter{ $0.word.hasPrefix(letter) }
         } else {
-            return [DictionaryToken]()
+            return [DictionaryEntry]()
         }
     }
     

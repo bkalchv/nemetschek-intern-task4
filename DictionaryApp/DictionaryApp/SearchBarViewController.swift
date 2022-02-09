@@ -33,7 +33,7 @@ class SearchBarViewController: UIViewController, UISearchBarDelegate {
                 searchEngine.wordsDictionary[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in wordsDictionary
             }
             
-            if let closestMatch: DictionaryToken = searchEngine.findClosestMatchInWordsDictionary(toInput: searchText.uppercased()) {
+            if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInWordsDictionary(toInput: searchText.uppercased()) {
                 //print(closestMatch)
                 wordLabel.text = closestMatch.word
                 translationTextField.text = closestMatch.translation
@@ -49,7 +49,7 @@ class SearchBarViewController: UIViewController, UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchBarText = searchBar.text {
             
-            if let closestMatch: DictionaryToken = searchEngine.findClosestMatchInWordsDictionary(toInput: searchBarText.uppercased()) {
+            if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInWordsDictionary(toInput: searchBarText.uppercased()) {
                 print(closestMatch)
                 wordLabel.text = closestMatch.word
                 translationTextField.text = closestMatch.translation

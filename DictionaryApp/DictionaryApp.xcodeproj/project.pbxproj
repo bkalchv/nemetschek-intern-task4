@@ -18,7 +18,7 @@
 		42539D0627AAC22600E74B53 /* bg_en.kyp in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0427AAC22600E74B53 /* bg_en.kyp */; };
 		42539D0A27AACD9900E74B53 /* smallerEnBg.dic in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0927AACD9900E74B53 /* smallerEnBg.dic */; };
 		42CCDB7E27B1522100BB4647 /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CCDB7D27B1522100BB4647 /* FileReader.swift */; };
-		42CCDB8027B1525A00BB4647 /* DictionaryToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CCDB7F27B1525A00BB4647 /* DictionaryToken.swift */; };
+		42CCDB8027B1525A00BB4647 /* DictionaryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CCDB7F27B1525A00BB4647 /* DictionaryEntry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +35,7 @@
 		42539D0427AAC22600E74B53 /* bg_en.kyp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bg_en.kyp; sourceTree = "<group>"; };
 		42539D0927AACD9900E74B53 /* smallerEnBg.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = smallerEnBg.dic; path = ../../../../../../Documents/smallerEnBg.dic; sourceTree = "<group>"; };
 		42CCDB7D27B1522100BB4647 /* FileReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileReader.swift; sourceTree = "<group>"; };
-		42CCDB7F27B1525A00BB4647 /* DictionaryToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryToken.swift; sourceTree = "<group>"; };
+		42CCDB7F27B1525A00BB4647 /* DictionaryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryEntry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +76,7 @@
 				422A558727A2E8B100B24B80 /* LaunchScreen.storyboard */,
 				422A558A27A2E8B100B24B80 /* Info.plist */,
 				42539D0227AAC1FD00E74B53 /* Resources */,
-				42CCDB7F27B1525A00BB4647 /* DictionaryToken.swift */,
+				42CCDB7F27B1525A00BB4647 /* DictionaryEntry.swift */,
 				42CCDB7D27B1522100BB4647 /* FileReader.swift */,
 				4250E55527B2B75F009E74AD /* SearchEngine.swift */,
 			);
@@ -167,7 +167,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42CCDB8027B1525A00BB4647 /* DictionaryToken.swift in Sources */,
+				42CCDB8027B1525A00BB4647 /* DictionaryEntry.swift in Sources */,
 				422A558127A2E8B000B24B80 /* SearchBarViewController.swift in Sources */,
 				422A557D27A2E8B000B24B80 /* AppDelegate.swift in Sources */,
 				4250E55627B2B75F009E74AD /* SearchEngine.swift in Sources */,

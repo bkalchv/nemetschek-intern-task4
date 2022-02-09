@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DictionaryToken : CustomStringConvertible, Codable {
+class DictionaryEntry : CustomStringConvertible, Codable {
     var word: String = ""
     var translation: String = ""
     
