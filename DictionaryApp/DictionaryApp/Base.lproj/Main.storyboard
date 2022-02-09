@@ -74,22 +74,12 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tYV-ik-ldG">
-                                <rect key="frame" x="255" y="759" width="139" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="DecodeAndPrintA"/>
-                                <connections>
-                                    <action selector="onDecodeAndPrintAButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="whH-6Y-KOe"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="bu6-Zp-pxv"/>
                     <connections>
-                        <outlet property="DecodeAndPrintA" destination="tYV-ik-ldG" id="7ff-5J-P2f"/>
                         <outlet property="searchBar" destination="62D-Os-PaN" id="bKx-TQ-QlO"/>
                         <outlet property="translationTextField" destination="Sm7-DA-h5a" id="Ebw-nF-pw6"/>
                         <outlet property="wordLabel" destination="wWD-pJ-8Os" id="tmh-f6-jyP"/>
