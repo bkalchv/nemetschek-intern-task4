@@ -29,7 +29,7 @@ class SearchBarViewController: UIViewController, UISearchBarDelegate {
             // TODO: handle first letter not being capital letter
             // TODO: handle first not being a letter
             let firstLetterOfSearchTextAsUppercasedString = firstLetterOfSearchText.uppercased()
-            if !searchEngine.doesKeyExistInWordsDictionary(withKey: firstLetterOfSearchTextAsUppercasedString) {
+            if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
                 searchEngine.wordsDictionary[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in wordsDictionary
             }
             

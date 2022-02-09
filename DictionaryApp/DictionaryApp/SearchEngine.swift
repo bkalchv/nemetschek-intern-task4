@@ -45,11 +45,11 @@ class SearchEngine {
         return result
     }
 
-    func doesKeyExistInWordsDictionary(withKey key: String) -> Bool {
+    func doesKeyExistInWordsDictionary(key: String) -> Bool {
         return wordsDictionary.keys.contains(key)
     }
 
-    func containsWordsWithPrefix(withDictionaryTokenArray dictionaryTokensArray: [DictionaryToken], withPrefix prefix: String) -> Bool {
+    func containsWordsWithPrefix(withDictionaryTokenArray dictionaryTokensArray: [DictionaryToken], prefix: String) -> Bool {
         let dictionaryTokensWithPrefix = dictionaryTokensArray.filter( {return $0.word.hasPrefix(prefix)} )
         return !dictionaryTokensWithPrefix.isEmpty
     }
@@ -63,7 +63,7 @@ class SearchEngine {
                 var currentRangeOfInterest = word.startIndex..<endIndex
                 var currentPrefix = String(word[currentRangeOfInterest])
 
-                while !containsWordsWithPrefix(withDictionaryTokenArray: words, withPrefix: currentPrefix) && endIndex != word.startIndex {
+                while !containsWordsWithPrefix(withDictionaryTokenArray: words, prefix: currentPrefix) && endIndex != word.startIndex {
                     endIndex = word.index(before: endIndex)
                     currentRangeOfInterest = word.startIndex..<endIndex
                     currentPrefix = String(word[currentRangeOfInterest])

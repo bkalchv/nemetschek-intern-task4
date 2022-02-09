@@ -36,12 +36,12 @@ class DictionaryToken : CustomStringConvertible, Codable {
         }
     }
     
-    init(withWord: String, withTranslation: String) {
-        word = withWord
-        translation = withTranslation
+    init(_ keyWord: String,_ valueTranslation: String) {
+        word = keyWord
+        translation = valueTranslation
     }
     
-    init(withTokenAsString tokenAsString: String) {
+    init(tokenAsString: String) {
         let readWord        = readWord(fromTokenAsString: tokenAsString)
         let readTranslation = readTranslation(fromTokenAsString: tokenAsString)
         word = readWord

@@ -36,7 +36,7 @@ class FileReader {
     
     var tokens: [DictionaryToken] {
         let result = self.entries.map {
-            return DictionaryToken(withTokenAsString: $0)
+            return DictionaryToken(tokenAsString: $0)
         }
         return result
     }
