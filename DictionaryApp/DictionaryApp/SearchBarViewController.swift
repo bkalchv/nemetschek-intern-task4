@@ -30,7 +30,7 @@ class SearchBarViewController: UIViewController, UISearchBarDelegate {
             // TODO: handle first not being a letter
             let firstLetterOfSearchTextAsUppercasedString = firstLetterOfSearchText.uppercased()
             if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
-                searchEngine.wordsDictionary[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in wordsDictionary
+                searchEngine.letterToEntries[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in wordsDictionary
             }
             
             if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInWordsDictionary(toInput: searchText.uppercased()) {

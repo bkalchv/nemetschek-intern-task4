@@ -15,7 +15,7 @@ class DictionaryEntry : CustomStringConvertible, Codable {
         return "[\(word) : \(translation)]"
     }
     
-    private func readWord(fromTokenAsString tokenAsString: String) -> String {
+    private func readWord(fromEntryAsString tokenAsString: String) -> String {
         if let firstOccuranceOfNewLine = tokenAsString.firstIndex(of: "\n") {
             let range = tokenAsString.startIndex..<firstOccuranceOfNewLine
             
@@ -25,7 +25,7 @@ class DictionaryEntry : CustomStringConvertible, Codable {
         }
     }
     
-    private func readTranslation(fromTokenAsString tokenAsString: String) -> String {
+    private func readTranslation(fromEntryAsString tokenAsString: String) -> String {
         if let firstOccuranceOfNewLine = tokenAsString.firstIndex(of: "\n") {
             let indexAfterNewLine = tokenAsString.index(after: firstOccuranceOfNewLine)
             let range = indexAfterNewLine..<tokenAsString.endIndex
@@ -37,8 +37,8 @@ class DictionaryEntry : CustomStringConvertible, Codable {
     }
     
     init(tokenAsString: String) {
-        let readWord        = readWord(fromTokenAsString: tokenAsString)
-        let readTranslation = readTranslation(fromTokenAsString: tokenAsString)
+        let readWord        = readWord(fromEntryAsString: tokenAsString)
+        let readTranslation = readTranslation(fromEntryAsString: tokenAsString)
         word = readWord
         translation = readTranslation
     }

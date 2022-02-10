@@ -52,7 +52,7 @@ class FileReader {
         }
     }
     
-    func tokensStartingWithLetter(letter: String) -> [DictionaryEntry] {
+    func entriesStartingWithLetter(letter: String) -> [DictionaryEntry] {
         if (isLetterFromAlphabet(letter: letter)) {
             return tokens.filter{ $0.word.hasPrefix(letter) }
         } else {
@@ -73,7 +73,7 @@ class FileReader {
         let filePath = fileUrl.path
         //print(filePath)
             
-        let tokensForLetter = tokensStartingWithLetter(letter: letter)
+        let tokensForLetter = entriesStartingWithLetter(letter: letter)
         
         let encoder = JSONEncoder()
         

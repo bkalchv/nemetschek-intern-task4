@@ -9,7 +9,7 @@ import Foundation
 
 class SearchEngine {
     
-    var wordsDictionary: [String : [DictionaryEntry]] = [String : [DictionaryEntry]]()
+    var letterToEntries: [String : [DictionaryEntry]] = [String : [DictionaryEntry]]()
     
     func decodeFileForLetter(letter: String) -> [DictionaryEntry] {
         
@@ -46,40 +46,33 @@ class SearchEngine {
     }
 
     func doesKeyExistInWordsDictionary(key: String) -> Bool {
-        return wordsDictionary.keys.contains(key)
+        return letterToEntries.keys.contains(key)
     }
 
-    func containsWordsWithPrefix(withDictionaryTokenArray dictionaryTokensArray: [DictionaryEntry], prefix: String) -> Bool {
-        let dictionaryTokensWithPrefix = dictionaryTokensArray.filter( {return $0.word.hasPrefix(prefix)} )
-        return !dictionaryTokensWithPrefix.isEmpty
+    func containsWordsWithPrefix(withDictionaryEntriesArray dictionaryEntriesArray: [DictionaryEntry], prefix: String) -> Bool {
+        let dictionaryEntriesWithPrefix = dictionaryEntriesArray.filter( {return $0.word.hasPrefix(prefix)} )
+        return !dictionaryEntriesWithPrefix.isEmpty
     }
 
     // TODO: optional nescesarry?
-    func findLongestPrefixInWordsDictionary(ofWord word: String) -> String? {
+    func findLongestPrefixInWordsDictionary(ofWord word: String) -> String {
 
         if let firstLetterOfWord = word.first, firstLetterOfWord.isLetter {
             let firstLetterOfWordsAsUppercasedString = firstLetterOfWord.uppercased()
-            if let words = wordsDictionary[firstLetterOfWordsAsUppercasedString] {
-                var endIndex = word.endIndex
-                var currentRangeOfInterest = word.startIndex..<endIndex
-                var currentPrefix = String(word[currentRangeOfInterest])
-
-                while !containsWordsWithPrefix(withDictionaryTokenArray: words, prefix: currentPrefix) && endIndex != word.startIndex {
-                    endIndex = word.index(before: endIndex)
-                    currentRangeOfInterest = word.startIndex..<endIndex
-                    currentPrefix = String(word[currentRangeOfInterest])
+            if let entries = letterToEntries[firstLetterOfWordsAsUppercasedString] {
+                
+                for backwardIndex in (1...word.count).reversed() {
+                    let currentPrefix = String(word.prefix(backwardIndex))
+                    if containsWordsWithPrefix(withDictionaryEntriesArray: entries, prefix: currentPrefix) { return currentPrefix }
                 }
-
-                if (endIndex == word.startIndex) { return nil }
-
-                return currentPrefix
+                
+                return firstLetterOfWordsAsUppercasedString
 
             } else {
-                return nil
-                
+                return firstLetterOfWordsAsUppercasedString
             }
         } else {
-            return nil
+            return ""
         }
     }
     
@@ -88,14 +81,11 @@ class SearchEngine {
         
         if let firstLetterOfInput = input.first, firstLetterOfInput.isLetter {
             let firstLetterOfInputAsUppercasedString = firstLetterOfInput.uppercased()
-            if  firstLetterOfInputAsUppercasedString != "",
-                let words = wordsDictionary[firstLetterOfInputAsUppercasedString],
-                let longestPrefix = findLongestPrefixInWordsDictionary(ofWord: input) {
-
-                    let dictionaryTokensWithCurrentPrefix = words.filter( { return $0.word.hasPrefix(longestPrefix)} )
-
-                    if let first = dictionaryTokensWithCurrentPrefix.first { return first }
-                }
+            if let words = letterToEntries[firstLetterOfInputAsUppercasedString]{
+                let longestPrefix = findLongestPrefixInWordsDictionary(ofWord: input)
+                let dictionaryEntriesWithLongestPrefix = words.filter( { return $0.word.hasPrefix(longestPrefix)} )
+                if let first = dictionaryEntriesWithLongestPrefix.first { return first }
+            }
         }
     
         return nil
