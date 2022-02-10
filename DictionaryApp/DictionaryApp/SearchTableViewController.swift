@@ -1,0 +1,158 @@
+//
+//  SearchTableViewController.swift
+//  DictionaryApp
+//
+//  Created by Bogdan Kalchev on 10.02.22.
+//
+
+import UIKit
+
+class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
+
+    var tableData = [DictionaryEntry]()
+    var searchEngine = SearchEngine()
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var tableView: UITableView!
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let selectedRowIndexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedRowIndexPath, animated: false)
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        searchBar.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+
+        //tableView.isScrollEnabled = false
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let searchBarText = searchBar.text {
+
+            if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: searchBarText.uppercased()) {
+                print(closestMatch)
+                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: 10, toClosestMatch: closestMatch)
+            } else {
+                print("NoClosestMatchNotFound")
+            }
+            
+            tableView.reloadData()
+        }
+
+        print("Hello")
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
+
+            let firstLetterOfSearchTextAsUppercasedString = firstLetterOfSearchText.uppercased()
+            if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
+                searchEngine.letterToEntries[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in wordsDictionary
+            }
+
+            if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: searchText.uppercased()) {
+                
+                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: 10, toClosestMatch: closestMatch)
+                print(tableData)
+                tableView.reloadData()
+            } else {
+                print("NoClosestMatchFound")
+            }
+        } else {
+            tableData = [DictionaryEntry]()
+            tableView.reloadData()
+        }
+    }
+
+
+    // MARK: - Table view data source
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return self.tableData.count
+    }
+
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell: WordTableViewCell = tableView.dequeueReusableCell(withIdentifier: "WordTableViewCell", for: indexPath) as! WordTableViewCell
+        
+        let entry: DictionaryEntry = self.tableData[indexPath.row]
+        
+        cell.wordLabel.text = entry.word
+        
+        //Configure the cell...
+
+        return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showTranslation" {
+            if let indexPath:IndexPath = self.tableView.indexPathForSelectedRow {
+                let translationVC: TranslationViewController = segue.destination as! TranslationViewController
+                let entry: DictionaryEntry = self.tableData[indexPath.row]
+                translationVC.word = entry.word
+                translationVC.translation = entry.translation
+            }
+        }
+    }
+    /*
+    // Override to support conditional editing of the table view.
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        return true
+    }
+    */
+
+    /*
+    // Override to support editing the table view.
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Delete the row from the data source
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }    
+    }
+    */
+
+    /*
+    // Override to support rearranging the table view.
+    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+
+    }
+    */
+
+    /*
+    // Override to support conditional rearranging of the table view.
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the item to be re-orderable.
+        return true
+    }
+    */
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}

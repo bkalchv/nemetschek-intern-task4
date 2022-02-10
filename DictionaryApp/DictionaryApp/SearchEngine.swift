@@ -33,7 +33,7 @@ class SearchEngine {
                 let data = try Data(contentsOf: fileUrl)
                 let decoder = JSONDecoder()
                 result = try decoder.decode([DictionaryEntry].self, from: data)
-                print("DictionaryTokens at \(filePath) read.")
+                print("DictionaryEntries at \(filePath) read.")
                 //print(dictionaryTokens)
             } catch {
                 print(error)
@@ -54,40 +54,46 @@ class SearchEngine {
         return !dictionaryEntriesWithPrefix.isEmpty
     }
 
-    // TODO: optional nescesarry?
-    func findLongestPrefixInWordsDictionary(ofWord word: String) -> String {
-
+    func findLongestPrefixInDictionaryEntries(ofWord word: String) -> String {
         if let firstLetterOfWord = word.first, firstLetterOfWord.isLetter {
             let firstLetterOfWordsAsUppercasedString = firstLetterOfWord.uppercased()
             if let entries = letterToEntries[firstLetterOfWordsAsUppercasedString] {
                 
                 for backwardIndex in (1...word.count).reversed() {
                     let currentPrefix = String(word.prefix(backwardIndex))
-                    if containsWordsWithPrefix(withDictionaryEntriesArray: entries, prefix: currentPrefix) { return currentPrefix }
+                    if containsWordsWithPrefix(withDictionaryEntriesArray: entries, prefix: currentPrefix) {
+                        return currentPrefix
+                    }
                 }
-                
-                return firstLetterOfWordsAsUppercasedString
-
-            } else {
                 return firstLetterOfWordsAsUppercasedString
             }
-        } else {
-            return ""
         }
+        
+        return ""
     }
     
     // TODO: optional nescesarry?
-    func findClosestMatchInWordsDictionary(toInput input: String) -> DictionaryEntry? {
+    func findClosestMatchInDictionaryEntries(toInput input: String) -> DictionaryEntry? {
         
         if let firstLetterOfInput = input.first, firstLetterOfInput.isLetter {
             let firstLetterOfInputAsUppercasedString = firstLetterOfInput.uppercased()
-            if let words = letterToEntries[firstLetterOfInputAsUppercasedString]{
-                let longestPrefix = findLongestPrefixInWordsDictionary(ofWord: input)
-                let dictionaryEntriesWithLongestPrefix = words.filter( { return $0.word.hasPrefix(longestPrefix)} )
+            if let entries = letterToEntries[firstLetterOfInputAsUppercasedString]{
+                let longestPrefix = findLongestPrefixInDictionaryEntries(ofWord: input)
+                let dictionaryEntriesWithLongestPrefix = entries.filter( { return $0.word.hasPrefix(longestPrefix)} )
                 if let first = dictionaryEntriesWithLongestPrefix.first { return first }
             }
         }
     
         return nil
+    }
+    
+    func findFollowingMatchesInDictionaryEntries(amountOfMatches: Int ,toClosestMatch closestMatch: DictionaryEntry) -> [DictionaryEntry] {
+        
+        if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entries = letterToEntries[firstLetterOfClosestMatch] {
+            let closestMatchIndex = entries.firstIndex(where: {return $0.word == closestMatch.word})
+            return Array(entries[closestMatchIndex!...(closestMatchIndex! + amountOfMatches)]) //
+        }
+        
+        return [DictionaryEntry]()
     }
 }

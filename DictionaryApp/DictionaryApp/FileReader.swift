@@ -34,7 +34,7 @@ class FileReader {
         return entries
     }
     
-    var tokens: [DictionaryEntry] {
+    var dictionaryEntries: [DictionaryEntry] {
         let result = self.entries.map {
             return DictionaryEntry(tokenAsString: $0)
         }
@@ -54,7 +54,7 @@ class FileReader {
     
     func entriesStartingWithLetter(letter: String) -> [DictionaryEntry] {
         if (isLetterFromAlphabet(letter: letter)) {
-            return tokens.filter{ $0.word.hasPrefix(letter) }
+            return dictionaryEntries.filter{ $0.word.hasPrefix(letter) }
         } else {
             return [DictionaryEntry]()
         }
@@ -73,13 +73,13 @@ class FileReader {
         let filePath = fileUrl.path
         //print(filePath)
             
-        let tokensForLetter = entriesStartingWithLetter(letter: letter)
+        let entriesForLetter = entriesStartingWithLetter(letter: letter)
         
         let encoder = JSONEncoder()
         
         if !fileManager.fileExists(atPath: filePath) {
             do {
-                let data = try encoder.encode(tokensForLetter)
+                let data = try encoder.encode(entriesForLetter)
                 try data.write(to: fileUrl)
                 print("File \(filePath) created")
             } catch {

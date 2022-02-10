@@ -22,7 +22,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CwS-9B-ORH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-484" y="-104"/>
+            <point key="canvasLocation" x="-572" y="-320"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Jle-1J-FTt">
@@ -34,8 +34,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="u1D-tP-4i7"/>
-                        <segue destination="YdP-nz-AQw" kind="relationship" relationship="viewControllers" id="mEa-2r-AJ2"/>
+                        <segue destination="O7H-mb-FYM" kind="relationship" relationship="viewControllers" id="3ia-sv-lz8"/>
+                        <segue destination="YdP-nz-AQw" kind="relationship" relationship="viewControllers" id="0hx-hI-eTT"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="37a-m4-4a4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -45,7 +45,7 @@
         <!--Translator-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="SearchBarViewController" customModule="DictionaryApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="TranslationViewController" customModule="DictionaryApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -57,15 +57,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <searchBar contentMode="redraw" fixedFrame="YES" text="" translatesAutoresizingMaskIntoConstraints="NO" id="62D-Os-PaN">
-                                <rect key="frame" x="20" y="72" width="374" height="51"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <scopeButtonTitles>
-                                    <string>Title</string>
-                                    <string>Title</string>
-                                </scopeButtonTitles>
-                            </searchBar>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="&lt;Translation&gt;" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sm7-DA-h5a">
                                 <rect key="frame" x="20" y="181" width="374" height="546"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -79,15 +70,101 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Translator" image="menu_book_black_24pt" id="bu6-Zp-pxv"/>
+                    <navigationItem key="navigationItem" id="BsJ-tk-brA"/>
                     <connections>
-                        <outlet property="searchBar" destination="62D-Os-PaN" id="bKx-TQ-QlO"/>
-                        <outlet property="translationTextField" destination="Sm7-DA-h5a" id="Ebw-nF-pw6"/>
-                        <outlet property="wordLabel" destination="wWD-pJ-8Os" id="tmh-f6-jyP"/>
+                        <outlet property="translationTextField" destination="Sm7-DA-h5a" id="RKD-yN-vJ9"/>
+                        <outlet property="wordLabel" destination="wWD-pJ-8Os" id="rRW-jA-lx8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-484.05797101449281" y="-756.02678571428567"/>
+            <point key="canvasLocation" x="1116" y="412"/>
+        </scene>
+        <!--Translator-->
+        <scene sceneID="w3e-4Z-es7">
+            <objects>
+                <navigationController id="O7H-mb-FYM" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Translator" image="menu_book_black_24pt" id="tUV-R2-ZXV"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="AhH-jP-y0a">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="qv6-7W-qdy" kind="relationship" relationship="rootViewController" id="gbP-le-xve"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QN9-aw-E4S" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-572" y="412"/>
+        </scene>
+        <!--Search Table View Controller-->
+        <scene sceneID="KVu-2F-GsN">
+            <objects>
+                <viewController id="qv6-7W-qdy" customClass="SearchTableViewController" customModule="DictionaryApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oCC-Db-5i5">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="1UB-Aj-bZg">
+                                <rect key="frame" x="0.0" y="75" width="414" height="51"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Efi-X0-cLl">
+                                <rect key="frame" x="0.0" y="127" width="414" height="611"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="611" id="65J-Um-tCK"/>
+                                </constraints>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="WordTableViewCell" id="CiN-Vg-3fr" customClass="WordTableViewCell" customModule="DictionaryApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CiN-Vg-3fr" id="Rhm-27-aOV">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;word&gt;" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ov-Bl-apw">
+                                                    <rect key="frame" x="30" y="11.5" width="354" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="1ov-Bl-apw" firstAttribute="centerY" secondItem="Rhm-27-aOV" secondAttribute="centerY" id="1Zf-kF-X6g"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="1ov-Bl-apw" secondAttribute="trailing" constant="10" id="8mD-il-jmG"/>
+                                                <constraint firstItem="1ov-Bl-apw" firstAttribute="leading" secondItem="Rhm-27-aOV" secondAttribute="leadingMargin" constant="10" id="jEc-Ra-L9K"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="wordLabel" destination="1ov-Bl-apw" id="ujO-kQ-4Lu"/>
+                                            <segue destination="BYZ-38-t0r" kind="show" identifier="showTranslation" id="d6C-K7-rzE"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="hAk-Yb-IG0"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="1UB-Aj-bZg" firstAttribute="trailing" secondItem="hAk-Yb-IG0" secondAttribute="trailing" id="4FY-So-dhq"/>
+                            <constraint firstItem="Efi-X0-cLl" firstAttribute="trailing" secondItem="hAk-Yb-IG0" secondAttribute="trailing" id="7Qf-jZ-iNz"/>
+                            <constraint firstItem="hAk-Yb-IG0" firstAttribute="top" secondItem="1UB-Aj-bZg" secondAttribute="top" constant="13" id="DTi-Lu-P1Y"/>
+                            <constraint firstItem="1UB-Aj-bZg" firstAttribute="centerX" secondItem="hAk-Yb-IG0" secondAttribute="centerX" id="W7l-la-XpH"/>
+                            <constraint firstItem="Efi-X0-cLl" firstAttribute="leading" secondItem="hAk-Yb-IG0" secondAttribute="leading" id="fSl-3r-6gj"/>
+                            <constraint firstItem="Efi-X0-cLl" firstAttribute="top" secondItem="1UB-Aj-bZg" secondAttribute="bottom" constant="1" id="gef-6q-njD"/>
+                            <constraint firstItem="1UB-Aj-bZg" firstAttribute="leading" secondItem="hAk-Yb-IG0" secondAttribute="leading" id="s2r-h7-hj2"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="nXb-LM-UuG"/>
+                    <connections>
+                        <outlet property="searchBar" destination="1UB-Aj-bZg" id="aLS-Lk-JKP"/>
+                        <outlet property="tableView" destination="Efi-X0-cLl" id="QB2-q7-WNb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c0e-Y0-8Kd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="269.56521739130437" y="411.83035714285711"/>
         </scene>
     </scenes>
     <resources>
