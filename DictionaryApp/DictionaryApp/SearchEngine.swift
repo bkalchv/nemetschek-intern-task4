@@ -91,7 +91,7 @@ class SearchEngine {
         
         if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entries = letterToEntries[firstLetterOfClosestMatch] {
             let closestMatchIndex = entries.firstIndex(where: {return $0.word == closestMatch.word})
-            return Array(entries[closestMatchIndex!...(closestMatchIndex! + amountOfMatches)]) //
+            return Array(entries[closestMatchIndex!..<(closestMatchIndex! + amountOfMatches)]) //
         }
         
         return [DictionaryEntry]()

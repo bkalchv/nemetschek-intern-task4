@@ -19,6 +19,16 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if let selectedRowIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRowIndexPath, animated: false)
         }
+        
+        if let searchBarText = searchBar.text, !searchBarText.isEmpty {
+            
+            if !tableData.isEmpty && tableData.count < OptionsManager.shared.suggestionsToBeShown {
+                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: tableData[0])
+            }
+            
+            tableData = Array(tableData[0..<OptionsManager.shared.suggestionsToBeShown])
+            tableView.reloadData()
+        }
     }
     
     override func viewDidLoad() {
@@ -36,23 +46,25 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if let searchBarText = searchBar.text {
-
+        if !OptionsManager.shared.translateOnEachKeyStroke, let searchBarText = searchBar.text, !searchBarText.isEmpty {
+            
+            let firstLetterOfSearchTextAsUppercasedString = searchBarText.first!.uppercased()
+            if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
+                searchEngine.letterToEntries[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in wordsDictionary
+            }
+            
             if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: searchBarText.uppercased()) {
-                print(closestMatch)
-                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: 10, toClosestMatch: closestMatch)
+                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
             } else {
                 print("NoClosestMatchNotFound")
             }
             
             tableView.reloadData()
         }
-
-        print("Hello")
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
+        if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
 
             let firstLetterOfSearchTextAsUppercasedString = firstLetterOfSearchText.uppercased()
             if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
@@ -61,7 +73,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 
             if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: searchText.uppercased()) {
                 
-                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: 10, toClosestMatch: closestMatch)
+                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
                 print(tableData)
                 tableView.reloadData()
             } else {
