@@ -10,8 +10,12 @@ import UIKit
 class SplashScreenViewController: UIViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-        
-    func filenamesOfNonExistingHelperFiles() -> [String] {
+    
+    let englishAlphabetUnicodeRange = Unicode.Scalar("A").value...Unicode.Scalar("Z").value
+    let bulgarianAlphabetUnicodeRange = Unicode.Scalar("А").value...Unicode.Scalar("Я").value
+//    let bulgarianAlphabetUnicodeRange = (Unicode.Scalar("А").value...Unicode.Scalar("Я").value).filter({$0 != 1067 && $0 != 1069})
+    
+    func filenamesOfNonExistingHelperFiles(forLanguageUnicodeRange languageUnicodeRange: ClosedRange<UInt32>) -> [String] {
         
         var filenamesOfNonExistingHelperFiles = [String]()
         
@@ -19,11 +23,11 @@ class SplashScreenViewController: UIViewController {
         let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
         let cachesDirectoryUrl = urls[0]
         
-        let startChar = Unicode.Scalar("A").value
-        let endChar = Unicode.Scalar("Z").value
+//        let startChar = Unicode.Scalar("A").value
+//        let endChar = Unicode.Scalar("Z").value
         
-        for alpha in startChar...endChar {
-            if let letter = Unicode.Scalar(alpha) {
+        for alpha in languageUnicodeRange {
+            if alpha != 1067, alpha != 1069, let letter = Unicode.Scalar(alpha) { // extracts russian letters // TODO: scalar
                 
                 let fileUrl = cachesDirectoryUrl.appendingPathComponent(String(letter))
                 //print(fileUrl.absoluteString)
@@ -42,16 +46,27 @@ class SplashScreenViewController: UIViewController {
         super.viewDidLoad()
         
         activityIndicator.startAnimating()
+        self.view.isUserInteractionEnabled = false
         
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarViewController") as! TabBarViewController
         
         DispatchQueue.global(qos: .default).async {
 
-            let nonExistingFilenames = self.filenamesOfNonExistingHelperFiles()
+            let nonExistingEnglishFilenames = self.filenamesOfNonExistingHelperFiles(forLanguageUnicodeRange:  self.englishAlphabetUnicodeRange)
             
-            if (!nonExistingFilenames.isEmpty) {
+            if (!nonExistingEnglishFilenames.isEmpty) {
                 if let freader = FileReader(filename: "en_bg.dic") {
-                    for filename in nonExistingFilenames {
+                    for filename in nonExistingEnglishFilenames {
+                        freader.createFileForLetter(letter: filename)
+                    }
+                }
+            }
+            
+            let nonExistingBulgarianFilenames = self.filenamesOfNonExistingHelperFiles(forLanguageUnicodeRange:  self.bulgarianAlphabetUnicodeRange)
+            
+            if (!nonExistingBulgarianFilenames.isEmpty) {
+                if let freader = FileReader(filename: "bg_en.kyp") {
+                    for filename in nonExistingBulgarianFilenames {
                         freader.createFileForLetter(letter: filename)
                     }
                 }

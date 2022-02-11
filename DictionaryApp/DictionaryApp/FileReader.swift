@@ -47,6 +47,8 @@ class FileReader {
         switch uniCode {
         case "A" ... "Z":
             return true
+        case "А" ... "Я":
+            return true
         default:
             return false
         }

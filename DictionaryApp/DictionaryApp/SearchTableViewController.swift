@@ -11,6 +11,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 
     var tableData = [DictionaryEntry]()
     var searchEngine = SearchEngine()
+    //TODO: what about that? var exceedingLongestValidPrefix = false
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -36,8 +37,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
-
-        //tableView.isScrollEnabled = false
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 

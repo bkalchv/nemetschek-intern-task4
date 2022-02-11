@@ -11,11 +11,9 @@ class SearchEngine {
     
     var letterToEntries: [String : [DictionaryEntry]] = [String : [DictionaryEntry]]()
     
+    var lastValidPrefix: String = ""
+    
     func decodeFileForLetter(letter: String) -> [DictionaryEntry] {
-        
-        // TODO: ask - should there be a check for the letter itself
-        // or can we rely on the fact we call the function once we are sure that the
-        // argument is a letter?
         
         var result = [DictionaryEntry]()
 
@@ -72,7 +70,6 @@ class SearchEngine {
         return ""
     }
     
-    // TODO: optional nescesarry?
     func findClosestMatchInDictionaryEntries(toInput input: String) -> DictionaryEntry? {
         
         if let firstLetterOfInput = input.first, firstLetterOfInput.isLetter {
@@ -83,15 +80,20 @@ class SearchEngine {
                 if let first = dictionaryEntriesWithLongestPrefix.first { return first }
             }
         }
-    
+        
         return nil
     }
     
-    func findFollowingMatchesInDictionaryEntries(amountOfMatches: Int ,toClosestMatch closestMatch: DictionaryEntry) -> [DictionaryEntry] {
+    func findFollowingMatchesInDictionaryEntries(amountOfMatches: Int, toClosestMatch closestMatch: DictionaryEntry) -> [DictionaryEntry] {
         
-        if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entries = letterToEntries[firstLetterOfClosestMatch] {
-            let closestMatchIndex = entries.firstIndex(where: {return $0.word == closestMatch.word})
-            return Array(entries[closestMatchIndex!..<(closestMatchIndex! + amountOfMatches)]) //
+        if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entries = letterToEntries[firstLetterOfClosestMatch], let closestMatchIndex = entries.firstIndex(where: {return $0.word == closestMatch.word}) {
+        
+            if amountOfMatches <= entries.count {
+                return Array(entries[closestMatchIndex..<(closestMatchIndex + amountOfMatches)])
+            } else {
+                OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: entries.count)
+                return Array(entries[closestMatchIndex..<(closestMatchIndex + entries.count)])
+            }
         }
         
         return [DictionaryEntry]()

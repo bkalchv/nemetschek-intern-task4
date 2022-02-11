@@ -14,12 +14,16 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     
     let pickerData: [Int] = [Int](1...20)
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.suggestionsAmountPicker.dataSource = self
         self.suggestionsAmountPicker.delegate = self
         // Do any additional setup after loading the view.
-        self.suggestionsAmountPicker.selectRow(9, inComponent: 0, animated: false)
+        self.suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
     }
     
     
