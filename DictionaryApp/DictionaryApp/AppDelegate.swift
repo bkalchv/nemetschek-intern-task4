@@ -10,52 +10,9 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    func doHelperFilesExist() -> Bool {
-        
-        let fileManager = FileManager.default
-        let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
-        let cachesDirectoryUrl = urls[0]
-        
-        let startChar = Unicode.Scalar("A").value
-        let endChar = Unicode.Scalar("Z").value
-        
-        for alpha in startChar...endChar {
-            if let letter = Unicode.Scalar(alpha) {
-                
-                let fileUrl = cachesDirectoryUrl.appendingPathComponent(String(letter))
-                //print(fileUrl.absoluteString)
-                
-                let filePath = fileUrl.path
-                //print(filePath)
-                
-                if !fileManager.fileExists(atPath: filePath) { return false }
-            }
-        }
-        
-        return true
-    }
+
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        
-        
-        if (!doHelperFilesExist()) {
-            if let freader = FileReader(filename: "en_bg.dic") {
-                
-                let startChar = Unicode.Scalar("A").value
-                let endChar = Unicode.Scalar("Z").value
-
-                for alpha in startChar...endChar {
-                    if let letter = Unicode.Scalar(alpha) {
-                        freader.createFileForLetter(letter: String(letter))
-                    }
-                }
-                return true
-            } else {
-                return false
-            }
-        }
-        
         return true
 }
     

@@ -22,7 +22,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if let searchBarText = searchBar.text, !searchBarText.isEmpty {
             
-            if !tableData.isEmpty && tableData.count < OptionsManager.shared.suggestionsToBeShown {
+            if !tableData.isEmpty && tableData.count <= OptionsManager.shared.suggestionsToBeShown {
                 tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: tableData[0])
             }
             
