@@ -146,33 +146,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="611" id="65J-Um-tCK"/>
                                 </constraints>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="WordTableViewCell" id="CiN-Vg-3fr" customClass="WordTableViewCell" customModule="DictionaryApp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CiN-Vg-3fr" id="Rhm-27-aOV">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;word&gt;" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ov-Bl-apw">
-                                                    <rect key="frame" x="30" y="11.5" width="354" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="1ov-Bl-apw" firstAttribute="centerY" secondItem="Rhm-27-aOV" secondAttribute="centerY" id="1Zf-kF-X6g"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="1ov-Bl-apw" secondAttribute="trailing" constant="10" id="8mD-il-jmG"/>
-                                                <constraint firstItem="1ov-Bl-apw" firstAttribute="leading" secondItem="Rhm-27-aOV" secondAttribute="leadingMargin" constant="10" id="jEc-Ra-L9K"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="wordLabel" destination="1ov-Bl-apw" id="ujO-kQ-4Lu"/>
-                                            <segue destination="BYZ-38-t0r" kind="show" identifier="showTranslation" id="d6C-K7-rzE"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hAk-Yb-IG0"/>

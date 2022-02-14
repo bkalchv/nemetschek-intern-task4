@@ -12,6 +12,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var tableData = [DictionaryEntry]()
     var searchEngine = SearchEngine()
     //TODO: what about that? var exceedingLongestValidPrefix = false
+    var selectedCellIndexPath: IndexPath? = nil
+    let selectedCellHeight = 251.0
+    let unselectedCellHeight = 51.0
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -37,6 +40,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
+        
+        let cellNib = UINib(nibName: "ExpandableTableViewCell", bundle: nil)
+        tableView.register(cellNib, forCellReuseIdentifier: "ExpandableCell")
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -101,27 +107,53 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell: WordTableViewCell = tableView.dequeueReusableCell(withIdentifier: "WordTableViewCell", for: indexPath) as! WordTableViewCell
+        let cell: ExpandableTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ExpandableCell", for: indexPath) as! ExpandableTableViewCell
         
         let entry: DictionaryEntry = self.tableData[indexPath.row]
         
         cell.wordLabel.text = entry.word
-        
+        cell.translationTextView.text = entry.translation
         //Configure the cell...
 
         return cell
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showTranslation" {
-            if let indexPath:IndexPath = self.tableView.indexPathForSelectedRow {
-                let translationVC: TranslationViewController = segue.destination as! TranslationViewController
-                let entry: DictionaryEntry = self.tableData[indexPath.row]
-                translationVC.word = entry.word
-                translationVC.translation = entry.translation
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if let cell = tableView.cellForRow(at: indexPath) as? ExpandableTableViewCell {
+            
+            if (selectedCellIndexPath == indexPath) {
+                selectedCellIndexPath = nil
+            } else {
+                selectedCellIndexPath = indexPath
             }
+            
+            UIView.animate(withDuration: 0.3) {
+                cell.descriptionView.isHidden = !cell.descriptionView.isHidden
+            }
+            tableView.beginUpdates()
+            tableView.endUpdates()
+            //tableView.deselectRow(at: indexPath, animated: true)
         }
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if self.selectedCellIndexPath == indexPath {
+            return selectedCellHeight
+        }
+        return unselectedCellHeight
+    }
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "showTranslation" {
+//            if let indexPath:IndexPath = self.tableView.indexPathForSelectedRow {
+//                let translationVC: TranslationViewController = segue.destination as! TranslationViewController
+//                let entry: DictionaryEntry = self.tableData[indexPath.row]
+//                translationVC.word = entry.word
+//                translationVC.translation = entry.translation
+//            }
+//        }
+//    }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
