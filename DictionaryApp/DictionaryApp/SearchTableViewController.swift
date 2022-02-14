@@ -142,6 +142,14 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if let cell = tableView.cellForRow(at: indexPath) as? ExpandableTableViewCell {
             
             if selectedCellIndexPath == indexPath {
+                if !cell.descriptionView.isHidden, let currentCellText = cell.wordLabel.text {
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let translationVC: TranslationViewController = storyboard.instantiateViewController(withIdentifier: "TranslationViewController") as! TranslationViewController
+                    translationVC.modalPresentationStyle = .fullScreen
+                    translationVC.word = currentCellText
+                    translationVC.translation = cell.translationTextView.text
+                    self.present(translationVC, animated: true, completion: nil)
+                }
                 selectedCellIndexPath = nil
             } else {
                 deselectPreviouslySelectedCell()

@@ -76,7 +76,7 @@
         <!--Translator-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="TranslationViewController" customModule="DictionaryApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TranslationViewController" id="BYZ-38-t0r" customClass="TranslationViewController" customModule="DictionaryApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -96,13 +96,30 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="sst-MC-rI9">
+                                <rect key="frame" x="20" y="56" width="60" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Ugt-4a-ROL"/>
+                                    <constraint firstAttribute="height" constant="30" id="Xpj-lP-JQc"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Back"/>
+                                <connections>
+                                    <action selector="onBackButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ApE-YA-UcC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="sst-MC-rI9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="YKP-jf-7rd"/>
+                            <constraint firstItem="sst-MC-rI9" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="12" id="g0C-Qm-yfY"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Translator" image="menu_book_black_24pt" id="bu6-Zp-pxv"/>
                     <navigationItem key="navigationItem" id="BsJ-tk-brA"/>
                     <connections>
+                        <outlet property="backButton" destination="sst-MC-rI9" id="pmN-UP-cpp"/>
                         <outlet property="translationTextField" destination="Sm7-DA-h5a" id="RKD-yN-vJ9"/>
                         <outlet property="wordLabel" destination="wWD-pJ-8Os" id="rRW-jA-lx8"/>
                     </connections>

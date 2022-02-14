@@ -12,11 +12,7 @@ class ExpandableTableViewCell: UITableViewCell {
     @IBOutlet weak var wordLabel: UILabel!
     @IBOutlet weak var translationTextView: UITextView!
     @IBOutlet weak var wordView: UIView!
-    @IBOutlet weak var descriptionView: UIView! //{
-//        didSet {
-//            descriptionView.isHidden = true
-//        }
-//    }
+    @IBOutlet weak var descriptionView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
