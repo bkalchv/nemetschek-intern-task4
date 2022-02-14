@@ -12,15 +12,16 @@ class ExpandableTableViewCell: UITableViewCell {
     @IBOutlet weak var wordLabel: UILabel!
     @IBOutlet weak var translationTextView: UITextView!
     @IBOutlet weak var wordView: UIView!
-    @IBOutlet weak var descriptionView: UIView! {
-        didSet {
-            descriptionView.isHidden = true
-        }
-    }
+    @IBOutlet weak var descriptionView: UIView! //{
+//        didSet {
+//            descriptionView.isHidden = true
+//        }
+//    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        descriptionView.isHidden = true
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

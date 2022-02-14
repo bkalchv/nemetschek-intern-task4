@@ -52,6 +52,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        deselectPreviouslySelectedCell()
+        selectedCellIndexPath = nil
         if !OptionsManager.shared.translateOnEachKeyStroke, let searchBarText = searchBar.text, !searchBarText.isEmpty {
             
             let firstLetterOfSearchTextAsUppercasedString = searchBarText.first!.uppercased()
@@ -70,6 +72,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        deselectPreviouslySelectedCell()
+        selectedCellIndexPath = nil
         if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
 
             let firstLetterOfSearchTextAsUppercasedString = firstLetterOfSearchText.uppercased()
@@ -118,22 +122,37 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         return cell
     }
     
+    func deselectPreviouslySelectedCell() {
+        if let selectedCellIndexPath = selectedCellIndexPath, let previouslySelectedCell = tableView.cellForRow(at: selectedCellIndexPath) as? ExpandableTableViewCell {
+            tableView.deselectRow(at: selectedCellIndexPath, animated: false)
+            UIView.animate(withDuration: 0.3)  {
+                previouslySelectedCell.descriptionView.isHidden.toggle()
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let cell = tableView.cellForRow(at: indexPath) as? ExpandableTableViewCell {
             
             if (selectedCellIndexPath == indexPath) {
+                //
                 selectedCellIndexPath = nil
             } else {
+                deselectPreviouslySelectedCell()
                 selectedCellIndexPath = indexPath
+                // scrollTo
+                // tableView.scrollToRow(at: selectedCellIndexPath!, at: .top, animated: true)
             }
             
             UIView.animate(withDuration: 0.3) {
-                cell.descriptionView.isHidden = !cell.descriptionView.isHidden
+                cell.descriptionView.isHidden.toggle()
             }
+            
             tableView.beginUpdates()
-            tableView.endUpdates()
             //tableView.deselectRow(at: indexPath, animated: true)
+            tableView.endUpdates()
+            
         }
     }
     
