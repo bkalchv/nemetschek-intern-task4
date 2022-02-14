@@ -137,18 +137,28 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
+    func presentTranslationViewController(forCell cell: ExpandableTableViewCell) {
+        if let cellWord = cell.wordLabel.text {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let translationVC: TranslationViewController = storyboard.instantiateViewController(withIdentifier: "TranslationViewController") as! TranslationViewController
+            translationVC.modalPresentationStyle = .fullScreen
+            translationVC.word = cellWord
+            translationVC.translation = cell.translationTextView.text
+            tableView.beginUpdates()
+            UIView.animate(withDuration: 0.1) { //TODO: Hakcy!
+                self.present(translationVC, animated: true, completion: nil)
+            }
+            tableView.endUpdates()
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let cell = tableView.cellForRow(at: indexPath) as? ExpandableTableViewCell {
             
             if selectedCellIndexPath == indexPath {
-                if !cell.descriptionView.isHidden, let currentCellText = cell.wordLabel.text {
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let translationVC: TranslationViewController = storyboard.instantiateViewController(withIdentifier: "TranslationViewController") as! TranslationViewController
-                    translationVC.modalPresentationStyle = .fullScreen
-                    translationVC.word = currentCellText
-                    translationVC.translation = cell.translationTextView.text
-                    self.present(translationVC, animated: true, completion: nil)
+                if !cell.descriptionView.isHidden {
+                    presentTranslationViewController(forCell: cell)
                 }
                 selectedCellIndexPath = nil
             } else {
@@ -158,7 +168,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             
             tableView.beginUpdates()
             
-            UIView.animate(withDuration: 0.3) { // TODO: Hacky! (increase duration to see what's up)
+            UIView.animate(withDuration: 0.3) { // TODO: Hacky! (increase duration to see what's up) Ask how to chain all the animations the way you imagine them
                 cell.descriptionView.isHidden.toggle()
             }
             
