@@ -11,9 +11,9 @@ class SplashScreenViewController: UIViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    let catchyPhrases = ["Catchy phrase1", "Catchy phrase2", "Catchy phrase3"]
     let englishAlphabetUnicodeRange = Unicode.Scalar("A").value...Unicode.Scalar("Z").value
     let bulgarianAlphabetUnicodeRange = Unicode.Scalar("А").value...Unicode.Scalar("Я").value
-//    let bulgarianAlphabetUnicodeRange = (Unicode.Scalar("А").value...Unicode.Scalar("Я").value).filter({$0 != 1067 && $0 != 1069})
     
     func filenamesOfNonExistingHelperFiles(forLanguageUnicodeRange languageUnicodeRange: ClosedRange<UInt32>) -> [String] {
         
@@ -23,11 +23,8 @@ class SplashScreenViewController: UIViewController {
         let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
         let cachesDirectoryUrl = urls[0]
         
-//        let startChar = Unicode.Scalar("A").value
-//        let endChar = Unicode.Scalar("Z").value
-        
         for alpha in languageUnicodeRange {
-            if alpha != 1067, alpha != 1069, let letter = Unicode.Scalar(alpha) { // extracts russian letters // TODO: scalar
+            if alpha != Unicode.Scalar("Э").value, alpha != Unicode.Scalar("Ы").value, let letter = Unicode.Scalar(alpha) { // extracts russian letters
                 
                 let fileUrl = cachesDirectoryUrl.appendingPathComponent(String(letter))
                 //print(fileUrl.absoluteString)

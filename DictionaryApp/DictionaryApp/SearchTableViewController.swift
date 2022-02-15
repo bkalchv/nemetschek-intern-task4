@@ -13,8 +13,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var searchEngine = SearchEngine()
     //TODO: what about that? var exceedingLongestValidPrefix = false
     var selectedCellIndexPath: IndexPath? = nil
-    let selectedCellHeight = 251.0
-    let unselectedCellHeight = 51.0
+    let selectedCellHeight = 200.0
+    let unselectedCellHeight = 50.0
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -83,13 +83,13 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             
             let firstLetterOfSearchTextAsUppercasedString = firstLetterOfSearchText.uppercased()
             if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
-                searchEngine.letterToEntries[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in wordsDictionary
+                searchEngine.letterToEntries[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in letterToEntries dictionary
             }
 
             if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: searchText.uppercased()) {
                 
                 tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
-                print(tableData)
+                
                 tableView.reloadData()
             } else {
                 print("NoClosestMatchFound")
