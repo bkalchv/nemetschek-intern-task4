@@ -131,7 +131,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func deselectPreviouslySelectedCell() {
         if let selectedCellIndexPath = selectedCellIndexPath, let previouslySelectedCell = tableView.cellForRow(at: selectedCellIndexPath) as? ExpandableTableViewCell {
             tableView.deselectRow(at: selectedCellIndexPath, animated: true)
-            UIView.animate(withDuration: 0.3)  { // TODO: Hacky!
+            UIView.animate(withDuration: 0.3)  { // TODO: Hacky?
                 previouslySelectedCell.descriptionView.isHidden.toggle()
             }
         }
@@ -144,11 +144,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             translationVC.modalPresentationStyle = .fullScreen
             translationVC.word = cellWord
             translationVC.translation = cell.translationTextView.text
-            tableView.beginUpdates()
-            UIView.animate(withDuration: 0.1) { //TODO: Hakcy!
-                self.present(translationVC, animated: true, completion: nil)
-            }
-            tableView.endUpdates()
+            self.navigationController?.pushViewController(translationVC, animated: true)
         }
     }
     
@@ -168,7 +164,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             
             tableView.beginUpdates()
             
-            UIView.animate(withDuration: 0.3) { // TODO: Hacky! (increase duration to see what's up) Ask how to chain all the animations the way you imagine them
+            UIView.animate(withDuration: 0.3) { // TODO: Hacky? (increase duration to see what's up) Ask how to chain all the animations the way you imagine them
                 cell.descriptionView.isHidden.toggle()
             }
             
