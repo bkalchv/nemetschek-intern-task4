@@ -26,7 +26,6 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         self.suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
     }
     
-    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }

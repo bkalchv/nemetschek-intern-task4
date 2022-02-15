@@ -28,11 +28,13 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             }
             
             tableData = Array(tableData[0..<OptionsManager.shared.suggestionsToBeShown])
+            deselectPreviouslySelectedCell()
+            //selectedCellIndexPath = nil // TODO: when uncommented - a bug appears
             tableView.reloadData()
         }
         
-        if let selectedRowIndexPath = self.selectedCellIndexPath, let cell = tableView.cellForRow(at: selectedRowIndexPath) as? ExpandableTableViewCell  {
-            cell.descriptionView.isHidden = false
+        if let selectedRowIndexPath = self.selectedCellIndexPath, let cell = tableView.cellForRow(at: selectedRowIndexPath) as? WordTableViewCell  {
+            cell.translationView.isHidden = false
         }
     }
     
@@ -41,9 +43,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
-        
-        let cellNib = UINib(nibName: "ExpandableTableViewCell", bundle: nil)
-        tableView.register(cellNib, forCellReuseIdentifier: "ExpandableCell")
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -104,19 +103,17 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     // MARK: - Table view data source
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return self.tableData.count
     }
 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell: ExpandableTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ExpandableCell", for: indexPath) as! ExpandableTableViewCell
+        let cell: WordTableViewCell = tableView.dequeueReusableCell(withIdentifier: "WordCell", for: indexPath) as! WordTableViewCell
         
         let entry: DictionaryEntry = self.tableData[indexPath.row]
         
@@ -129,15 +126,12 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func deselectPreviouslySelectedCell() {
-        if let selectedCellIndexPath = selectedCellIndexPath, let previouslySelectedCell = tableView.cellForRow(at: selectedCellIndexPath) as? ExpandableTableViewCell {
-            tableView.deselectRow(at: selectedCellIndexPath, animated: true)
-            UIView.animate(withDuration: 0.3)  { // TODO: Hacky?
-                previouslySelectedCell.descriptionView.isHidden.toggle()
-            }
+        if let selectedCellIndexPath = selectedCellIndexPath, let previouslySelectedCell = tableView.cellForRow(at: selectedCellIndexPath) as? WordTableViewCell {
+            previouslySelectedCell.translationView.isHidden.toggle()
         }
     }
     
-    func presentTranslationViewController(forCell cell: ExpandableTableViewCell) {
+    func presentTranslationViewController(forCell cell: WordTableViewCell) {
         if let cellWord = cell.wordLabel.text {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let translationVC: TranslationViewController = storyboard.instantiateViewController(withIdentifier: "TranslationViewController") as! TranslationViewController
@@ -150,10 +144,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if let cell = tableView.cellForRow(at: indexPath) as? ExpandableTableViewCell {
+        if let cell = tableView.cellForRow(at: indexPath) as? WordTableViewCell {
             
             if selectedCellIndexPath == indexPath {
-                if !cell.descriptionView.isHidden {
+                if !cell.translationView.isHidden {
                     presentTranslationViewController(forCell: cell)
                 }
                 selectedCellIndexPath = nil
@@ -164,9 +158,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             
             tableView.beginUpdates()
             
-            UIView.animate(withDuration: 0.3) { // TODO: Hacky? (increase duration to see what's up) Ask how to chain all the animations the way you imagine them
-                cell.descriptionView.isHidden.toggle()
-            }
+            cell.translationView.isHidden.toggle()
             
             tableView.endUpdates()
             
