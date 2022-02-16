@@ -9,9 +9,13 @@ import UIKit
 
 class SplashScreenViewController: UIViewController {
     
+    @IBOutlet weak var tabBar: UITabBar!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var catchyPhraseLabel: UILabel!
+    let catchyPhrases = ["Hello translation adventurer!", "Gathering all words...", "Loading your favorite words...", "Прелистваме речника...", "Взимаме преводите от Стефан...", "Your translation adventure begins in a second!"]
+    var currentCatchyPhraseIndex: Int = 0
+    var catchyPhrasesDoneAnimating = false
     
-    let catchyPhrases = ["Catchy phrase1", "Catchy phrase2", "Catchy phrase3"]
     let englishAlphabetUnicodeRange = Unicode.Scalar("A").value...Unicode.Scalar("Z").value
     let bulgarianAlphabetUnicodeRange = Unicode.Scalar("А").value...Unicode.Scalar("Я").value
     
@@ -39,48 +43,192 @@ class SplashScreenViewController: UIViewController {
         return filenamesOfNonExistingHelperFiles
     }
     
+    func nextCatchyPhraseIndex() -> Int {
+        if (currentCatchyPhraseIndex == catchyPhrases.count - 1) {
+            return 0;
+        } else {
+            return currentCatchyPhraseIndex + 1;
+        }
+    }
+    
+    func updateCurrentCatchyPhraseIndex() {
+        currentCatchyPhraseIndex = nextCatchyPhraseIndex();
+    }
+    
+    func executeFirstAnimationCycle() {
+        UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: { // Fade in
+            self.catchyPhraseLabel.alpha = 1.0
+        }, completion: {
+            (finished) in
+            if finished {
+                UIView.animate(withDuration: 1.0, delay: 1.0, options: [],  animations: { // Ease away
+                    self.catchyPhraseLabel.center = CGPoint(x: self.catchyPhraseLabel.frame.width + UIScreen.main.bounds.width, y: self.catchyPhraseLabel.center.y)
+                }, completion: {
+                    (finished) in
+                    if finished {
+                        
+                        self.updateCurrentCatchyPhraseIndex()
+                        self.catchyPhraseLabel.text = self.catchyPhrases[self.currentCatchyPhraseIndex]
+                        // CatchyPhrase updated
+                        
+                        if (self.catchyPhraseLabel.center.x > UIScreen.main.bounds.width) {
+                            self.catchyPhraseLabel.center.x = -self.catchyPhraseLabel.frame.width
+                        }
+                        
+                        UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: { // Ease in
+                            self.catchyPhraseLabel.center = CGPoint(x: 1/2 * UIScreen.main.bounds.width, y: self.catchyPhraseLabel.center.y)
+                        }, completion: {
+                            (finished) in
+                            if finished {
+                                self.catchyPhrasesDoneAnimating = true // CatchyPhrasesDoneAnimating updated
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+    
+    func executeAnyOtherAnimationCycle() { // Removes the fade in
+        UIView.animate(withDuration: 1.0, delay: 1.0, options: [],  animations: { // Ease away
+            self.catchyPhraseLabel.center = CGPoint(x: self.catchyPhraseLabel.frame.width + UIScreen.main.bounds.width, y: self.catchyPhraseLabel.center.y)
+        }, completion: {
+            (finished) in
+            if finished {
+                
+                self.updateCurrentCatchyPhraseIndex()
+                self.catchyPhraseLabel.text = self.catchyPhrases[self.currentCatchyPhraseIndex]
+                // CatchyPhrase updated
+                
+                if (self.catchyPhraseLabel.center.x > UIScreen.main.bounds.width) {
+                    self.catchyPhraseLabel.center.x = -self.catchyPhraseLabel.frame.width
+                }
+                
+                UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: { // Ease in
+                    self.catchyPhraseLabel.center = CGPoint(x: 1/2 * UIScreen.main.bounds.width, y: self.catchyPhraseLabel.center.y)
+                }, completion: {
+                    (finished) in
+                    if finished {
+                        self.catchyPhrasesDoneAnimating = true
+                    }
+                })
+            }
+        })
+    }
+    
+    func executeAnimationCycle() {
+        
+        self.catchyPhrasesDoneAnimating = false
+        
+        if self.catchyPhraseLabel.alpha == 0.0 {
+            executeFirstAnimationCycle()
+        } else {
+            executeAnyOtherAnimationCycle()
+        }
+    }
+    
+    func presentTabViewController() {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarViewController") as! TabBarViewController
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: false, completion: nil)
+    }
+    
+    func executeAllSetAnimationAndPresentTabBarViewController() {
+        UIView.animate(withDuration: 0.5, delay: 0, options: [], animations: {
+            self.catchyPhraseLabel.alpha = 0.0
+        }, completion: {
+            (finished) in
+            if finished {
+                
+                self.catchyPhraseLabel.text = "All set!"
+                
+                UIView.animate(withDuration: 1.0, delay: 0, options: [], animations: {
+                    self.catchyPhraseLabel.alpha = 1.0
+                }, completion: {
+                    (finished) in
+                    if finished {
+                        UIView.animate(withDuration: 1.0, delay: 0, options: [], animations: {
+                            self.catchyPhraseLabel.alpha = 0.0
+                            self.activityIndicator.alpha = 0.0
+                        }, completion: {
+                            (finished) in
+                            if finished {
+                                self.activityIndicator.stopAnimating()
+                                self.presentTabViewController()
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        activityIndicator.startAnimating()
-        self.view.isUserInteractionEnabled = false
-        
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarViewController") as! TabBarViewController
-        
-        DispatchQueue.global(qos: .default).async {
-
-            let nonExistingEnglishFilenames = self.filenamesOfNonExistingHelperFiles(forLanguageUnicodeRange:  self.englishAlphabetUnicodeRange)
-            
-            if (!nonExistingEnglishFilenames.isEmpty) {
-                if let freader = FileReader(filename: "en_bg.dic") {
-                    for filename in nonExistingEnglishFilenames {
-                        freader.createFileForLetter(letter: filename)
-                    }
-                }
-            }
-            
-            let nonExistingBulgarianFilenames = self.filenamesOfNonExistingHelperFiles(forLanguageUnicodeRange:  self.bulgarianAlphabetUnicodeRange)
-            
-            if (!nonExistingBulgarianFilenames.isEmpty) {
-                if let freader = FileReader(filename: "bg_en.kyp") {
-                    for filename in nonExistingBulgarianFilenames {
-                        freader.createFileForLetter(letter: filename)
-                    }
-                }
-            }
-            
-           DispatchQueue.main.async { [weak self] in
-               // UI updates must be on main thread
-               
-               self?.activityIndicator.stopAnimating()
-               vc.modalPresentationStyle = .fullScreen
-               self?.present(vc, animated: false, completion: nil)
-            }
-        }
-        
-        
-        
         // Do any additional setup after loading the view.
+        
+        currentCatchyPhraseIndex = 0
+        catchyPhraseLabel.text = catchyPhrases[currentCatchyPhraseIndex]
+        catchyPhraseLabel.alpha = 0.0
+        
+        tabBar.clipsToBounds = true;
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        let nonExistingEnglishFilenames = self.filenamesOfNonExistingHelperFiles(forLanguageUnicodeRange:  self.englishAlphabetUnicodeRange)
+        
+        let nonExistingBulgarianFilenames = self.filenamesOfNonExistingHelperFiles(forLanguageUnicodeRange:  self.bulgarianAlphabetUnicodeRange)
+        
+        let willHaveToBeLoadingHelperFiles = !nonExistingEnglishFilenames.isEmpty || !nonExistingBulgarianFilenames.isEmpty
+        
+        if willHaveToBeLoadingHelperFiles {
+            
+            executeAnimationCycle()
+            activityIndicator.startAnimating()
+            self.view.isUserInteractionEnabled = false
+            
+            DispatchQueue.global(qos: .default).async {
+                
+                if !nonExistingEnglishFilenames.isEmpty {
+                    if let freader = FileReader(filename: "en_bg.dic") {
+                        for filename in nonExistingEnglishFilenames {
+                            
+                            if self.catchyPhrasesDoneAnimating {
+                                DispatchQueue.main.async { // UI updates on main thred
+                                    self.executeAnimationCycle()
+                                }
+                            }
+                            
+                            freader.createFileForLetter(letter: filename)
+                        }
+                    }
+                }
+                
+                if !nonExistingBulgarianFilenames.isEmpty {
+                    if let freader = FileReader(filename: "bg_en.kyp") {
+                        for filename in nonExistingBulgarianFilenames {
+                            
+                            if self.catchyPhrasesDoneAnimating {
+                                DispatchQueue.main.async { // UI updates on main thred
+                                    self.executeAnimationCycle()
+                                }
+                            }
+                            
+                            freader.createFileForLetter(letter: filename)
+                        }
+                    }
+                }
+                
+                DispatchQueue.main.async { [weak self] in
+                   // UI updates must be on main thread
+                    self?.executeAllSetAnimationAndPresentTabBarViewController()
+                }
+            }
+        } else {
+            self.presentTabViewController()
+        }
     }
     
 
