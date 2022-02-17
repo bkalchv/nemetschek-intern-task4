@@ -12,7 +12,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var tableData = [DictionaryEntry]()
     var searchEngine = SearchEngine()
     var firstInputWithNoNewSuggestions = ""
-    var firstAppearance = true
     var lastSelectedCellIndexPath: IndexPath? = nil
     let selectedCellHeight = 200.0
     let unselectedCellHeight = 50.0
@@ -31,14 +30,12 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         tableView.delegate = self
         tableView.dataSource = self
         
-        if firstAppearance {
-            
-            if let randomDictionaryEntry = searchEngine.randomDictionaryEntry() {
-                wordOfTheDayLabel.text = randomDictionaryEntry.word
-                wordOftheDayTextView.text = randomDictionaryEntry.translation
-            }
-            
-            self.firstAppearance = false
+        wordOfTheDayView.layer.cornerRadius = 10
+        wordOfTheDayView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        
+        if let randomDictionaryEntry = searchEngine.randomDictionaryEntry() {
+            wordOfTheDayLabel.text = randomDictionaryEntry.word
+            wordOftheDayTextView.text = randomDictionaryEntry.translation
         }
         
         // Uncomment the following line to preserve selection between presentations
