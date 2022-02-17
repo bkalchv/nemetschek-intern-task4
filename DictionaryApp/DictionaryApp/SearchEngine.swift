@@ -11,7 +11,7 @@ class SearchEngine {
     
     var letterToEntries: [String : [DictionaryEntry]] = [String : [DictionaryEntry]]()
     
-    var lastValidPrefix: String = ""
+    //var lastValidLongestPrefix: String = ""
     
     func decodeFileForLetter(letter: String) -> [DictionaryEntry] {
         
@@ -76,6 +76,7 @@ class SearchEngine {
             let firstLetterOfInputAsUppercasedString = firstLetterOfInput.uppercased()
             if let entries = letterToEntries[firstLetterOfInputAsUppercasedString]{
                 let longestPrefix = findLongestPrefixInDictionaryEntries(ofWord: input)
+                
                 let dictionaryEntriesWithLongestPrefix = entries.filter( { return $0.word.hasPrefix(longestPrefix)} )
                 if let first = dictionaryEntriesWithLongestPrefix.first { return first }
             }
@@ -84,12 +85,12 @@ class SearchEngine {
         return nil
     }
     
-    func findFollowingMatchesInDictionaryEntries(amountOfMatches: Int, toClosestMatch closestMatch: DictionaryEntry) -> [DictionaryEntry] {
+    func findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: Int, toClosestMatch closestMatch: DictionaryEntry) -> [DictionaryEntry] {
         
         if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entries = letterToEntries[firstLetterOfClosestMatch], let closestMatchIndex = entries.firstIndex(where: {return $0.word == closestMatch.word}) {
         
-            if amountOfMatches <= entries.count {
-                return Array(entries[closestMatchIndex..<(closestMatchIndex + amountOfMatches)])
+            if amountOfFollowingEntries <= entries.count {
+                return Array(entries[closestMatchIndex..<(closestMatchIndex + amountOfFollowingEntries)])
             } else {
                 OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: entries.count)
                 return Array(entries[closestMatchIndex..<(closestMatchIndex + entries.count)])

@@ -11,8 +11,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 
     var tableData = [DictionaryEntry]()
     var searchEngine = SearchEngine()
-    //TODO: what about that? var exceedingLongestValidPrefix = false
-    var selectedCellIndexPath: IndexPath? = nil
+    var firstInputWithNoNewSuggestions = ""
+    var lastSelectedCellIndexPath: IndexPath? = nil
     let selectedCellHeight = 200.0
     let unselectedCellHeight = 50.0
     
@@ -24,18 +24,20 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if let searchBarText = searchBar.text, !searchBarText.isEmpty {
             
             if !tableData.isEmpty && tableData.count <= OptionsManager.shared.suggestionsToBeShown {
-                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: tableData[0])
+                tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: tableData[0])
             }
             
             tableData = Array(tableData[0..<OptionsManager.shared.suggestionsToBeShown])
-            deselectPreviouslySelectedCell()
-            //selectedCellIndexPath = nil // TODO: when uncommented - a bug appears
+            collapsePreviouslySelectedCellIfVisible()
+            //selectedCellIndexPath = nil // TODO: when uncommented - a bug appears :eek:
             tableView.reloadData()
+            
         }
         
-        if let selectedRowIndexPath = self.selectedCellIndexPath, let cell = tableView.cellForRow(at: selectedRowIndexPath) as? WordTableViewCell  {
+        if let lastSelectedRowIndexPath = self.lastSelectedCellIndexPath, let cell = tableView.cellForRow(at: lastSelectedRowIndexPath) as? WordTableViewCell  {
             cell.translationView.isHidden = false
         }
+        
     }
     
     override func viewDidLoad() {
@@ -55,8 +57,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 
         if !OptionsManager.shared.translateOnEachKeyStroke, let searchBarText = searchBar.text, !searchBarText.isEmpty {
             
-            deselectPreviouslySelectedCell()
-            selectedCellIndexPath = nil
+            collapsePreviouslySelectedCellIfVisible()
+            lastSelectedCellIndexPath = nil
             
             let firstLetterOfSearchTextAsUppercasedString = searchBarText.first!.uppercased()
             if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
@@ -64,7 +66,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             }
             
             if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: searchBarText.uppercased()) {
-                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
+                tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
             } else {
                 print("NoClosestMatchNotFound")
             }
@@ -73,26 +75,54 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func areNewSuggestionEntriesPresent(suggestionEntries: [DictionaryEntry]) -> Bool {
+        if suggestionEntries.count != tableData.count { return true }
+        
+        for entryIndex in 0..<suggestionEntries.count {
+            if suggestionEntries[entryIndex].word != tableData[entryIndex].word { return true }
+        }
+        
+        return false
+    }
     
+    func loadEntriesForLetterIfNeeded(letter: String) {
+        let firstLetterOfSearchTextAsUppercasedString = letter.uppercased()
+        if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
+            searchEngine.letterToEntries[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in letterToEntries dictionary
+        }
+    }
+    
+    func updateSuggestionsIfNeeded(for input: String) {
+        if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: input.uppercased()) {
+            let followingSuggestionEntries = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
+            if !areNewSuggestionEntriesPresent(suggestionEntries: followingSuggestionEntries) { // CATCH THERE ARE NO NEW RESULTS
+                self.firstInputWithNoNewSuggestions = input
+            } else {
+                tableData = followingSuggestionEntries
+                tableView.reloadData()
+            }
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
         if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
             
-            deselectPreviouslySelectedCell()
-            selectedCellIndexPath = nil
+            if !firstInputWithNoNewSuggestions.isEmpty {
+                if searchText.hasPrefix(firstInputWithNoNewSuggestions) { // TODO: PAY ATTENTION TO ME, GEORGI
+                    print("No new search query, because of me!")
+                    return
+                } else {
+                    firstInputWithNoNewSuggestions = ""
+                }
+            }
             
-            let firstLetterOfSearchTextAsUppercasedString = firstLetterOfSearchText.uppercased()
-            if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
-                searchEngine.letterToEntries[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in letterToEntries dictionary
-            }
+            collapsePreviouslySelectedCellIfVisible()
+            lastSelectedCellIndexPath = nil
 
-            if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: searchText.uppercased()) {
-                
-                tableData = searchEngine.findFollowingMatchesInDictionaryEntries(amountOfMatches: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
-                
-                tableView.reloadData()
-            } else {
-                print("NoClosestMatchFound")
-            }
+            loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+            updateSuggestionsIfNeeded(for: searchText)
+            
         } else {
             tableData = [DictionaryEntry]()
             tableView.reloadData()
@@ -125,8 +155,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         return cell
     }
     
-    func deselectPreviouslySelectedCell() {
-        if let selectedCellIndexPath = selectedCellIndexPath, let previouslySelectedCell = tableView.cellForRow(at: selectedCellIndexPath) as? WordTableViewCell {
+    func collapsePreviouslySelectedCellIfVisible() {
+        if let selectedCellIndexPath = lastSelectedCellIndexPath, let previouslySelectedCell = tableView.cellForRow(at: selectedCellIndexPath) as? WordTableViewCell {
             previouslySelectedCell.translationView.isHidden.toggle()
         }
     }
@@ -146,14 +176,14 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if let cell = tableView.cellForRow(at: indexPath) as? WordTableViewCell {
             
-            if selectedCellIndexPath == indexPath {
-                if !cell.translationView.isHidden {
+            if lastSelectedCellIndexPath == indexPath {
+                if !cell.translationView.isHidden { // second click
                     presentTranslationViewController(forCell: cell)
                 }
-                selectedCellIndexPath = nil
+                lastSelectedCellIndexPath = nil
             } else {
-                deselectPreviouslySelectedCell()
-                selectedCellIndexPath = indexPath
+                collapsePreviouslySelectedCellIfVisible()
+                lastSelectedCellIndexPath = indexPath
             }
             
             tableView.beginUpdates()
@@ -162,14 +192,14 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             
             tableView.endUpdates()
             
-            if (selectedCellIndexPath != nil) {
-                tableView.scrollToRow(at: selectedCellIndexPath!, at: .top, animated: true)
+            if (lastSelectedCellIndexPath != nil) {
+                tableView.scrollToRow(at: lastSelectedCellIndexPath!, at: .top, animated: true)
             }
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.selectedCellIndexPath == indexPath {
+        if self.lastSelectedCellIndexPath == indexPath {
             return selectedCellHeight
         }
         return unselectedCellHeight

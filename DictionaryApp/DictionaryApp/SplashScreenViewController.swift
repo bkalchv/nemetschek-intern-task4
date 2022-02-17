@@ -59,12 +59,12 @@ class SplashScreenViewController: UIViewController {
         UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: { // Fade in
             self.catchyPhraseLabel.alpha = 1.0
         }, completion: {
-            (finished) in
+            finished in
             if finished {
                 UIView.animate(withDuration: 1.0, delay: 1.0, options: [],  animations: { // Ease away
                     self.catchyPhraseLabel.center = CGPoint(x: self.catchyPhraseLabel.frame.width + UIScreen.main.bounds.width, y: self.catchyPhraseLabel.center.y)
                 }, completion: {
-                    (finished) in
+                    finished in
                     if finished {
                         
                         self.updateCurrentCatchyPhraseIndex()
@@ -76,9 +76,9 @@ class SplashScreenViewController: UIViewController {
                         }
                         
                         UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: { // Ease in
-                            self.catchyPhraseLabel.center = CGPoint(x: 1/2 * UIScreen.main.bounds.width, y: self.catchyPhraseLabel.center.y)
+                            self.catchyPhraseLabel.center = CGPoint(x: 0.5 * UIScreen.main.bounds.width, y: self.catchyPhraseLabel.center.y)
                         }, completion: {
-                            (finished) in
+                            finished in
                             if finished {
                                 self.catchyPhrasesDoneAnimating = true // CatchyPhrasesDoneAnimating updated
                             }
@@ -93,7 +93,7 @@ class SplashScreenViewController: UIViewController {
         UIView.animate(withDuration: 1.0, delay: 1.0, options: [],  animations: { // Ease away
             self.catchyPhraseLabel.center = CGPoint(x: self.catchyPhraseLabel.frame.width + UIScreen.main.bounds.width, y: self.catchyPhraseLabel.center.y)
         }, completion: {
-            (finished) in
+            finished in
             if finished {
                 
                 self.updateCurrentCatchyPhraseIndex()
@@ -107,7 +107,7 @@ class SplashScreenViewController: UIViewController {
                 UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: { // Ease in
                     self.catchyPhraseLabel.center = CGPoint(x: 1/2 * UIScreen.main.bounds.width, y: self.catchyPhraseLabel.center.y)
                 }, completion: {
-                    (finished) in
+                    finished in
                     if finished {
                         self.catchyPhrasesDoneAnimating = true
                     }
@@ -137,7 +137,7 @@ class SplashScreenViewController: UIViewController {
         UIView.animate(withDuration: 0.5, delay: 0, options: [], animations: {
             self.catchyPhraseLabel.alpha = 0.0
         }, completion: {
-            (finished) in
+            finished in
             if finished {
                 
                 self.catchyPhraseLabel.text = "All set!"
@@ -145,13 +145,13 @@ class SplashScreenViewController: UIViewController {
                 UIView.animate(withDuration: 1.0, delay: 0, options: [], animations: {
                     self.catchyPhraseLabel.alpha = 1.0
                 }, completion: {
-                    (finished) in
+                    finished in
                     if finished {
                         UIView.animate(withDuration: 1.0, delay: 0, options: [], animations: {
                             self.catchyPhraseLabel.alpha = 0.0
                             self.activityIndicator.alpha = 0.0
                         }, completion: {
-                            (finished) in
+                            finished in
                             if finished {
                                 self.activityIndicator.stopAnimating()
                                 self.presentTabViewController()
@@ -226,6 +226,7 @@ class SplashScreenViewController: UIViewController {
                     self?.executeAllSetAnimationAndPresentTabBarViewController()
                 }
             }
+            
         } else {
             self.presentTabViewController()
         }
