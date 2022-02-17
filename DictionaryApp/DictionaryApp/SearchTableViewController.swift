@@ -18,6 +18,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     let unselectedCellHeight = 50.0
     
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var stackViewVCContent: UIStackView!
+    @IBOutlet weak var wordOfTheDayView: UIView!
+    @IBOutlet weak var wordOfTheDayLabel: UILabel!
+    @IBOutlet weak var wordOftheDayTextView: UITextView!
+    @IBOutlet weak var wordOfTheDayCloseButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
         
     override func viewDidLoad() {
@@ -29,7 +34,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if firstAppearance {
             
             if let randomDictionaryEntry = searchEngine.randomDictionaryEntry() {
-                print(randomDictionaryEntry)
+                wordOfTheDayLabel.text = randomDictionaryEntry.word
+                wordOftheDayTextView.text = randomDictionaryEntry.translation
             }
             
             self.firstAppearance = false
@@ -85,6 +91,22 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
+    func hideWordOfTheDayView() {
+        UIView.animate(withDuration: 0.25, delay: 0.0, options:[], animations: {
+            self.wordOfTheDayView.isHidden = true
+            self.stackViewVCContent.removeArrangedSubview(self.wordOfTheDayView)
+            self.stackViewVCContent.layoutIfNeeded()
+        }, completion: { finished in
+            if finished {
+               
+            }
+        })
+    }
+    
+    @IBAction func onWordOfTheDayViewCloseButtonClick(_ sender: Any) {
+        hideWordOfTheDayView()
+    }
+    
     func areNewSuggestionEntriesPresent(suggestionEntries: [DictionaryEntry]) -> Bool {
         if suggestionEntries.count != tableData.count { return true }
         
@@ -115,21 +137,44 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
             
-            if !firstInputWithNoNewSuggestions.isEmpty {
-                if searchText.hasPrefix(firstInputWithNoNewSuggestions) { // TODO: PAY ATTENTION TO ME, GEORGI
-                    print("No new search query, because of me!")
-                    return
-                } else {
-                    firstInputWithNoNewSuggestions = ""
+            if self.wordOfTheDayView.isDescendant(of: self.stackViewVCContent) {
+                
+                DispatchQueue.main.async { // UI updates on main thred
+                    self.hideWordOfTheDayView()
                 }
-            }
-            
-            collapsePreviouslySelectedCellIfVisible()
-            lastSelectedCellIndexPath = nil
+                DispatchQueue.main.async { // UI updates on main thred
+                    if !self.firstInputWithNoNewSuggestions.isEmpty {
+                        if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) { // TODO: PAY ATTENTION TO ME, GEORGI
+                            print("No new search query, because of me!")
+                            return
+                        } else {
+                            self.firstInputWithNoNewSuggestions = ""
+                        }
+                    }
+                    
+                    self.collapsePreviouslySelectedCellIfVisible()
+                    self.lastSelectedCellIndexPath = nil
 
-            loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-            updateSuggestionsIfNeeded(for: searchText)
-            
+                    self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+                    self.updateSuggestionsIfNeeded(for: searchText)
+                }
+
+            } else {
+                if !firstInputWithNoNewSuggestions.isEmpty {
+                    if searchText.hasPrefix(firstInputWithNoNewSuggestions) { // TODO: PAY ATTENTION TO ME, GEORGI
+                        print("No new search query, because of me!")
+                        return
+                    } else {
+                        firstInputWithNoNewSuggestions = ""
+                    }
+                }
+                
+                collapsePreviouslySelectedCellIfVisible()
+                lastSelectedCellIndexPath = nil
+
+                loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+                updateSuggestionsIfNeeded(for: searchText)
+            }
         } else {
             tableData = [DictionaryEntry]()
             tableView.reloadData()
