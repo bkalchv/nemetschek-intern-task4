@@ -12,12 +12,35 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var tableData = [DictionaryEntry]()
     var searchEngine = SearchEngine()
     var firstInputWithNoNewSuggestions = ""
+    var firstAppearance = true
     var lastSelectedCellIndexPath: IndexPath? = nil
     let selectedCellHeight = 200.0
     let unselectedCellHeight = 50.0
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+        
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        searchBar.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        if firstAppearance {
+            
+            if let randomDictionaryEntry = searchEngine.randomDictionaryEntry() {
+                print(randomDictionaryEntry)
+            }
+            
+            self.firstAppearance = false
+        }
+        
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         
@@ -38,19 +61,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             cell.translationView.isHidden = false
         }
         
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        searchBar.delegate = self
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -86,10 +96,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func loadEntriesForLetterIfNeeded(letter: String) {
-        let firstLetterOfSearchTextAsUppercasedString = letter.uppercased()
-        if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
-            searchEngine.letterToEntries[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in letterToEntries dictionary
-        }
+        searchEngine.loadEntriesForLetterIfNeeded(letter: letter)
     }
     
     func updateSuggestionsIfNeeded(for input: String) {
@@ -139,7 +146,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.tableData.count
     }
-
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         

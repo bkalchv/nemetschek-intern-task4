@@ -10,8 +10,32 @@ import Foundation
 class SearchEngine {
     
     var letterToEntries: [String : [DictionaryEntry]] = [String : [DictionaryEntry]]()
+    let languageUnicodeRanges = [Unicode.Scalar("A").value...Unicode.Scalar("Z").value, Unicode.Scalar("А").value...Unicode.Scalar("Я").value]
     
-    //var lastValidLongestPrefix: String = ""
+    func chooseRandomLanguage() -> ClosedRange<UInt32> {
+        let randomLanguageRangeIndex = Int.random(in: 0..<languageUnicodeRanges.count)
+        return languageUnicodeRanges[randomLanguageRangeIndex]
+    }
+    
+    func randomLetterUnicode(from languageRange: ClosedRange<UInt32>) -> UInt32 {
+        var randomLetterUnicode = UInt32.random(in: languageRange)
+        
+        while randomLetterUnicode == Unicode.Scalar("Э").value || randomLetterUnicode == Unicode.Scalar("Ы").value {
+            randomLetterUnicode = UInt32.random(in: languageRange)
+        }
+        
+        return randomLetterUnicode
+    }
+    
+    func randomDictionaryEntry() -> DictionaryEntry? {
+        let randomLanguageRange = chooseRandomLanguage()
+        let randomLetterUnicode = randomLetterUnicode(from: randomLanguageRange)
+        guard let randomLetterUnicodeScalar = Unicode.Scalar(randomLetterUnicode) else { return nil }
+        let randomLetterUppercased = String(randomLetterUnicodeScalar)
+        loadEntriesForLetterIfNeeded(letter: randomLetterUppercased)
+        guard let randomDictionaryEntry = letterToEntries[randomLetterUppercased]?.randomElement() else { return nil }
+        return randomDictionaryEntry
+    }
     
     func decodeFileForLetter(letter: String) -> [DictionaryEntry] {
         
@@ -41,6 +65,13 @@ class SearchEngine {
         }
 
         return result
+    }
+    
+    func loadEntriesForLetterIfNeeded(letter: String) {
+        let firstLetterOfSearchTextAsUppercasedString = letter.uppercased()
+        if !doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
+            letterToEntries[firstLetterOfSearchTextAsUppercasedString] = decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in letterToEntries dictionary
+        }
     }
 
     func doesKeyExistInWordsDictionary(key: String) -> Bool {
@@ -99,4 +130,5 @@ class SearchEngine {
         
         return [DictionaryEntry]()
     }
+    
 }

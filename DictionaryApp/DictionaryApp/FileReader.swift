@@ -7,8 +7,6 @@
 
 import Foundation
 
-let pathToResoruces = "/Users/bkalchev/MyPlayground2.playground/Resources"
-
 class FileReader {
 
     let wordTag = "@"
