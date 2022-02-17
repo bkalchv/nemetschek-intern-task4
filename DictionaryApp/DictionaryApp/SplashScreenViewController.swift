@@ -34,7 +34,7 @@ class SplashScreenViewController: UIViewController {
                 //print(fileUrl.absoluteString)
                 
                 let filePath = fileUrl.path
-                //print(filePath)
+                print(filePath)
                 
                 if !fileManager.fileExists(atPath: filePath) { filenamesOfNonExistingHelperFiles.append(String(letter)) }
             }
@@ -43,16 +43,19 @@ class SplashScreenViewController: UIViewController {
         return filenamesOfNonExistingHelperFiles
     }
     
-    func nextCatchyPhraseIndex() -> Int {
-        if (currentCatchyPhraseIndex == catchyPhrases.count - 1) {
-            return 0;
-        } else {
-            return currentCatchyPhraseIndex + 1;
+    func generateRandomCatchyPhraseIndexDifferentThanCurrent() -> Int {
+        
+        var randomCatchyPhraseIndex = Int.random(in: 0..<catchyPhrases.count)
+        
+        while randomCatchyPhraseIndex == self.currentCatchyPhraseIndex {
+            randomCatchyPhraseIndex = Int.random(in: 0..<catchyPhrases.count)
         }
+        
+        return randomCatchyPhraseIndex
     }
     
     func updateCurrentCatchyPhraseIndex() {
-        currentCatchyPhraseIndex = nextCatchyPhraseIndex();
+        currentCatchyPhraseIndex = generateRandomCatchyPhraseIndexDifferentThanCurrent();
     }
     
     func executeFirstAnimationCycle() {
