@@ -16,7 +16,6 @@ class TranslationViewController: UIViewController, UISearchBarDelegate {
     var translation: String = ""
     @IBOutlet weak var wordLabel: UILabel!
     @IBOutlet weak var translationTextField: UITextView!
-    @IBOutlet weak var backButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +24,5 @@ class TranslationViewController: UIViewController, UISearchBarDelegate {
         
         wordLabel.text = word
         translationTextField.text = translation
-    }
-    
-    @IBAction func onBackButtonClick(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
     }
 }
