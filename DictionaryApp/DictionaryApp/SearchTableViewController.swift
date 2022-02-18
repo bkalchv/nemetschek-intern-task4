@@ -29,6 +29,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
+        wordOfTheDayView.isHidden = true
         
         wordOfTheDayView.layer.cornerRadius = 10
         wordOfTheDayView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
@@ -66,6 +67,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        showWordOfTheDayView()
+    }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 
         if !OptionsManager.shared.translateOnEachKeyStroke, let searchBarText = searchBar.text, !searchBarText.isEmpty {
@@ -88,16 +93,24 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
-    func hideWordOfTheDayView() {
+    func showWordOfTheDayView() {
         UIView.animate(withDuration: 0.25, delay: 0.0, options:[], animations: {
-            self.wordOfTheDayView.isHidden = true
-            self.stackViewVCContent.removeArrangedSubview(self.wordOfTheDayView)
+            self.wordOfTheDayView.isHidden = false
+            //self.stackViewVCContent.removeArrangedSubview(self.wordOfTheDayView)
             self.stackViewVCContent.layoutIfNeeded()
         }, completion: { finished in
             if finished {
                
             }
         })
+    }
+    
+    func hideWordOfTheDayView() {
+        UIView.animate(withDuration: 0.25, delay: 0.0, options:[], animations: {
+            self.wordOfTheDayView.isHidden = true
+            self.stackViewVCContent.removeArrangedSubview(self.wordOfTheDayView)
+            self.stackViewVCContent.layoutIfNeeded()
+        }, completion: nil)
     }
     
     @IBAction func onWordOfTheDayViewCloseButtonClick(_ sender: Any) {
