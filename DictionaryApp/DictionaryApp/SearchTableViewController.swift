@@ -96,7 +96,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func showWordOfTheDayView() {
         UIView.animate(withDuration: 0.25, delay: 0.0, options:[], animations: {
             self.wordOfTheDayView.isHidden = false
-            //self.stackViewVCContent.removeArrangedSubview(self.wordOfTheDayView)
             self.stackViewVCContent.layoutIfNeeded()
         }, completion: { finished in
             if finished {
@@ -107,10 +106,17 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func hideWordOfTheDayView() {
         UIView.animate(withDuration: 0.25, delay: 0.0, options:[], animations: {
-            self.wordOfTheDayView.isHidden = true
-            self.stackViewVCContent.removeArrangedSubview(self.wordOfTheDayView)
-            self.stackViewVCContent.layoutIfNeeded()
-        }, completion: nil)
+            self.wordOfTheDayView.alpha = 0.0
+            self.wordOfTheDayView.center.y -= 1.5 * self.wordOfTheDayView.frame.height
+            self.tableView.center.y -= self.wordOfTheDayView.frame.height
+        }, completion: { finished in
+            if finished, self.wordOfTheDayView != nil {
+                self.stackViewVCContent.removeArrangedSubview(self.wordOfTheDayView)
+                self.wordOfTheDayView.removeFromSuperview()
+                self.stackViewVCContent.layoutIfNeeded()
+            }
+        })
+    
     }
     
     @IBAction func onWordOfTheDayViewCloseButtonClick(_ sender: Any) {
@@ -147,32 +153,15 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
             
-            if self.wordOfTheDayView.isDescendant(of: self.stackViewVCContent) {
+            if searchText.count == 1, self.wordOfTheDayView != nil, self.wordOfTheDayView.isDescendant(of: self.stackViewVCContent) {
                 
-                DispatchQueue.main.async { // UI updates on main thred
-                    self.hideWordOfTheDayView()
-                }
-                DispatchQueue.main.async { // UI updates on main thred
-                    if !self.firstInputWithNoNewSuggestions.isEmpty {
-                        if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) { // TODO: PAY ATTENTION TO ME, GEORGI
-                            print("No new search query, because of me!")
-                            return
-                        } else {
-                            self.firstInputWithNoNewSuggestions = ""
-                        }
-                    }
-                    
-                    self.collapsePreviouslySelectedCellIfVisible()
-                    self.lastSelectedCellIndexPath = nil
-
-                    self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-                    self.updateSuggestionsIfNeeded(for: searchText)
-                }
-
+                self.hideWordOfTheDayView()
+                self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+                self.updateSuggestionsIfNeeded(for: searchText)
+                
             } else {
                 if !firstInputWithNoNewSuggestions.isEmpty {
-                    if searchText.hasPrefix(firstInputWithNoNewSuggestions) { // TODO: PAY ATTENTION TO ME, GEORGI
-                        print("No new search query, because of me!")
+                    if searchText.hasPrefix(firstInputWithNoNewSuggestions) {
                         return
                     } else {
                         firstInputWithNoNewSuggestions = ""
