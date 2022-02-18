@@ -75,22 +75,26 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 
-        if !OptionsManager.shared.translateOnEachKeyStroke, let searchBarText = searchBar.text, !searchBarText.isEmpty {
+        if !OptionsManager.shared.translateOnEachKeyStroke, let searchBarText = searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
+            
+            if self.wordOfTheDayView != nil, self.wordOfTheDayView.isDescendant(of: self.stackViewVCContent) {
+                self.hideWordOfTheDayView()
+            } else {
+                if !firstInputWithNoNewSuggestions.isEmpty {
+                    if searchBarText.hasPrefix(firstInputWithNoNewSuggestions) {
+                        return
+                    } else {
+                        firstInputWithNoNewSuggestions = ""
+                    }
+                }
+            }
             
             collapsePreviouslySelectedCellIfVisible()
             lastSelectedCellIndexPath = nil
-            
-            let firstLetterOfSearchTextAsUppercasedString = searchBarText.first!.uppercased()
-            if !searchEngine.doesKeyExistInWordsDictionary(key: firstLetterOfSearchTextAsUppercasedString) {
-                searchEngine.letterToEntries[firstLetterOfSearchTextAsUppercasedString] = searchEngine.decodeFileForLetter(letter: firstLetterOfSearchTextAsUppercasedString) // loads words in wordsDictionary
-            }
-            
-            if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: searchBarText.uppercased()) {
-                tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
-            } else {
-                print("NoClosestMatchNotFound")
-            }
-            
+            loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+            updateSuggestionsIfNeeded(for: searchBarText)
+        } else {
+            tableData = [DictionaryEntry]()
             tableView.reloadData()
         }
     }
@@ -152,11 +156,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
             
             if searchText.count == 1, self.wordOfTheDayView != nil, self.wordOfTheDayView.isDescendant(of: self.stackViewVCContent) {
-                
                 self.hideWordOfTheDayView()
-                self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-                self.updateSuggestionsIfNeeded(for: searchText)
-                
             } else {
                 if !firstInputWithNoNewSuggestions.isEmpty {
                     if searchText.hasPrefix(firstInputWithNoNewSuggestions) {
@@ -165,12 +165,12 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                         firstInputWithNoNewSuggestions = ""
                     }
                 }
-                
-                collapsePreviouslySelectedCellIfVisible()
-                lastSelectedCellIndexPath = nil
-                loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-                updateSuggestionsIfNeeded(for: searchText)
             }
+            
+            collapsePreviouslySelectedCellIfVisible()
+            lastSelectedCellIndexPath = nil
+            loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+            updateSuggestionsIfNeeded(for: searchText)
         } else {
             tableData = [DictionaryEntry]()
             tableView.reloadData()
