@@ -14,6 +14,8 @@ class WordTableViewCell: UITableViewCell {
     @IBOutlet weak var translationView: UIView!
     @IBOutlet weak var translationTextView: UITextView!
     
+    var isExpanded = false
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -11,11 +11,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 
     var tableData = [DictionaryEntry]()
     var searchEngine = SearchEngine()
+    var didAppearOnce = false
     var firstInputWithNoNewSuggestions = ""
     var lastSelectedCellIndexPath: IndexPath? = nil
     let selectedCellHeight = 200.0
     let unselectedCellHeight = 50.0
-    
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var stackViewVCContent: UIStackView!
     @IBOutlet weak var wordOfTheDayView: UIView!
@@ -30,7 +30,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         tableView.delegate = self
         tableView.dataSource = self
         wordOfTheDayView.isHidden = true
-        
         wordOfTheDayView.layer.cornerRadius = 10
         wordOfTheDayView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         
@@ -68,7 +67,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        showWordOfTheDayView()
+        if !didAppearOnce {
+            showWordOfTheDayView()
+            didAppearOnce = true
+        }
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -97,11 +99,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         UIView.animate(withDuration: 0.25, delay: 0.0, options:[], animations: {
             self.wordOfTheDayView.isHidden = false
             self.stackViewVCContent.layoutIfNeeded()
-        }, completion: { finished in
-            if finished {
-               
-            }
-        })
+        }, completion: nil)
     }
     
     func hideWordOfTheDayView() {
@@ -140,7 +138,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func updateSuggestionsIfNeeded(for input: String) {
         if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: input.uppercased()) {
             let followingSuggestionEntries = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
-            if !areNewSuggestionEntriesPresent(suggestionEntries: followingSuggestionEntries) { // CATCH THERE ARE NO NEW RESULTS
+            if !areNewSuggestionEntriesPresent(suggestionEntries: followingSuggestionEntries) { // CATCH THERE ARE NO NEW SUGGESTIONS
                 self.firstInputWithNoNewSuggestions = input
             } else {
                 tableData = followingSuggestionEntries
@@ -170,7 +168,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 
                 collapsePreviouslySelectedCellIfVisible()
                 lastSelectedCellIndexPath = nil
-
                 loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
                 updateSuggestionsIfNeeded(for: searchText)
             }
@@ -179,7 +176,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             tableView.reloadData()
         }
     }
-
 
     // MARK: - Table view data source
 
@@ -208,6 +204,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func collapsePreviouslySelectedCellIfVisible() {
         if let selectedCellIndexPath = lastSelectedCellIndexPath, let previouslySelectedCell = tableView.cellForRow(at: selectedCellIndexPath) as? WordTableViewCell {
             previouslySelectedCell.translationView.isHidden.toggle()
+            previouslySelectedCell.isExpanded = false
         }
     }
     
@@ -227,7 +224,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if let cell = tableView.cellForRow(at: indexPath) as? WordTableViewCell {
             
             if lastSelectedCellIndexPath == indexPath {
-                if !cell.translationView.isHidden { // second click
+                if cell.isExpanded { // second click
                     presentTranslationViewController(forCell: cell)
                 }
                 lastSelectedCellIndexPath = nil
@@ -239,6 +236,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             tableView.beginUpdates()
             
             cell.translationView.isHidden.toggle()
+            cell.isExpanded = true
             
             tableView.endUpdates()
             
