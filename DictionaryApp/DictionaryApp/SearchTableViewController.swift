@@ -20,6 +20,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     let selectedCellHeight = 200.0
     let unselectedCellHeight = 50.0
     
+    var wordOfTheDayDictionaryEntry: DictionaryEntry? = nil
     var wordOfTheDayView : WordOfTheDayView? = nil
     
     @IBOutlet weak var searchBar: UISearchBar!
@@ -57,9 +58,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         tableView.delegate = self
         tableView.dataSource = self
         loadAndSetupWordOfTheDayView()
+        wordOfTheDayDictionaryEntry = searchEngine.randomDictionaryEntry()
         shouldShowSectionHeader = true
         
-        if let wordOfTheDayView = wordOfTheDayView, let randomDictionaryEntry = searchEngine.randomDictionaryEntry() {
+        
+        if let wordOfTheDayView = wordOfTheDayView, let randomDictionaryEntry = wordOfTheDayDictionaryEntry {
             wordOfTheDayView.labelWordOfTheDay.text = randomDictionaryEntry.word
             wordOfTheDayView.textViewTranslation.text = randomDictionaryEntry.translation
         }
@@ -73,7 +76,14 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     override func viewWillAppear(_ animated: Bool) {
         
-        if let searchBarText = searchBar.text, !searchBarText.isEmpty {
+        if let wordOfTheDayView = wordOfTheDayView, let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didAppearOnce {
+            if let word = wordOfTheDayView.labelWordOfTheDay.text {
+                tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: wordOfTheDayEntry)
+                searchBar.searchTextField.text = word
+            }
+        }
+        
+        if let searchBarText = searchBar.text, !searchBarText.isEmpty, didAppearOnce {
             
             if !tableData.isEmpty && tableData.count <= OptionsManager.shared.suggestionsToBeShown {
                 tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: tableData[0])
@@ -88,6 +98,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if let lastSelectedRowIndexPath = self.lastSelectedCellIndexPath, let cell = tableView.cellForRow(at: lastSelectedRowIndexPath) as? WordTableViewCell  {
             cell.translationView.isHidden = false
+            cell.isExpanded = true
         }
         
     }
