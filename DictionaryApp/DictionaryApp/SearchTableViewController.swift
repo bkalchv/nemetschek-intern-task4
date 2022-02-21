@@ -144,10 +144,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             })
         }
     }
-        
-    func collapseView() {
-        hideWordOfTheDayView()
-    }
     
     func suggestionEntries(forInput input: String) -> [DictionaryEntry] {
         if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: input.uppercased()) {

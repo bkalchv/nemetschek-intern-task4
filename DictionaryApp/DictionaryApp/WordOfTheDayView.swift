@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol WordOfTheDayViewDelegate: AnyObject {
-    func collapseView()
+    func hideWordOfTheDayView()
 }
 
 class WordOfTheDayView : UIView {
@@ -21,6 +21,6 @@ class WordOfTheDayView : UIView {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
     @IBAction func onButtonCloseClick(_ sender: Any) {
-        delegate?.collapseView()
+        delegate?.hideWordOfTheDayView()
     }
 }
