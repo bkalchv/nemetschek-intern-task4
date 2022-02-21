@@ -10,7 +10,7 @@ import UIKit
 class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, WordOfTheDayViewDelegate {
     
     var tableData = [DictionaryEntry]()
-    var shouldShowHeaderSection = false
+    var shouldShowSectionHeader = false
     let headerSectionHeight = 200.0
     var searchEngine = SearchEngine()
     var wasTextPasted = false
@@ -29,19 +29,35 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 //    @IBOutlet weak var wordOftheDayTextView: UITextView!
 //    @IBOutlet weak var wordOfTheDayCloseButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
-        
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        searchBar.delegate = self
-        tableView.delegate = self
-        tableView.dataSource = self
+    
+    func loadAndSetupWordOfTheDayView() {
         let viewFromNib: WordOfTheDayView = Bundle.main.loadNibNamed("wordOfTheDayView", owner: self, options: nil)?.first as! WordOfTheDayView
         wordOfTheDayView = viewFromNib
         wordOfTheDayView?.delegate = self
         wordOfTheDayView?.layer.cornerRadius = 10
         wordOfTheDayView?.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         wordOfTheDayView?.heightConstraint.constant = 0
-        shouldShowHeaderSection = true
+        
+        wordOfTheDayView?.labelWordOfTheDay.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onLabelWordOfTheDayTap(tapGestureRecognizer:)))
+        wordOfTheDayView?.labelWordOfTheDay.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func onLabelWordOfTheDayTap(tapGestureRecognizer: UITapGestureRecognizer) {
+        
+        if let wordOfTheDayView = wordOfTheDayView, let word = wordOfTheDayView.labelWordOfTheDay.text, let translation = wordOfTheDayView.textViewTranslation.text {
+            presentTranslationViewController(forWord: word, forTranslation: translation)
+        }
+        
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        searchBar.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        loadAndSetupWordOfTheDayView()
+        shouldShowSectionHeader = true
         
         if let wordOfTheDayView = wordOfTheDayView, let randomDictionaryEntry = searchEngine.randomDictionaryEntry() {
             wordOfTheDayView.labelWordOfTheDay.text = randomDictionaryEntry.word
@@ -77,7 +93,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return shouldShowHeaderSection ? headerSectionHeight : 0
+        return shouldShowSectionHeader ? headerSectionHeight : 0
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -87,7 +103,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         //viewInSection?.center = tableView.convert(tableView.center, from:tableView.superview)
         //viewInSection.center = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: wordOfTheDayView!.center.y);
         
-        return shouldShowHeaderSection ? self.wordOfTheDayView : nil
+        return shouldShowSectionHeader ? self.wordOfTheDayView : nil
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -135,7 +151,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             self.wordOfTheDayView!.heightConstraint.constant = 0
             UIView.animate(withDuration: 0.5, animations: {
                 self.view.layoutIfNeeded()
-                self.shouldShowHeaderSection = false
+                self.shouldShowSectionHeader = false
             }, completion: {
                 finished in
                 if finished {
@@ -261,13 +277,17 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func presentTranslationViewController(forCell cell: WordTableViewCell) {
         if let cellWord = cell.wordLabel.text {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let translationVC: TranslationViewController = storyboard.instantiateViewController(withIdentifier: "TranslationViewController") as! TranslationViewController
-            translationVC.modalPresentationStyle = .fullScreen
-            translationVC.word = cellWord
-            translationVC.translation = cell.translationTextView.text
-            self.navigationController?.pushViewController(translationVC, animated: true)
+            presentTranslationViewController(forWord: cellWord, forTranslation: cell.translationTextView.text)
         }
+    }
+    
+    func presentTranslationViewController(forWord word: String, forTranslation translation: String) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let translationVC: TranslationViewController = storyboard.instantiateViewController(withIdentifier: "TranslationViewController") as! TranslationViewController
+        translationVC.modalPresentationStyle = .fullScreen
+        translationVC.word = word
+        translationVC.translation = translation
+        self.navigationController?.pushViewController(translationVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
