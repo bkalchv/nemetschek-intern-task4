@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4219D37D27BFF86F00D1059B /* wordOfTheDayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4219D37C27BFF86F00D1059B /* wordOfTheDayView.xib */; };
+		4219D37F27BFFAAB00D1059B /* WordOfTheDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4219D37E27BFFAAB00D1059B /* WordOfTheDayView.swift */; };
 		422A557D27A2E8B000B24B80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422A557C27A2E8B000B24B80 /* AppDelegate.swift */; };
 		422A557F27A2E8B000B24B80 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422A557E27A2E8B000B24B80 /* SceneDelegate.swift */; };
 		422A558127A2E8B000B24B80 /* TranslationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422A558027A2E8B000B24B80 /* TranslationViewController.swift */; };
@@ -29,6 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4219D37C27BFF86F00D1059B /* wordOfTheDayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = wordOfTheDayView.xib; sourceTree = "<group>"; };
+		4219D37E27BFFAAB00D1059B /* WordOfTheDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordOfTheDayView.swift; sourceTree = "<group>"; };
 		422A557927A2E8B000B24B80 /* DictionaryApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DictionaryApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		422A557C27A2E8B000B24B80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		422A557E27A2E8B000B24B80 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -85,9 +89,11 @@
 				422A557C27A2E8B000B24B80 /* AppDelegate.swift */,
 				422A557E27A2E8B000B24B80 /* SceneDelegate.swift */,
 				422A558227A2E8B000B24B80 /* Main.storyboard */,
+				4219D37C27BFF86F00D1059B /* wordOfTheDayView.xib */,
 				42BAC0D127B6995500387E9D /* TabBarViewController.swift */,
 				42BAC0CF27B6931200387E9D /* SplashScreenViewController.swift */,
 				42309A3127B555A2002967F9 /* SearchTableViewController.swift */,
+				4219D37E27BFFAAB00D1059B /* WordOfTheDayView.swift */,
 				422A558027A2E8B000B24B80 /* TranslationViewController.swift */,
 				42309A3727B5A2FD002967F9 /* OptionsViewController.swift */,
 				42309A3327B56B00002967F9 /* WordTableViewCell.swift */,
@@ -176,6 +182,7 @@
 				42539D0A27AACD9900E74B53 /* smallerEnBg.dic in Resources */,
 				42539D0627AAC22600E74B53 /* bg_en.kyp in Resources */,
 				422A558927A2E8B100B24B80 /* LaunchScreen.storyboard in Resources */,
+				4219D37D27BFF86F00D1059B /* wordOfTheDayView.xib in Resources */,
 				425D572B27B3FE84008EC553 /* Assets.xcassets in Resources */,
 				422A558427A2E8B000B24B80 /* Main.storyboard in Resources */,
 			);
@@ -188,6 +195,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4219D37F27BFFAAB00D1059B /* WordOfTheDayView.swift in Sources */,
 				42309A3627B59F67002967F9 /* OptionsManager.swift in Sources */,
 				42CCDB8027B1525A00BB4647 /* DictionaryEntry.swift in Sources */,
 				42309A3427B56B00002967F9 /* WordTableViewCell.swift in Sources */,
