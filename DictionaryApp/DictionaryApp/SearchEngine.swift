@@ -123,7 +123,13 @@ class SearchEngine {
             if amountOfFollowingEntries <= entries.count {
                 return Array(entries[closestMatchIndex..<(closestMatchIndex + amountOfFollowingEntries)])
             } else {
+                
                 OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: entries.count)
+                
+                if entries.count == 1 {
+                    return [closestMatch]
+                }
+                
                 return Array(entries[closestMatchIndex..<(closestMatchIndex + entries.count)])
             }
         }

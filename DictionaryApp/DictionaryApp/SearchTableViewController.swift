@@ -67,7 +67,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         }
         
-        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -118,13 +117,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         return shouldShowSectionHeader ? headerSectionHeight : 0
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        // TODO: bring width back to 300, ask how to center the view
-        //var viewInSection = self.wordOfTheDayView
-        //viewInSection?.center = tableView.convert(tableView.center, from:tableView.superview)
-        //viewInSection.center = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: wordOfTheDayView!.center.y);
-        
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {      
         return shouldShowSectionHeader ? self.feelingOldView : nil
     }
     
