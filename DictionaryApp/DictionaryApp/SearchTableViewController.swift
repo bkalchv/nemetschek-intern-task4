@@ -117,7 +117,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         return shouldShowSectionHeader ? headerSectionHeight : 0
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {      
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return shouldShowSectionHeader ? self.feelingOldView : nil
     }
     
@@ -273,23 +273,29 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell: WordTableViewCell = tableView.dequeueReusableCell(withIdentifier: "WordCell", for: indexPath) as! WordTableViewCell
-        
-        if lastSelectedCellIndexPath != nil && indexPath == lastSelectedCellIndexPath {
-            cell.translationView.isHidden.toggle()
-            cell.isExpanded = true
-        }
-        
+            
         let entry: DictionaryEntry = self.tableData[indexPath.row]
         
         cell.wordLabel.text = entry.word
         cell.translationTextView.text = entry.translation
         
-        if indexPath.row == 0 && !didAppearOnce && shouldShowSectionHeader {
-            cell.translationView.isHidden.toggle()
-            cell.isExpanded = true
-            lastSelectedCellIndexPath = indexPath
+        if indexPath.row == 0 && entry.word == wordOfTheDayDictionaryEntry?.word {
+            
+            cell.lightbulbImage.isHidden = false
+            
+            if !didAppearOnce {
+                lastSelectedCellIndexPath = indexPath
+                cell.translationView.isHidden = false
+                cell.isExpanded = true
+            } else {
+                //TODO:
+            }
+            
+        } else {
+            cell.lightbulbImage.isHidden = true
+            cell.translationView.isHidden = true
+            cell.isExpanded = false
         }
-        
         //Configure the cell...
 
         return cell

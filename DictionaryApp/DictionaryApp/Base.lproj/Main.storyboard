@@ -177,18 +177,27 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;word&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRu-HE-FQ0">
-                                                                    <rect key="frame" x="20" y="20" width="374" height="20.5"/>
+                                                                    <rect key="frame" x="20" y="15" width="341" height="20.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
+                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="baseline_lightbulb_black_24pt" translatesAutoresizingMaskIntoConstraints="NO" id="6fa-if-Mqr">
+                                                                    <rect key="frame" x="371" y="7.5" width="35" height="35"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="35" id="F6y-HX-aUx"/>
+                                                                        <constraint firstAttribute="width" constant="35" id="uvM-QI-jvz"/>
+                                                                    </constraints>
+                                                                </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="trailing" secondItem="QRu-HE-FQ0" secondAttribute="trailing" constant="20" id="3j8-1q-7jo"/>
+                                                                <constraint firstItem="QRu-HE-FQ0" firstAttribute="centerY" secondItem="HyQ-ly-wyU" secondAttribute="centerY" id="2ga-K1-QgZ"/>
+                                                                <constraint firstItem="6fa-if-Mqr" firstAttribute="centerY" secondItem="QRu-HE-FQ0" secondAttribute="centerY" id="WOa-xi-PnD"/>
+                                                                <constraint firstItem="6fa-if-Mqr" firstAttribute="leading" secondItem="QRu-HE-FQ0" secondAttribute="trailing" constant="10" id="Xg3-yw-vAW"/>
                                                                 <constraint firstAttribute="width" constant="414" id="cLR-op-lkY"/>
                                                                 <constraint firstItem="QRu-HE-FQ0" firstAttribute="leading" secondItem="HyQ-ly-wyU" secondAttribute="leading" constant="20" symbolic="YES" id="kOS-qL-6vK"/>
-                                                                <constraint firstItem="QRu-HE-FQ0" firstAttribute="top" secondItem="HyQ-ly-wyU" secondAttribute="top" constant="20" id="z3k-c4-0TZ"/>
+                                                                <constraint firstAttribute="trailing" secondItem="6fa-if-Mqr" secondAttribute="trailing" constant="8" id="rAw-pP-Wfk"/>
                                                                 <constraint firstAttribute="height" constant="50" id="zUx-hV-ugz"/>
                                                             </constraints>
                                                         </view>
@@ -215,12 +224,13 @@
                                                         </view>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="GbN-B5-o5M" firstAttribute="top" secondItem="QRu-HE-FQ0" secondAttribute="bottom" constant="17.5" id="EWs-Ag-hPj"/>
+                                                        <constraint firstItem="GbN-B5-o5M" firstAttribute="top" secondItem="QRu-HE-FQ0" secondAttribute="bottom" constant="22.5" id="8Tk-gM-hZX"/>
                                                     </constraints>
                                                 </stackView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="lightbulbImage" destination="6fa-if-Mqr" id="l1M-M5-HQa"/>
                                             <outlet property="translationTextView" destination="GbN-B5-o5M" id="cuJ-DX-9T8"/>
                                             <outlet property="translationView" destination="3zB-Ph-ux5" id="2bs-jz-uJM"/>
                                             <outlet property="wordLabel" destination="QRu-HE-FQ0" id="Lmo-5q-wOE"/>
@@ -364,6 +374,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="baseline_lightbulb_black_24pt" width="24" height="24"/>
         <image name="menu_book_black_24pt" width="24" height="24"/>
         <image name="settings_black_24pt" width="24" height="24"/>
         <systemColor name="labelColor">

@@ -120,7 +120,7 @@ class SearchEngine {
         
         if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entries = letterToEntries[firstLetterOfClosestMatch], let closestMatchIndex = entries.firstIndex(where: {return $0.word == closestMatch.word}) {
         
-            if amountOfFollowingEntries <= entries.count {
+            if amountOfFollowingEntries < entries.count {
                 return Array(entries[closestMatchIndex..<(closestMatchIndex + amountOfFollowingEntries)])
             } else {
                 
@@ -130,7 +130,7 @@ class SearchEngine {
                     return [closestMatch]
                 }
                 
-                return Array(entries[closestMatchIndex..<(closestMatchIndex + entries.count)])
+                return Array(entries[closestMatchIndex..<(entries.count)])
             }
         }
         
