@@ -11,11 +11,13 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
 
     @IBOutlet weak var suggestionsAmountPicker: UIPickerView!
     @IBOutlet weak var keyStorkeSwitch: UISwitch!
+    @IBOutlet weak var multiTapTextingSwitch: UISwitch!
     
     let pickerData: [Int] = [Int](1...20)
     
     override func viewWillAppear(_ animated: Bool) {
         self.suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
+        self.multiTapTextingSwitch.isOn = OptionsManager.shared.multiTapTexting
     }
     
     override func viewDidLoad() {
@@ -42,7 +44,10 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: pickerData[row])
     }
     @IBAction func onKeyStrokeSwitchPress(_ sender: Any) {
-        OptionsManager.shared.changeTranslateOnEachKeyStroke()
+        OptionsManager.shared.toggleTranslateOnEachKeyStroke()
+    }
+    @IBAction func onMultiTapTextingPress(_ sender: Any) {
+        OptionsManager.shared.toggleMultiTapTexting()
     }
     
     /*

@@ -6,6 +6,14 @@
 //
 
 import UIKit
+import NumberPad
+
+public extension UITextInput {
+    var text: String {
+        get { text(in: textRange(from: beginningOfDocument, to: endOfDocument)!) ?? "" }
+        set(value) { replace(textRange(from: beginningOfDocument, to: endOfDocument)!, withText: value) }
+    }
+}
 
 class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, WordOfTheDayViewDelegate {
     
@@ -21,7 +29,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     let unselectedCellHeight = 50.0
     
     var wordOfTheDayDictionaryEntry: DictionaryEntry? = nil
-    var wordOfTheDayView : WordOfTheDayView? = nil
+    var feelingOldView : FeelingOldView? = nil
+    
+    //var delegateObject = NumberPad.NumpadDelegateObject()
     
     @IBOutlet weak var searchBar: UISearchBar!
 //    @IBOutlet weak var stackViewVCContent: UIStackView!
@@ -30,42 +40,33 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 //    @IBOutlet weak var wordOftheDayTextView: UITextView!
 //    @IBOutlet weak var wordOfTheDayCloseButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
-    
-    func loadAndSetupWordOfTheDayView() {
-        let viewFromNib: WordOfTheDayView = Bundle.main.loadNibNamed("wordOfTheDayView", owner: self, options: nil)?.first as! WordOfTheDayView
-        wordOfTheDayView = viewFromNib
-        wordOfTheDayView?.delegate = self
-        wordOfTheDayView?.layer.cornerRadius = 10
-        wordOfTheDayView?.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        wordOfTheDayView?.heightConstraint.constant = 0
+
+    let generatedFeelingOldView: FeelingOldView = {
+        var viewFromNib: FeelingOldView = Bundle.main.loadNibNamed("feelingOldView", owner: self, options: nil)?.first as! FeelingOldView
         
-        wordOfTheDayView?.labelWordOfTheDay.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onLabelWordOfTheDayTap(tapGestureRecognizer:)))
-        wordOfTheDayView?.labelWordOfTheDay.addGestureRecognizer(tapGesture)
-    }
-    
-    @objc func onLabelWordOfTheDayTap(tapGestureRecognizer: UITapGestureRecognizer) {
+        viewFromNib.layer.cornerRadius = 10
+        viewFromNib.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        viewFromNib.heightConstraint.constant = 0
         
-        if let wordOfTheDayView = wordOfTheDayView, let word = wordOfTheDayView.labelWordOfTheDay.text, let translation = wordOfTheDayView.textViewTranslation.text {
-            presentTranslationViewController(forWord: word, forTranslation: translation)
-        }
-        
-    }
-    
+        return viewFromNib
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
+        //searchBar.delegate = delegateObject
         tableView.delegate = self
         tableView.dataSource = self
-        loadAndSetupWordOfTheDayView()
+        feelingOldView = generatedFeelingOldView
+        feelingOldView?.delegate = self
         wordOfTheDayDictionaryEntry = searchEngine.randomDictionaryEntry()
         shouldShowSectionHeader = true
+                
+        if let wordOfTheDayView = feelingOldView, let randomDictionaryEntry = wordOfTheDayDictionaryEntry
+        {
         
-        
-        if let wordOfTheDayView = wordOfTheDayView, let randomDictionaryEntry = wordOfTheDayDictionaryEntry {
-            wordOfTheDayView.labelWordOfTheDay.text = randomDictionaryEntry.word
-            wordOfTheDayView.textViewTranslation.text = randomDictionaryEntry.translation
         }
+        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -76,11 +77,21 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     override func viewWillAppear(_ animated: Bool) {
         
-        if let wordOfTheDayView = wordOfTheDayView, let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didAppearOnce {
-            if let word = wordOfTheDayView.labelWordOfTheDay.text {
-                tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: wordOfTheDayEntry)
-                searchBar.searchTextField.text = word
-            }
+        //TODO: BUG! When deleting in multiTapTexting mode before the timer has fired, shouldReplaceCharatersIn returns true -> updates searchTextField's text -> shows results
+        //TODO: Issue -> once searchTextField.delegate is set to delegateObject,
+//        if OptionsManager.shared.multiTapTexting {
+//            //delegateObject.toggleMode()
+//            delegateObject.mode = .multiTap
+//            searchBar.keyboardType = .asciiCapableNumberPad
+//            searchBar.searchTextField.delegate = delegateObject
+//        } else {
+//            delegateObject.mode = .normal
+//            searchBar.keyboardType = .default
+//        }
+
+        if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didAppearOnce {
+            tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: wordOfTheDayEntry)
+            searchBar.searchTextField.text = wordOfTheDayEntry.word
         }
         
         if let searchBarText = searchBar.text, !searchBarText.isEmpty, didAppearOnce {
@@ -114,7 +125,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         //viewInSection?.center = tableView.convert(tableView.center, from:tableView.superview)
         //viewInSection.center = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: wordOfTheDayView!.center.y);
         
-        return shouldShowSectionHeader ? self.wordOfTheDayView : nil
+        return shouldShowSectionHeader ? self.feelingOldView : nil
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -127,7 +138,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchBarText = searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
             
-            if self.wordOfTheDayView != nil {
+            if self.feelingOldView != nil {
                 self.hideWordOfTheDayView()
             } else {
                 if !firstInputWithNoNewSuggestions.isEmpty {
@@ -148,8 +159,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func showWordOfTheDayView() {
-        if self.wordOfTheDayView != nil {
-            self.wordOfTheDayView!.heightConstraint.constant = headerSectionHeight
+        if self.feelingOldView != nil {
+            self.feelingOldView!.heightConstraint.constant = headerSectionHeight
             UIView.animate(withDuration: 0.5, delay: 0.0, options:[], animations: {
                 self.view.layoutIfNeeded()
             }, completion: nil)
@@ -158,15 +169,16 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
 
     func hideWordOfTheDayView() {
-        if self.wordOfTheDayView != nil {
-            self.wordOfTheDayView!.heightConstraint.constant = 0
+        if self.feelingOldView != nil {
+            self.feelingOldView!.heightConstraint.constant = 0
             UIView.animate(withDuration: 0.5, animations: {
                 self.view.layoutIfNeeded()
-                self.shouldShowSectionHeader = false
             }, completion: {
                 finished in
                 if finished {
-                    self.wordOfTheDayView = nil
+                    self.shouldShowSectionHeader = false
+                    self.feelingOldView = nil
+                    self.tableView.reloadData()
                 }
             })
         }
@@ -234,7 +246,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
             
-            if searchText.count == 1, self.wordOfTheDayView != nil {
+            if searchText.count == 1, self.feelingOldView != nil {
                 self.hideWordOfTheDayView()
             } else {
                 if !firstInputWithNoNewSuggestions.isEmpty {
@@ -269,11 +281,22 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         let cell: WordTableViewCell = tableView.dequeueReusableCell(withIdentifier: "WordCell", for: indexPath) as! WordTableViewCell
         
+        if lastSelectedCellIndexPath != nil && indexPath == lastSelectedCellIndexPath {
+            cell.translationView.isHidden.toggle()
+            cell.isExpanded = true
+        }
+        
         let entry: DictionaryEntry = self.tableData[indexPath.row]
         
         cell.wordLabel.text = entry.word
         cell.translationTextView.text = entry.translation
-
+        
+        if indexPath.row == 0 && !didAppearOnce && shouldShowSectionHeader {
+            cell.translationView.isHidden.toggle()
+            cell.isExpanded = true
+            lastSelectedCellIndexPath = indexPath
+        }
+        
         //Configure the cell...
 
         return cell
@@ -332,6 +355,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if self.lastSelectedCellIndexPath == indexPath {
             return selectedCellHeight
         }
+        
         return unselectedCellHeight
     }
     
