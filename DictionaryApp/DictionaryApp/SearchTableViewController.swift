@@ -34,11 +34,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     //var delegateObject = NumberPad.NumpadDelegateObject()
     
     @IBOutlet weak var searchBar: UISearchBar!
-//    @IBOutlet weak var stackViewVCContent: UIStackView!
-//    @IBOutlet weak var wordOfTheDayView: UIView!
-//    @IBOutlet weak var wordOfTheDayLabel: UILabel!
-//    @IBOutlet weak var wordOftheDayTextView: UITextView!
-//    @IBOutlet weak var wordOfTheDayCloseButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
 
     let generatedFeelingOldView: FeelingOldView = {
@@ -123,7 +118,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     override func viewDidAppear(_ animated: Bool) {
         if !didVCAppearOnce {
-            showWordOfTheDayView()
+            showFeelingOldView()
             didVCAppearOnce = true
         }
     }
@@ -132,7 +127,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if let searchBarText = searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
             
             if self.feelingOldView != nil {
-                self.hideWordOfTheDayView()
+                self.hideFeelingOldView()
             } else {
                 if !firstInputWithNoNewSuggestions.isEmpty {
                     if searchBarText.hasPrefix(firstInputWithNoNewSuggestions) {
@@ -151,7 +146,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
-    func showWordOfTheDayView() {
+    func showFeelingOldView() {
         if self.feelingOldView != nil {
             self.feelingOldView!.heightConstraint.constant = headerSectionHeight
             UIView.animate(withDuration: 0.5, delay: 0.0, options:[], animations: {
@@ -161,7 +156,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 
     }
 
-    func hideWordOfTheDayView() {
+    func hideFeelingOldView() {
         if self.feelingOldView != nil {
             self.feelingOldView!.heightConstraint.constant = 0
             UIView.animate(withDuration: 0.5, animations: {
@@ -254,7 +249,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
             
             if searchText.count == 1, self.feelingOldView != nil {
-                self.hideWordOfTheDayView()
+                self.hideFeelingOldView()
             } else {
                 if !firstInputWithNoNewSuggestions.isEmpty {
                     if searchText.hasPrefix(firstInputWithNoNewSuggestions) && !areWordsWithSamePrefixInTableDataPresent() {
@@ -293,22 +288,20 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         cell.wordLabel.text = entry.word
         cell.translationTextView.text = entry.translation
         
-        if indexPath.row == 0 && entry.word == wordOfTheDayDictionaryEntry?.word {
-            
+        if entry.word == wordOfTheDayDictionaryEntry?.word {
             cell.lightbulbImage.isHidden = false
-            
-            if !didVCAppearOnce {
-                lastSelectedCellIndexPath = indexPath
-                cell.translationView.isHidden = false
-                cell.isExpanded = true
-            } else {
-                //TODO:
-            }
-            
         } else {
             cell.lightbulbImage.isHidden = true
             cell.translationView.isHidden = true
             cell.isExpanded = false
+        }
+        
+        if indexPath.row == 0 && entry.word == wordOfTheDayDictionaryEntry?.word {
+            
+            cell.translationView.isHidden.toggle()
+            cell.isExpanded = true
+            lastSelectedCellIndexPath = indexPath
+            
         }
         //Configure the cell...
 

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol WordOfTheDayViewDelegate: AnyObject {
-    func hideWordOfTheDayView()
+    func hideFeelingOldView()
 }
 
 class FeelingOldView : UIView {
@@ -21,16 +21,16 @@ class FeelingOldView : UIView {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
     @IBAction func onButtonCloseClick(_ sender: Any) {
-        delegate?.hideWordOfTheDayView()
+        delegate?.hideFeelingOldView()
     }
     
     @IBAction func onButtonYesClick(_ sender: Any) {
         OptionsManager.shared.setMultiTapTexting(to: true)
-        delegate?.hideWordOfTheDayView()
+        delegate?.hideFeelingOldView()
     }
     
     @IBAction func onButtonNoClick(_ sender: Any) {
         OptionsManager.shared.setMultiTapTexting(to: false)
-        delegate?.hideWordOfTheDayView()
+        delegate?.hideFeelingOldView()
     }
 }
