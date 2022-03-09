@@ -22,7 +22,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     let headerSectionHeight = 200.0
     var searchEngine = SearchEngine()
     var wasTextPasted = false
-    var didAppearOnce = false
+    var didVCAppearOnce = false
     var firstInputWithNoNewSuggestions = ""
     var lastSelectedCellIndexPath: IndexPath? = nil
     let selectedCellHeight = 200.0
@@ -88,12 +88,12 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 //            searchBar.keyboardType = .default
 //        }
 
-        if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didAppearOnce {
+        if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didVCAppearOnce {
             tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: wordOfTheDayEntry)
             searchBar.searchTextField.text = wordOfTheDayEntry.word
         }
         
-        if let searchBarText = searchBar.text, !searchBarText.isEmpty, didAppearOnce {
+        if let searchBarText = searchBar.text, !searchBarText.isEmpty, didVCAppearOnce {
             
             if !tableData.isEmpty && tableData.count <= OptionsManager.shared.suggestionsToBeShown {
                 tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: tableData[0])
@@ -122,9 +122,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if !didAppearOnce {
+        if !didVCAppearOnce {
             showWordOfTheDayView()
-            didAppearOnce = true
+            didVCAppearOnce = true
         }
     }
     
@@ -210,15 +210,29 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func updateSuggestionsIfNeeded(for input: String) {
         
-        if areNewSuggestionEntriesPresent(forInput: input) {
-            collapsePreviouslySelectedCellIfVisible()
-            lastSelectedCellIndexPath = nil
+        if !didVCAppearOnce {
             tableData = suggestionEntries(forInput: input)
             tableView.reloadData()
         } else {
-            self.firstInputWithNoNewSuggestions = input
+            if areNewSuggestionEntriesPresent(forInput: input) {
+                collapsePreviouslySelectedCellIfVisible()
+                lastSelectedCellIndexPath = nil
+                tableData = suggestionEntries(forInput: input)
+                tableView.reloadData()
+            } else {
+                self.firstInputWithNoNewSuggestions = input
+            }
+        }
+    }
+    
+    func areWordsWithSamePrefixInTableDataPresent() -> Bool {
+        for dictionaryEntry in self.tableData {
+            if dictionaryEntry.word.hasPrefix(self.firstInputWithNoNewSuggestions) {
+                return true
+            }
         }
         
+        return false
     }
     
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
@@ -243,7 +257,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 self.hideWordOfTheDayView()
             } else {
                 if !firstInputWithNoNewSuggestions.isEmpty {
-                    if searchText.hasPrefix(firstInputWithNoNewSuggestions) {
+                    if searchText.hasPrefix(firstInputWithNoNewSuggestions) && !areWordsWithSamePrefixInTableDataPresent() {
                         return
                     } else {
                         firstInputWithNoNewSuggestions = ""
@@ -283,7 +297,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             
             cell.lightbulbImage.isHidden = false
             
-            if !didAppearOnce {
+            if !didVCAppearOnce {
                 lastSelectedCellIndexPath = indexPath
                 cell.translationView.isHidden = false
                 cell.isExpanded = true
