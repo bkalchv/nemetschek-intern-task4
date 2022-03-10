@@ -18,6 +18,7 @@
 		42309A3427B56B00002967F9 /* WordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42309A3327B56B00002967F9 /* WordTableViewCell.swift */; };
 		42309A3627B59F67002967F9 /* OptionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42309A3527B59F67002967F9 /* OptionsManager.swift */; };
 		42309A3827B5A2FD002967F9 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42309A3727B5A2FD002967F9 /* OptionsViewController.swift */; };
+		424FB81427D8E69100F76A83 /* NumberPad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 424FB81327D8E69100F76A83 /* NumberPad.framework */; platformFilter = ios; };
 		4250D4E527BBF3F50005B2D5 /* AnimationTryoutsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4250D4E427BBF3F50005B2D5 /* AnimationTryoutsViewController.swift */; };
 		4250E55627B2B75F009E74AD /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4250E55527B2B75F009E74AD /* SearchEngine.swift */; };
 		42539D0527AAC22600E74B53 /* en_bg.dic in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0327AAC22600E74B53 /* en_bg.dic */; };
@@ -28,8 +29,6 @@
 		42BAC0D227B6995500387E9D /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BAC0D127B6995500387E9D /* TabBarViewController.swift */; };
 		42CCDB7E27B1522100BB4647 /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CCDB7D27B1522100BB4647 /* FileReader.swift */; };
 		42CCDB8027B1525A00BB4647 /* DictionaryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CCDB7F27B1525A00BB4647 /* DictionaryEntry.swift */; };
-		42D16DA527CFA3CC00913280 /* NumberPad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42D16DA427CFA3CC00913280 /* NumberPad.framework */; platformFilter = ios; };
-		42D16DA627CFA3CC00913280 /* NumberPad.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 42D16DA427CFA3CC00913280 /* NumberPad.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,7 +38,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				42D16DA627CFA3CC00913280 /* NumberPad.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -60,6 +58,7 @@
 		42309A3327B56B00002967F9 /* WordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordTableViewCell.swift; sourceTree = "<group>"; };
 		42309A3527B59F67002967F9 /* OptionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsManager.swift; sourceTree = "<group>"; };
 		42309A3727B5A2FD002967F9 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
+		424FB81327D8E69100F76A83 /* NumberPad.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NumberPad.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/NumberPad-bkvjkotdarqqpjagniheaecycjfo/Build/Products/Debug-iphonesimulator/NumberPad.framework"; sourceTree = "<group>"; };
 		4250D4E427BBF3F50005B2D5 /* AnimationTryoutsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationTryoutsViewController.swift; sourceTree = "<group>"; };
 		4250E55527B2B75F009E74AD /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
 		42539D0327AAC22600E74B53 /* en_bg.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = en_bg.dic; sourceTree = "<group>"; };
@@ -70,7 +69,6 @@
 		42BAC0D127B6995500387E9D /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		42CCDB7D27B1522100BB4647 /* FileReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileReader.swift; sourceTree = "<group>"; };
 		42CCDB7F27B1525A00BB4647 /* DictionaryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryEntry.swift; sourceTree = "<group>"; };
-		42D16DA427CFA3CC00913280 /* NumberPad.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NumberPad.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42D16DA527CFA3CC00913280 /* NumberPad.framework in Frameworks */,
+				424FB81427D8E69100F76A83 /* NumberPad.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +86,6 @@
 		422A557027A2E8B000B24B80 = {
 			isa = PBXGroup;
 			children = (
-				42BDFA2427CD128200CD66A3 /* Frameworks */,
 				422A557B27A2E8B000B24B80 /* DictionaryApp */,
 				422A557A27A2E8B000B24B80 /* Products */,
 			);
@@ -119,6 +116,7 @@
 				422A558727A2E8B100B24B80 /* LaunchScreen.storyboard */,
 				422A558A27A2E8B100B24B80 /* Info.plist */,
 				425D572A27B3FE84008EC553 /* Assets.xcassets */,
+				424FB81227D8E67D00F76A83 /* Frameworks */,
 				42539D0227AAC1FD00E74B53 /* Resources */,
 				42CCDB7F27B1525A00BB4647 /* DictionaryEntry.swift */,
 				42CCDB7D27B1522100BB4647 /* FileReader.swift */,
@@ -129,6 +127,14 @@
 			path = DictionaryApp;
 			sourceTree = "<group>";
 		};
+		424FB81227D8E67D00F76A83 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				424FB81327D8E69100F76A83 /* NumberPad.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		42539D0227AAC1FD00E74B53 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -137,14 +143,6 @@
 				42539D0927AACD9900E74B53 /* smallerEnBg.dic */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		42BDFA2427CD128200CD66A3 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				42D16DA427CFA3CC00913280 /* NumberPad.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -384,6 +382,10 @@
 		422A558E27A2E8B100B24B80 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					"x86_64-apple-ios-simulator",
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -415,6 +417,10 @@
 		422A558F27A2E8B100B24B80 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					"x86_64-apple-ios-simulator",
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;

@@ -7,8 +7,13 @@
 
 import UIKit
 
-class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+protocol OptionsViewControllerDelegate: AnyObject {
+    func toggleSearchBarInputMode()
+}
 
+class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    weak var delegate: OptionsViewControllerDelegate?
     @IBOutlet weak var suggestionsAmountPicker: UIPickerView!
     @IBOutlet weak var keyStorkeSwitch: UISwitch!
     @IBOutlet weak var multiTapTextingSwitch: UISwitch!
@@ -22,9 +27,14 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let searchTableNavVC = self.tabBarController?.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
+            let searchTableVC = searchTableNavVC.viewControllers.first(where: {$0 is SearchTableViewController}) as? SearchTableViewController {
+            self.delegate = searchTableVC
+        }
+        
         self.suggestionsAmountPicker.dataSource = self
         self.suggestionsAmountPicker.delegate = self
-        // Do any additional setup after loading the view.
         self.suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
     }
     
@@ -48,6 +58,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     }
     @IBAction func onMultiTapTextingPress(_ sender: Any) {
         OptionsManager.shared.toggleMultiTapTexting()
+        delegate?.toggleSearchBarInputMode()
     }
     
     /*

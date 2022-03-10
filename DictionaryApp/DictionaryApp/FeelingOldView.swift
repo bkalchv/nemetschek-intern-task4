@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-protocol WordOfTheDayViewDelegate: AnyObject {
+protocol FeelingOldViewDelegate: AnyObject {
     func hideFeelingOldView()
 }
 
 class FeelingOldView : UIView {
     
-    weak var delegate: WordOfTheDayViewDelegate?
+    weak var delegate: FeelingOldViewDelegate?
     @IBOutlet weak var buttonYes: UIButton!
     @IBOutlet weak var buttonNo: UIButton!
     @IBOutlet weak var buttonClose: UIButton!

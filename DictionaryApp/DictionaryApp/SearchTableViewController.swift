@@ -15,7 +15,8 @@ public extension UITextInput {
     }
 }
 
-class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, WordOfTheDayViewDelegate {
+class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FeelingOldViewDelegate, OptionsViewControllerDelegate {
+    
     
     var tableData = [DictionaryEntry]()
     var shouldShowSectionHeader = false
@@ -30,10 +31,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     var wordOfTheDayDictionaryEntry: DictionaryEntry? = nil
     var feelingOldView : FeelingOldView? = nil
-    
-    //var delegateObject = NumberPad.NumpadDelegateObject()
-    
-    @IBOutlet weak var searchBar: UISearchBar!
+
+    @IBOutlet weak var searchBar: NumberPad.CustomSearchBar!
     @IBOutlet weak var tableView: UITableView!
 
     let generatedFeelingOldView: FeelingOldView = {
@@ -45,22 +44,80 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         return viewFromNib
     }()
+    
+    func setCustomSearchBarSearchButtonClickedClosure() {
+        if self.searchBar.customDelegate.defaultSearchBarButtonClickClosure == nil {
+            self.searchBar.customDelegate.defaultSearchBarButtonClickClosure = {
+                if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
+                    
+                    if self.feelingOldView != nil {
+                        self.hideFeelingOldView()
+                    } else {
+                        if !self.firstInputWithNoNewSuggestions.isEmpty {
+                            if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
+                                return
+                            } else {
+                                self.firstInputWithNoNewSuggestions = ""
+                            }
+                        }
+                    }
+                
+                    self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+                    self.updateSuggestionsIfNeeded(for: searchBarText)
+                } else {
+                    self.tableData = [DictionaryEntry]()
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
+    
+    func setCustomSearchBarTextDidChangeClosure() {
+        
+        self.searchBar.customDelegate.defaultSearchBarTextDidChangeClosure = { searchText in
+//            if self.wasTextPasted {
+//                self.searchBar.customDelegate.defaultSearchBarButtonClickClosure!()
+//                //self.searchBarSearchButtonClicked(searchBar)
+//                self.wasTextPasted = false
+//                return
+//            }
+            
+            if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
+                
+                if searchText.count == 1, self.feelingOldView != nil {
+                    self.hideFeelingOldView()
+                } else {
+                    if !self.firstInputWithNoNewSuggestions.isEmpty {
+                        if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
+                            return
+                        } else {
+                            self.firstInputWithNoNewSuggestions = ""
+                        }
+                    }
+                }
+                
+                self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+                self.updateSuggestionsIfNeeded(for: searchText)
+            } else {
+                self.tableData = [DictionaryEntry]()
+                self.tableView.reloadData()
+            }
+        }
+        
+    }
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBar.delegate = self
-        //searchBar.delegate = delegateObject
+        //searchBar.delegate = self
+        setCustomSearchBarSearchButtonClickedClosure()
+        setCustomSearchBarTextDidChangeClosure()
         tableView.delegate = self
         tableView.dataSource = self
         feelingOldView = generatedFeelingOldView
         feelingOldView?.delegate = self
         wordOfTheDayDictionaryEntry = searchEngine.randomDictionaryEntry()
         shouldShowSectionHeader = true
-                
-        if let wordOfTheDayView = feelingOldView, let randomDictionaryEntry = wordOfTheDayDictionaryEntry
-        {
-        
-        }
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -73,15 +130,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         //TODO: BUG! When deleting in multiTapTexting mode before the timer has fired, shouldReplaceCharatersIn returns true -> updates searchTextField's text -> shows results
         //TODO: Issue -> once searchTextField.delegate is set to delegateObject,
-//        if OptionsManager.shared.multiTapTexting {
-//            //delegateObject.toggleMode()
-//            delegateObject.mode = .multiTap
-//            searchBar.keyboardType = .asciiCapableNumberPad
-//            searchBar.searchTextField.delegate = delegateObject
-//        } else {
-//            delegateObject.mode = .normal
-//            searchBar.keyboardType = .default
-//        }
 
         if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didVCAppearOnce {
             tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: wordOfTheDayEntry)
@@ -123,28 +171,28 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if let searchBarText = searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
-            
-            if self.feelingOldView != nil {
-                self.hideFeelingOldView()
-            } else {
-                if !firstInputWithNoNewSuggestions.isEmpty {
-                    if searchBarText.hasPrefix(firstInputWithNoNewSuggestions) {
-                        return
-                    } else {
-                        firstInputWithNoNewSuggestions = ""
-                    }
-                }
-            }
-        
-            loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-            updateSuggestionsIfNeeded(for: searchBarText)
-        } else {
-            tableData = [DictionaryEntry]()
-            tableView.reloadData()
-        }
-    }
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
+//
+//            if self.feelingOldView != nil {
+//                self.hideFeelingOldView()
+//            } else {
+//                if !self.firstInputWithNoNewSuggestions.isEmpty {
+//                    if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
+//                        return
+//                    } else {
+//                        self.firstInputWithNoNewSuggestions = ""
+//                    }
+//                }
+//            }
+//
+//            self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+//            self.updateSuggestionsIfNeeded(for: searchBarText)
+//        } else {
+//            self.tableData = [DictionaryEntry]()
+//            self.tableView.reloadData()
+//        }
+//    }
     
     func showFeelingOldView() {
         if self.feelingOldView != nil {
@@ -238,36 +286,40 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         return true
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if wasTextPasted {
-            self.searchBarSearchButtonClicked(searchBar)
-            wasTextPasted = false
-            return
-        }
-        
-        if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
-            
-            if searchText.count == 1, self.feelingOldView != nil {
-                self.hideFeelingOldView()
-            } else {
-                if !firstInputWithNoNewSuggestions.isEmpty {
-                    if searchText.hasPrefix(firstInputWithNoNewSuggestions) && !areWordsWithSamePrefixInTableDataPresent() {
-                        return
-                    } else {
-                        firstInputWithNoNewSuggestions = ""
-                    }
-                }
-            }
-            
-            loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-            updateSuggestionsIfNeeded(for: searchText)
-        } else {
-            tableData = [DictionaryEntry]()
-            tableView.reloadData()
-        }
-        
+    func toggleSearchBarInputMode() {
+        self.searchBar.toggleInputMode()
     }
+    
+    
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        if self.wasTextPasted {
+//            self.searchBar.customDelegate.defaultSearchBarButtonClickClosure!()
+//            //self.searchBarSearchButtonClicked(searchBar)
+//            self.wasTextPasted = false
+//            return
+//        }
+//
+//        if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
+//
+//            if searchText.count == 1, self.feelingOldView != nil {
+//                self.hideFeelingOldView()
+//            } else {
+//                if !self.firstInputWithNoNewSuggestions.isEmpty {
+//                    if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
+//                        return
+//                    } else {
+//                        self.firstInputWithNoNewSuggestions = ""
+//                    }
+//                }
+//            }
+//
+//            self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+//            self.updateSuggestionsIfNeeded(for: searchText)
+//        } else {
+//            self.tableData = [DictionaryEntry]()
+//            self.tableView.reloadData()
+//        }
+//    }
 
     // MARK: - Table view data source
 
@@ -298,11 +350,19 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if indexPath.row == 0 && entry.word == wordOfTheDayDictionaryEntry?.word {
             
-            cell.translationView.isHidden.toggle()
-            cell.isExpanded = true
-            lastSelectedCellIndexPath = indexPath
+            // does same as did select
+            if !didVCAppearOnce || (didVCAppearOnce && feelingOldView == nil) {
+                cell.translationView.isHidden = false
+                cell.isExpanded = true
+                lastSelectedCellIndexPath = indexPath
+            }
             
         }
+        
+//        if lastSelectedCellIndexPath == indexPath {
+//
+//        }
+        
         //Configure the cell...
 
         return cell
