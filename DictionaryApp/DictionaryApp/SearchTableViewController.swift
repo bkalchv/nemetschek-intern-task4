@@ -14,7 +14,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     var tableData = [DictionaryEntry]()
     var shouldShowSectionHeader = false
-    let headerSectionHeight = 200.0
+    let headerSectionHeight = 150.0
     var searchEngine = SearchEngine()
     var didVCAppearOnce = false
     var firstInputWithNoNewSuggestions = ""
