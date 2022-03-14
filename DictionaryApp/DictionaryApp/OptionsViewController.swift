@@ -53,9 +53,11 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: pickerData[row])
     }
+    
     @IBAction func onKeyStrokeSwitchPress(_ sender: Any) {
         OptionsManager.shared.toggleTranslateOnEachKeyStroke()
     }
+    
     @IBAction func onMultiTapTextingPress(_ sender: Any) {
         OptionsManager.shared.toggleMultiTapTexting()
         delegate?.toggleSearchBarInputMode()

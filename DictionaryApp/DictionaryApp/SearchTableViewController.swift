@@ -9,13 +9,6 @@ import UIKit
 import NumberPad
 import Toast
 
-public extension UITextInput {
-    var text: String {
-        get { text(in: textRange(from: beginningOfDocument, to: endOfDocument)!) ?? "" }
-        set(value) { replace(textRange(from: beginningOfDocument, to: endOfDocument)!, withText: value) }
-    }
-}
-
 class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FeelingOldViewDelegate, OptionsViewControllerDelegate {
     
     
@@ -23,7 +16,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var shouldShowSectionHeader = false
     let headerSectionHeight = 200.0
     var searchEngine = SearchEngine()
-    var wasTextPasted = false
     var didVCAppearOnce = false
     var firstInputWithNoNewSuggestions = ""
     var lastSelectedCellIndexPath: IndexPath? = nil
@@ -76,13 +68,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func setCustomSearchBarTextDidChangeClosure() {
         
         self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchText in
-            //            TODO: what about pasting?
-            //            if self.wasTextPasted {
-            //                self.searchBar.customDelegate.defaultSearchBarButtonClickClosure!()
-            //                //self.searchBarSearchButtonClicked(searchBar)
-            //                self.wasTextPasted = false
-            //                return
-            //            }
                         
             if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
                 
@@ -171,29 +156,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
-//
-//            if self.feelingOldView != nil {
-//                self.hideFeelingOldView()
-//            } else {
-//                if !self.firstInputWithNoNewSuggestions.isEmpty {
-//                    if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
-//                        return
-//                    } else {
-//                        self.firstInputWithNoNewSuggestions = ""
-//                    }
-//                }
-//            }
-//
-//            self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-//            self.updateSuggestionsIfNeeded(for: searchBarText)
-//        } else {
-//            self.tableData = [DictionaryEntry]()
-//            self.tableView.reloadData()
-//        }
-//    }
-    
     func showFeelingOldView() {
         if self.feelingOldView != nil {
             self.feelingOldView!.heightConstraint.constant = headerSectionHeight
@@ -201,7 +163,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 self.view.layoutIfNeeded()
             }, completion: nil)
         }
-
     }
 
     func hideFeelingOldView() {
@@ -285,46 +246,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         return false
     }
-    
-    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text.count > 1 && !wasTextPasted {
-            wasTextPasted = true
-            print("paste caught")
-        }
-        return true
-    }
-    
-    
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if self.wasTextPasted {
-//            self.searchBar.customDelegate.defaultSearchBarButtonClickClosure!()
-//            //self.searchBarSearchButtonClicked(searchBar)
-//            self.wasTextPasted = false
-//            return
-//        }
-//
-//        if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
-//
-//            if searchText.count == 1, self.feelingOldView != nil {
-//                self.hideFeelingOldView()
-//            } else {
-//                if !self.firstInputWithNoNewSuggestions.isEmpty {
-//                    if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
-//                        return
-//                    } else {
-//                        self.firstInputWithNoNewSuggestions = ""
-//                    }
-//                }
-//            }
-//
-//            self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-//            self.updateSuggestionsIfNeeded(for: searchText)
-//        } else {
-//            self.tableData = [DictionaryEntry]()
-//            self.tableView.reloadData()
-//        }
-//    }
-
     // MARK: - Table view data source
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -428,17 +349,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         return unselectedCellHeight
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "showTranslation" {
-//            if let indexPath:IndexPath = self.tableView.indexPathForSelectedRow {
-//                let translationVC: TranslationViewController = segue.destination as! TranslationViewController
-//                let entry: DictionaryEntry = self.tableData[indexPath.row]
-//                translationVC.word = entry.word
-//                translationVC.translation = entry.translation
-//            }
-//        }
-//    }
     
     /*
     // Override to support conditional editing of the table view.
