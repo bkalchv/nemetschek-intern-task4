@@ -17,8 +17,8 @@ protocol FeelingOldViewDelegate: AnyObject {
 class FeelingOldView : UIView {
     
     weak var delegate: FeelingOldViewDelegate?
-    @IBOutlet weak var buttonYes: UIButton!
-    @IBOutlet weak var buttonNo: UIButton!
+    @IBOutlet weak var buttonElderly: UIButton!
+    @IBOutlet weak var buttonYouth: UIButton!
     @IBOutlet weak var buttonClose: UIButton!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
@@ -26,14 +26,14 @@ class FeelingOldView : UIView {
         delegate?.hideFeelingOldView()
     }
     
-    @IBAction func onButtonYesClick(_ sender: Any) {
+    @IBAction func onButtonElderlyClick(_ sender: Any) {
         OptionsManager.shared.setMultiTapTexting(to: true)
         delegate?.hideFeelingOldView()
         delegate?.toggleSearchBarInputMode()
         delegate?.showToast(withText: "Setting somewhere a change!")
     }
     
-    @IBAction func onButtonNoClick(_ sender: Any) {
+    @IBAction func onButtonYouthClick(_ sender: Any) {
         OptionsManager.shared.setMultiTapTexting(to: false)
         delegate?.hideFeelingOldView()
     }

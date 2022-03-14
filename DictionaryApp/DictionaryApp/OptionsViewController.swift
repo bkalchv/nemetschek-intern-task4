@@ -21,8 +21,19 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     let pickerData: [Int] = [Int](1...20)
     
     override func viewWillAppear(_ animated: Bool) {
-        self.suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
-        self.multiTapTextingSwitch.isOn = OptionsManager.shared.multiTapTexting
+        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
+        multiTapTextingSwitch.isOn = OptionsManager.shared.multiTapTexting
+        
+        if  multiTapTextingSwitch.isOn {
+            if !keyStorkeSwitch.isOn {
+                onKeyStrokeSwitchPress(self)
+            }
+            keyStorkeSwitch.isOn = true
+            keyStorkeSwitch.isEnabled = false
+        } else {
+            keyStorkeSwitch.isEnabled = true
+        }
+        
     }
     
     override func viewDidLoad() {
@@ -30,12 +41,12 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         
         if let searchTableNavVC = self.tabBarController?.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
             let searchTableVC = searchTableNavVC.viewControllers.first(where: {$0 is SearchTableViewController}) as? SearchTableViewController {
-            self.delegate = searchTableVC
+            delegate = searchTableVC
         }
         
-        self.suggestionsAmountPicker.dataSource = self
-        self.suggestionsAmountPicker.delegate = self
-        self.suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
+        suggestionsAmountPicker.dataSource = self
+        suggestionsAmountPicker.delegate = self
+        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -62,9 +73,9 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         OptionsManager.shared.toggleMultiTapTexting()
         delegate?.toggleSearchBarInputMode()
         
-        if  multiTapTextingSwitch.isOn {           
+        if  multiTapTextingSwitch.isOn {
             if !keyStorkeSwitch.isOn {
-                self.onKeyStrokeSwitchPress(self)
+                onKeyStrokeSwitchPress(self)
             }
             keyStorkeSwitch.isOn = true
             keyStorkeSwitch.isEnabled = false

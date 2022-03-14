@@ -38,7 +38,7 @@
                     <state key="normal" title="Button"/>
                     <buttonConfiguration key="configuration" style="plain" image="baseline_elderly_black_48pt"/>
                     <connections>
-                        <action selector="onButtonYesClick:" destination="nFZ-I5-0y1" eventType="touchUpInside" id="Kdy-zD-moC"/>
+                        <action selector="onButtonElderlyClick:" destination="nFZ-I5-0y1" eventType="touchUpInside" id="QPA-je-1Yn"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u7Q-2c-Edt">
@@ -51,7 +51,7 @@
                     <state key="normal" title="Button"/>
                     <buttonConfiguration key="configuration" style="plain" image="baseline_child_care_black_48pt"/>
                     <connections>
-                        <action selector="onButtonNoClick:" destination="nFZ-I5-0y1" eventType="touchUpInside" id="bwj-SQ-4Dd"/>
+                        <action selector="onButtonYouthClick:" destination="nFZ-I5-0y1" eventType="touchUpInside" id="J7Q-JM-Ohu"/>
                     </connections>
                 </button>
             </subviews>
@@ -74,8 +74,8 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="buttonClose" destination="ED3-Xi-3Hi" id="SqP-1y-fFO"/>
-                <outlet property="buttonNo" destination="u7Q-2c-Edt" id="0Z4-ai-vKk"/>
-                <outlet property="buttonYes" destination="tHu-YW-2gF" id="a8G-Yd-ID2"/>
+                <outlet property="buttonElderly" destination="tHu-YW-2gF" id="a8G-Yd-ID2"/>
+                <outlet property="buttonYouth" destination="u7Q-2c-Edt" id="0Z4-ai-vKk"/>
                 <outlet property="heightConstraint" destination="DJ5-hp-lVA" id="etT-3q-I1m"/>
             </connections>
             <point key="canvasLocation" x="-4533.3333333333339" y="-981.02678571428567"/>
