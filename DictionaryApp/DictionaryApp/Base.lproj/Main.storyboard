@@ -312,66 +312,6 @@
             </objects>
             <point key="canvasLocation" x="-2120.289855072464" y="-320.08928571428572"/>
         </scene>
-        <!--Animation Tryouts View Controller-->
-        <scene sceneID="lgd-pH-DYj">
-            <objects>
-                <viewController id="RKW-ho-agm" customClass="AnimationTryoutsViewController" customModule="DictionaryApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="kvD-NT-Jpr">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="DDz-oI-Bxo">
-                                <rect key="frame" x="151" y="560" width="112" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Ease Away"/>
-                                <connections>
-                                    <action selector="onEaseAwayButtonClick:" destination="RKW-ho-agm" eventType="touchUpInside" id="55m-L1-Kno"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E52-xf-0th">
-                                <rect key="frame" x="178.5" y="433" width="57" height="29"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="i0s-Yr-9dK">
-                                <rect key="frame" x="151" y="612" width="112" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Ease In"/>
-                                <connections>
-                                    <action selector="onEaseInButtonClick:" destination="RKW-ho-agm" eventType="touchUpInside" id="FTw-RF-lnH"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="63r-eo-QJs">
-                                <rect key="frame" x="80" y="679" width="254" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Execute Animation Cycle"/>
-                                <connections>
-                                    <action selector="onExecuteAnimationCycleButtonClick:" destination="RKW-ho-agm" eventType="touchUpInside" id="iNV-tc-R7x"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="fob-E3-vmO"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="E52-xf-0th" firstAttribute="centerX" secondItem="fob-E3-vmO" secondAttribute="centerX" id="XpK-mb-FZH"/>
-                            <constraint firstItem="E52-xf-0th" firstAttribute="top" secondItem="fob-E3-vmO" secondAttribute="top" constant="389" id="bNU-Qh-xrn"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="catchyPhraseLabel" destination="E52-xf-0th" id="XbE-Qv-xfs"/>
-                        <outlet property="easeAwayButton" destination="DDz-oI-Bxo" id="iQI-sS-ydi"/>
-                        <outlet property="easeInButton" destination="i0s-Yr-9dK" id="hH6-mz-10L"/>
-                        <outlet property="executeAnimationCycleButton" destination="63r-eo-QJs" id="aFc-2N-Ss9"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="oBt-Z9-dg1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-2072" y="1003"/>
-        </scene>
     </scenes>
     <resources>
         <image name="baseline_lightbulb_black_24pt" width="24" height="24"/>
