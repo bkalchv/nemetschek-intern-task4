@@ -46,42 +46,43 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }()
     
     func setCustomSearchBarSearchButtonClickedClosure() {
-        if self.searchBar.customDelegate.defaultSearchBarButtonClickClosure == nil {
-            self.searchBar.customDelegate.defaultSearchBarButtonClickClosure = {
-                if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
-                    
-                    if self.feelingOldView != nil {
-                        self.hideFeelingOldView()
-                    } else {
-                        if !self.firstInputWithNoNewSuggestions.isEmpty {
-                            if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
-                                return
-                            } else {
-                                self.firstInputWithNoNewSuggestions = ""
-                            }
+        
+        self.searchBar.setDefaultSearchButtonClickedClosure(closure: {
+            if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
+                
+                if self.feelingOldView != nil {
+                    self.hideFeelingOldView()
+                } else {
+                    if !self.firstInputWithNoNewSuggestions.isEmpty {
+                        if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
+                            return
+                        } else {
+                            self.firstInputWithNoNewSuggestions = ""
                         }
                     }
-                
-                    self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-                    self.updateSuggestionsIfNeeded(for: searchBarText)
-                } else {
-                    self.tableData = [DictionaryEntry]()
-                    self.tableView.reloadData()
                 }
+            
+                self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+                self.updateSuggestionsIfNeeded(for: searchBarText)
+            } else {
+                self.tableData = [DictionaryEntry]()
+                self.tableView.reloadData()
             }
-        }
+        })
+        
     }
     
     func setCustomSearchBarTextDidChangeClosure() {
         
-        self.searchBar.customDelegate.defaultSearchBarTextDidChangeClosure = { searchText in
-//            if self.wasTextPasted {
-//                self.searchBar.customDelegate.defaultSearchBarButtonClickClosure!()
-//                //self.searchBarSearchButtonClicked(searchBar)
-//                self.wasTextPasted = false
-//                return
-//            }
-            
+        self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchText in
+            //            TODO: what about pasting?
+            //            if self.wasTextPasted {
+            //                self.searchBar.customDelegate.defaultSearchBarButtonClickClosure!()
+            //                //self.searchBarSearchButtonClicked(searchBar)
+            //                self.wasTextPasted = false
+            //                return
+            //            }
+                        
             if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
                 
                 if searchText.count == 1, self.feelingOldView != nil {
@@ -102,14 +103,12 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 self.tableData = [DictionaryEntry]()
                 self.tableView.reloadData()
             }
-        }
-        
+        })
     }
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //searchBar.delegate = self
         setCustomSearchBarSearchButtonClickedClosure()
         setCustomSearchBarTextDidChangeClosure()
         tableView.delegate = self
