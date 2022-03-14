@@ -36,7 +36,7 @@
                     </constraints>
                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" title="Yes"/>
+                    <buttonConfiguration key="configuration" style="plain" image="baseline_elderly_black_48pt"/>
                     <connections>
                         <action selector="onButtonYesClick:" destination="nFZ-I5-0y1" eventType="touchUpInside" id="Kdy-zD-moC"/>
                     </connections>
@@ -49,7 +49,7 @@
                     </constraints>
                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" title="No"/>
+                    <buttonConfiguration key="configuration" style="plain" image="baseline_child_care_black_48pt"/>
                     <connections>
                         <action selector="onButtonNoClick:" destination="nFZ-I5-0y1" eventType="touchUpInside" id="bwj-SQ-4Dd"/>
                     </connections>
@@ -82,6 +82,8 @@
         </view>
     </objects>
     <resources>
+        <image name="baseline_child_care_black_48pt" width="48" height="48"/>
+        <image name="baseline_elderly_black_48pt" width="48" height="48"/>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
