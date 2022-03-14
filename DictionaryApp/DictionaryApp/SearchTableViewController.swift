@@ -7,6 +7,7 @@
 
 import UIKit
 import NumberPad
+import Toast
 
 public extension UITextInput {
     var text: String {
@@ -219,6 +220,14 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
+    func toggleSearchBarInputMode() {
+        self.searchBar.toggleInputMode()
+    }
+    
+    func showToast(withText text: String) {
+        self.tableView.makeToast(text)
+    }
+    
     func suggestionEntries(forInput input: String) -> [DictionaryEntry] {
         if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: input.uppercased()) {
             let followingSuggestionEntries = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
@@ -283,10 +292,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             print("paste caught")
         }
         return true
-    }
-    
-    func toggleSearchBarInputMode() {
-        self.searchBar.toggleInputMode()
     }
     
     

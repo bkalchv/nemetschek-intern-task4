@@ -23,6 +23,7 @@
 		42539D0527AAC22600E74B53 /* en_bg.dic in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0327AAC22600E74B53 /* en_bg.dic */; };
 		42539D0627AAC22600E74B53 /* bg_en.kyp in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0427AAC22600E74B53 /* bg_en.kyp */; };
 		42539D0A27AACD9900E74B53 /* smallerEnBg.dic in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0927AACD9900E74B53 /* smallerEnBg.dic */; };
+		4257C7C427DF987100E19A9D /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 4257C7C327DF987100E19A9D /* Toast */; };
 		425D572B27B3FE84008EC553 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 425D572A27B3FE84008EC553 /* Assets.xcassets */; };
 		42BAC0D027B6931200387E9D /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BAC0CF27B6931200387E9D /* SplashScreenViewController.swift */; };
 		42BAC0D227B6995500387E9D /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BAC0D127B6995500387E9D /* TabBarViewController.swift */; };
@@ -46,7 +47,6 @@
 /* Begin PBXFileReference section */
 		4219D37C27BFF86F00D1059B /* feelingOldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = feelingOldView.xib; sourceTree = "<group>"; };
 		4219D37E27BFFAAB00D1059B /* FeelingOldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingOldView.swift; sourceTree = "<group>"; };
-		422A557927A2E8B000B24B80 /* DictionaryApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DictionaryApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		422A557C27A2E8B000B24B80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		422A557E27A2E8B000B24B80 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		422A558027A2E8B000B24B80 /* TranslationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationViewController.swift; sourceTree = "<group>"; };
@@ -62,6 +62,7 @@
 		42539D0327AAC22600E74B53 /* en_bg.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = en_bg.dic; sourceTree = "<group>"; };
 		42539D0427AAC22600E74B53 /* bg_en.kyp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bg_en.kyp; sourceTree = "<group>"; };
 		42539D0927AACD9900E74B53 /* smallerEnBg.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = smallerEnBg.dic; path = ../../../../../../Documents/smallerEnBg.dic; sourceTree = "<group>"; };
+		425B1F9D27DF93BE00466DC6 /* DictionaryApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DictionaryApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		425D572A27B3FE84008EC553 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../../.Trash/Assets.xcassets; sourceTree = "<group>"; };
 		42BAC0CF27B6931200387E9D /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		42BAC0D127B6995500387E9D /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -74,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4257C7C427DF987100E19A9D /* Toast in Frameworks */,
 				424FB81427D8E69100F76A83 /* NumberPad.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,16 +87,8 @@
 			isa = PBXGroup;
 			children = (
 				422A557B27A2E8B000B24B80 /* DictionaryApp */,
-				422A557A27A2E8B000B24B80 /* Products */,
+				425B1F9D27DF93BE00466DC6 /* DictionaryApp.app */,
 			);
-			sourceTree = "<group>";
-		};
-		422A557A27A2E8B000B24B80 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				422A557927A2E8B000B24B80 /* DictionaryApp.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		422A557B27A2E8B000B24B80 /* DictionaryApp */ = {
@@ -159,8 +153,11 @@
 			dependencies = (
 			);
 			name = DictionaryApp;
+			packageProductDependencies = (
+				4257C7C327DF987100E19A9D /* Toast */,
+			);
 			productName = DictionaryApp;
-			productReference = 422A557927A2E8B000B24B80 /* DictionaryApp.app */;
+			productReference = 425B1F9D27DF93BE00466DC6 /* DictionaryApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -187,7 +184,10 @@
 				Base,
 			);
 			mainGroup = 422A557027A2E8B000B24B80;
-			productRefGroup = 422A557A27A2E8B000B24B80 /* Products */;
+			packageReferences = (
+				4257C7C227DF987100E19A9D /* XCRemoteSwiftPackageReference "Toast-Swift" */,
+			);
+			productRefGroup = 422A557027A2E8B000B24B80;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -467,6 +467,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4257C7C227DF987100E19A9D /* XCRemoteSwiftPackageReference "Toast-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scalessec/Toast-Swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4257C7C327DF987100E19A9D /* Toast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4257C7C227DF987100E19A9D /* XCRemoteSwiftPackageReference "Toast-Swift" */;
+			productName = Toast;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 422A557127A2E8B000B24B80 /* Project object */;
 }
