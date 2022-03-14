@@ -61,6 +61,16 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     @IBAction func onMultiTapTextingPress(_ sender: Any) {
         OptionsManager.shared.toggleMultiTapTexting()
         delegate?.toggleSearchBarInputMode()
+        
+        if  multiTapTextingSwitch.isOn {           
+            if !keyStorkeSwitch.isOn {
+                self.onKeyStrokeSwitchPress(self)
+            }
+            keyStorkeSwitch.isOn = true
+            keyStorkeSwitch.isEnabled = false
+        } else {
+            keyStorkeSwitch.isEnabled = true
+        }
     }
     
     /*
