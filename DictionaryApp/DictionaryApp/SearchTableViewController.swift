@@ -185,6 +185,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         self.searchBar.toggleInputMode()
     }
     
+    func toggleSearchBarMultitapLanguage() {
+        self.searchBar.toggleMultitapLanguage()
+    }
+    
     func showToast(withText text: String) {
         self.tableView.makeToast(text)
     }

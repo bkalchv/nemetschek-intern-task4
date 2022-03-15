@@ -55,6 +55,20 @@
                                     <action selector="onMultiTapTextingPress:" destination="YdP-nz-AQw" eventType="valueChanged" id="8nG-vr-13S"/>
                                 </connections>
                             </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Multi-tap Cyrillic:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H1s-JU-lcp">
+                                <rect key="frame" x="20" y="423" width="162" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="dx0-Nn-LcZ">
+                                <rect key="frame" x="315" y="421" width="49" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="onMultitapCyrillicSwitchPress:" destination="YdP-nz-AQw" eventType="valueChanged" id="RHY-GF-n1M"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Gmk-g2-QKX"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -62,6 +76,9 @@
                     <tabBarItem key="tabBarItem" title="Settings" image="settings_black_24pt" id="Fs8-OE-lja"/>
                     <connections>
                         <outlet property="keyStorkeSwitch" destination="koo-Cs-hsq" id="0iN-qo-vRY"/>
+                        <outlet property="keyStrokeLabel" destination="ATI-16-xRG" id="3NZ-r3-tpy"/>
+                        <outlet property="multiTapCyrillicLabel" destination="H1s-JU-lcp" id="Nbe-yD-Agp"/>
+                        <outlet property="multiTapCyrillicSwitch" destination="dx0-Nn-LcZ" id="V28-2o-aAP"/>
                         <outlet property="multiTapTextingSwitch" destination="bl6-mS-vMq" id="pzI-0C-sbB"/>
                         <outlet property="suggestionsAmountPicker" destination="gXp-Hq-4tY" id="Bcu-Qs-gKR"/>
                     </connections>
