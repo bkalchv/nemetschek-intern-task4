@@ -7,11 +7,8 @@
 
 import UIKit
 
-class TranslationViewController: UIViewController, UISearchBarDelegate {
+class TranslationViewController: UIViewController {
 
-    //var searchEngine: SearchEngine = SearchEngine()
-    
-    //@IBOutlet weak var searchBar: UISearchBar!
     var word: String = ""
     var translation: String = ""
     @IBOutlet weak var wordLabel: UILabel!

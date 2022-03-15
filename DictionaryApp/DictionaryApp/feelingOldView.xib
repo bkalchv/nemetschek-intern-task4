@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nFZ-I5-0y1" customClass="FeelingOldView" customModule="DictionaryApp" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="150"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ED3-Xi-3Hi">
+                    <rect key="frame" x="345.5" y="13" width="60.5" height="31"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" title="Close"/>
+                    <connections>
+                        <action selector="onButtonCloseClick:" destination="nFZ-I5-0y1" eventType="touchUpInside" id="GtG-sV-ph4"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Feeling old yet?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FWn-zO-Sro">
+                    <rect key="frame" x="25" y="23" width="131.5" height="20.5"/>
+                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tHu-YW-2gF">
+                    <rect key="frame" x="137" y="99" width="55" height="31"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="31" id="cuZ-sX-2dj"/>
+                        <constraint firstAttribute="width" constant="55" id="gaG-8H-LQg"/>
+                    </constraints>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" image="baseline_elderly_black_48pt"/>
+                    <connections>
+                        <action selector="onButtonElderlyClick:" destination="nFZ-I5-0y1" eventType="touchUpInside" id="QPA-je-1Yn"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u7Q-2c-Edt">
+                    <rect key="frame" x="227" y="99" width="55" height="31"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="55" id="YB4-Bm-KIb"/>
+                        <constraint firstAttribute="height" constant="31" id="cn1-K9-E1c"/>
+                    </constraints>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" image="baseline_child_care_black_48pt"/>
+                    <connections>
+                        <action selector="onButtonYouthClick:" destination="nFZ-I5-0y1" eventType="touchUpInside" id="J7Q-JM-Ohu"/>
+                    </connections>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="HVm-yv-ddS"/>
+            <color key="backgroundColor" systemColor="linkColor"/>
+            <constraints>
+                <constraint firstAttribute="height" constant="150" id="DJ5-hp-lVA"/>
+                <constraint firstItem="ED3-Xi-3Hi" firstAttribute="top" secondItem="nFZ-I5-0y1" secondAttribute="top" constant="13" id="H5U-mZ-RTL"/>
+                <constraint firstItem="u7Q-2c-Edt" firstAttribute="leading" secondItem="FWn-zO-Sro" secondAttribute="trailing" constant="70.5" id="Lgz-rl-E0a"/>
+                <constraint firstItem="FWn-zO-Sro" firstAttribute="leading" secondItem="nFZ-I5-0y1" secondAttribute="leading" constant="25" id="MXS-ef-3W4"/>
+                <constraint firstItem="HVm-yv-ddS" firstAttribute="bottom" secondItem="tHu-YW-2gF" secondAttribute="bottom" constant="20" id="Sj2-xA-qYd"/>
+                <constraint firstAttribute="trailing" secondItem="ED3-Xi-3Hi" secondAttribute="trailing" constant="8" id="a5u-5A-S1i"/>
+                <constraint firstAttribute="width" constant="414" id="e5L-TJ-B43"/>
+                <constraint firstItem="HVm-yv-ddS" firstAttribute="trailing" secondItem="u7Q-2c-Edt" secondAttribute="trailing" constant="132" id="gSI-K4-teY"/>
+                <constraint firstItem="tHu-YW-2gF" firstAttribute="leading" secondItem="FWn-zO-Sro" secondAttribute="trailing" constant="-19.5" id="ldm-sN-xWT"/>
+                <constraint firstItem="HVm-yv-ddS" firstAttribute="bottom" secondItem="u7Q-2c-Edt" secondAttribute="bottom" constant="20" id="mKg-GA-tad"/>
+                <constraint firstItem="tHu-YW-2gF" firstAttribute="leading" secondItem="HVm-yv-ddS" secondAttribute="leading" constant="137" id="vjv-Dm-Ps6"/>
+                <constraint firstItem="FWn-zO-Sro" firstAttribute="top" secondItem="nFZ-I5-0y1" secondAttribute="top" constant="23" id="wmF-yl-sp5"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="buttonClose" destination="ED3-Xi-3Hi" id="SqP-1y-fFO"/>
+                <outlet property="buttonElderly" destination="tHu-YW-2gF" id="a8G-Yd-ID2"/>
+                <outlet property="buttonYouth" destination="u7Q-2c-Edt" id="0Z4-ai-vKk"/>
+                <outlet property="heightConstraint" destination="DJ5-hp-lVA" id="etT-3q-I1m"/>
+            </connections>
+            <point key="canvasLocation" x="-4533.3333333333339" y="-981.02678571428567"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="baseline_child_care_black_48pt" width="48" height="48"/>
+        <image name="baseline_elderly_black_48pt" width="48" height="48"/>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

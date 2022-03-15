@@ -120,11 +120,17 @@ class SearchEngine {
         
         if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entries = letterToEntries[firstLetterOfClosestMatch], let closestMatchIndex = entries.firstIndex(where: {return $0.word == closestMatch.word}) {
         
-            if amountOfFollowingEntries <= entries.count {
+            if closestMatchIndex + amountOfFollowingEntries < entries.count {
                 return Array(entries[closestMatchIndex..<(closestMatchIndex + amountOfFollowingEntries)])
             } else {
+                
                 OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: entries.count)
-                return Array(entries[closestMatchIndex..<(closestMatchIndex + entries.count)])
+                
+                if entries.count == 1 {
+                    return [closestMatch]
+                }
+                
+                return Array(entries[closestMatchIndex..<(entries.count)])
             }
         }
         

@@ -7,23 +7,46 @@
 
 import UIKit
 
-class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+protocol OptionsViewControllerDelegate: AnyObject {
+    func toggleSearchBarInputMode()
+}
 
+class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    weak var delegate: OptionsViewControllerDelegate?
     @IBOutlet weak var suggestionsAmountPicker: UIPickerView!
     @IBOutlet weak var keyStorkeSwitch: UISwitch!
+    @IBOutlet weak var multiTapTextingSwitch: UISwitch!
     
     let pickerData: [Int] = [Int](1...20)
     
     override func viewWillAppear(_ animated: Bool) {
-        self.suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
+        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
+        multiTapTextingSwitch.isOn = OptionsManager.shared.multiTapTexting
+        
+        if  multiTapTextingSwitch.isOn {
+            if !keyStorkeSwitch.isOn {
+                onKeyStrokeSwitchPress(self)
+            }
+            keyStorkeSwitch.isOn = true
+            keyStorkeSwitch.isEnabled = false
+        } else {
+            keyStorkeSwitch.isEnabled = true
+        }
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.suggestionsAmountPicker.dataSource = self
-        self.suggestionsAmountPicker.delegate = self
-        // Do any additional setup after loading the view.
-        self.suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
+        
+        if let searchTableNavVC = self.tabBarController?.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
+            let searchTableVC = searchTableNavVC.viewControllers.first(where: {$0 is SearchTableViewController}) as? SearchTableViewController {
+            delegate = searchTableVC
+        }
+        
+        suggestionsAmountPicker.dataSource = self
+        suggestionsAmountPicker.delegate = self
+        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -41,8 +64,24 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: pickerData[row])
     }
+    
     @IBAction func onKeyStrokeSwitchPress(_ sender: Any) {
-        OptionsManager.shared.changeTranslateOnEachKeyStroke()
+        OptionsManager.shared.toggleTranslateOnEachKeyStroke()
+    }
+    
+    @IBAction func onMultiTapTextingPress(_ sender: Any) {
+        OptionsManager.shared.toggleMultiTapTexting()
+        delegate?.toggleSearchBarInputMode()
+        
+        if  multiTapTextingSwitch.isOn {
+            if !keyStorkeSwitch.isOn {
+                onKeyStrokeSwitchPress(self)
+            }
+            keyStorkeSwitch.isOn = true
+            keyStorkeSwitch.isEnabled = false
+        } else {
+            keyStorkeSwitch.isEnabled = true
+        }
     }
     
     /*

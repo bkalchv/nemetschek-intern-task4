@@ -13,6 +13,7 @@ class WordTableViewCell: UITableViewCell {
     @IBOutlet weak var wordLabel: UILabel!
     @IBOutlet weak var translationView: UIView!
     @IBOutlet weak var translationTextView: UITextView!
+    @IBOutlet weak var lightbulbImage: UIImageView!
     
     var isExpanded = false
     
@@ -20,6 +21,7 @@ class WordTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         translationView.isHidden = true
+        lightbulbImage.isHidden = true
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

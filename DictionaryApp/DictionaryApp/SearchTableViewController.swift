@@ -6,38 +6,103 @@
 //
 
 import UIKit
+import NumberPad
+import Toast
 
-class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
-
+class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FeelingOldViewDelegate, OptionsViewControllerDelegate {
+    
+    
     var tableData = [DictionaryEntry]()
+    var shouldShowSectionHeader = false
+    let headerSectionHeight = 150.0
     var searchEngine = SearchEngine()
-    var wasTextPasted = false
-    var didAppearOnce = false
+    var didVCAppearOnce = false
     var firstInputWithNoNewSuggestions = ""
     var lastSelectedCellIndexPath: IndexPath? = nil
     let selectedCellHeight = 200.0
     let unselectedCellHeight = 50.0
-    @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var stackViewVCContent: UIStackView!
-    @IBOutlet weak var wordOfTheDayView: UIView!
-    @IBOutlet weak var wordOfTheDayLabel: UILabel!
-    @IBOutlet weak var wordOftheDayTextView: UITextView!
-    @IBOutlet weak var wordOfTheDayCloseButton: UIButton!
+    
+    var wordOfTheDayDictionaryEntry: DictionaryEntry? = nil
+    var feelingOldView : FeelingOldView? = nil
+
+    @IBOutlet weak var searchBar: NumberPad.CustomSearchBar!
     @IBOutlet weak var tableView: UITableView!
+
+    let generatedFeelingOldView: FeelingOldView = {
+        var viewFromNib: FeelingOldView = Bundle.main.loadNibNamed("feelingOldView", owner: self, options: nil)?.first as! FeelingOldView
         
+        viewFromNib.layer.cornerRadius = 10
+        viewFromNib.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        viewFromNib.heightConstraint.constant = 0
+        
+        return viewFromNib
+    }()
+    
+    func setCustomSearchBarSearchButtonClickedClosure() {
+        
+        self.searchBar.setDefaultSearchButtonClickedClosure(closure: {
+            if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
+                
+                if self.feelingOldView != nil {
+                    self.hideFeelingOldView()
+                } else {
+                    if !self.firstInputWithNoNewSuggestions.isEmpty {
+                        if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
+                            return
+                        } else {
+                            self.firstInputWithNoNewSuggestions = ""
+                        }
+                    }
+                }
+            
+                self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+                self.updateSuggestionsIfNeeded(for: searchBarText)
+            } else {
+                self.tableData = [DictionaryEntry]()
+                self.tableView.reloadData()
+            }
+        })
+        
+    }
+    
+    func setCustomSearchBarTextDidChangeClosure() {
+        
+        self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchText in
+                        
+            if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
+                
+                if searchText.count == 1, self.feelingOldView != nil {
+                    self.hideFeelingOldView()
+                } else {
+                    if !self.firstInputWithNoNewSuggestions.isEmpty {
+                        if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
+                            return
+                        } else {
+                            self.firstInputWithNoNewSuggestions = ""
+                        }
+                    }
+                }
+                
+                self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+                self.updateSuggestionsIfNeeded(for: searchText)
+            } else {
+                self.tableData = [DictionaryEntry]()
+                self.tableView.reloadData()
+            }
+        })
+    }
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBar.delegate = self
+        setCustomSearchBarSearchButtonClickedClosure()
+        setCustomSearchBarTextDidChangeClosure()
         tableView.delegate = self
         tableView.dataSource = self
-        wordOfTheDayView.isHidden = true
-        wordOfTheDayView.layer.cornerRadius = 10
-        wordOfTheDayView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        
-        if let randomDictionaryEntry = searchEngine.randomDictionaryEntry() {
-            wordOfTheDayLabel.text = randomDictionaryEntry.word
-            wordOftheDayTextView.text = randomDictionaryEntry.translation
-        }
+        feelingOldView = generatedFeelingOldView
+        feelingOldView?.delegate = self
+        wordOfTheDayDictionaryEntry = searchEngine.randomDictionaryEntry()
+        shouldShowSectionHeader = true
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -48,7 +113,15 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     override func viewWillAppear(_ animated: Bool) {
         
-        if let searchBarText = searchBar.text, !searchBarText.isEmpty {
+        //TODO: BUG! When deleting in multiTapTexting mode before the timer has fired, shouldReplaceCharatersIn returns true -> updates searchTextField's text -> shows results
+        //TODO: Issue -> once searchTextField.delegate is set to delegateObject,
+
+        if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didVCAppearOnce {
+            tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: wordOfTheDayEntry)
+            searchBar.searchTextField.text = wordOfTheDayEntry.word
+        }
+        
+        if let searchBarText = searchBar.text, !searchBarText.isEmpty, didVCAppearOnce {
             
             if !tableData.isEmpty && tableData.count <= OptionsManager.shared.suggestionsToBeShown {
                 tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: tableData[0])
@@ -63,64 +136,57 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if let lastSelectedRowIndexPath = self.lastSelectedCellIndexPath, let cell = tableView.cellForRow(at: lastSelectedRowIndexPath) as? WordTableViewCell  {
             cell.translationView.isHidden = false
+            cell.isExpanded = true
         }
         
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return shouldShowSectionHeader ? headerSectionHeight : 0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return shouldShowSectionHeader ? self.feelingOldView : nil
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if !didAppearOnce {
-            showWordOfTheDayView()
-            didAppearOnce = true
+        if !didVCAppearOnce {
+            showFeelingOldView()
+            didVCAppearOnce = true
         }
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if let searchBarText = searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
-            
-            if self.wordOfTheDayView != nil, self.wordOfTheDayView.isDescendant(of: self.stackViewVCContent) {
-                self.hideWordOfTheDayView()
-            } else {
-                if !firstInputWithNoNewSuggestions.isEmpty {
-                    if searchBarText.hasPrefix(firstInputWithNoNewSuggestions) {
-                        return
-                    } else {
-                        firstInputWithNoNewSuggestions = ""
-                    }
+    func showFeelingOldView() {
+        if self.feelingOldView != nil {
+            self.feelingOldView!.heightConstraint.constant = headerSectionHeight
+            UIView.animate(withDuration: 0.5, delay: 0.0, options:[], animations: {
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+        }
+    }
+
+    func hideFeelingOldView() {
+        if self.feelingOldView != nil {
+            self.feelingOldView!.heightConstraint.constant = 0
+            UIView.animate(withDuration: 0.5, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: {
+                finished in
+                if finished {
+                    self.shouldShowSectionHeader = false
+                    self.feelingOldView = nil
+                    self.tableView.reloadData()
                 }
-            }
-        
-            loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-            updateSuggestionsIfNeeded(for: searchBarText)
-        } else {
-            tableData = [DictionaryEntry]()
-            tableView.reloadData()
+            })
         }
     }
     
-    func showWordOfTheDayView() {
-        UIView.animate(withDuration: 0.25, delay: 0.0, options:[], animations: {
-            self.wordOfTheDayView.isHidden = false
-            self.stackViewVCContent.layoutIfNeeded()
-        }, completion: nil)
+    func toggleSearchBarInputMode() {
+        self.searchBar.toggleInputMode()
     }
     
-    func hideWordOfTheDayView() {
-        UIView.animate(withDuration: 0.25, delay: 0.0, options:[], animations: {
-            self.wordOfTheDayView.alpha = 0.0
-            self.wordOfTheDayView.center.y -= 1.5 * self.wordOfTheDayView.frame.height
-            self.tableView.center.y -= self.wordOfTheDayView.frame.height
-        }, completion: { finished in
-            if finished, self.wordOfTheDayView != nil {
-                self.stackViewVCContent.removeArrangedSubview(self.wordOfTheDayView)
-                self.wordOfTheDayView.removeFromSuperview()
-                self.stackViewVCContent.layoutIfNeeded()
-            }
-        })
-    
-    }
-    
-    @IBAction func onWordOfTheDayViewCloseButtonClick(_ sender: Any) {
-        hideWordOfTheDayView()
+    func showToast(withText text: String) {
+        self.tableView.makeToast(text)
     }
     
     func suggestionEntries(forInput input: String) -> [DictionaryEntry] {
@@ -156,56 +222,30 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func updateSuggestionsIfNeeded(for input: String) {
         
-        if areNewSuggestionEntriesPresent(forInput: input) {
-            collapsePreviouslySelectedCellIfVisible()
-            lastSelectedCellIndexPath = nil
+        if !didVCAppearOnce {
             tableData = suggestionEntries(forInput: input)
             tableView.reloadData()
         } else {
-            self.firstInputWithNoNewSuggestions = input
-        }
-        
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text.count > 1 && !wasTextPasted {
-            wasTextPasted = true
-            print("paste caught")
-        }
-        return true
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if wasTextPasted {
-            self.searchBarSearchButtonClicked(searchBar)
-            wasTextPasted = false
-            return
-        }
-        
-        if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
-            
-            if searchText.count == 1, self.wordOfTheDayView != nil, self.wordOfTheDayView.isDescendant(of: self.stackViewVCContent) {
-                self.hideWordOfTheDayView()
+            if areNewSuggestionEntriesPresent(forInput: input) {
+                collapsePreviouslySelectedCellIfVisible()
+                lastSelectedCellIndexPath = nil
+                tableData = suggestionEntries(forInput: input)
+                tableView.reloadData()
             } else {
-                if !firstInputWithNoNewSuggestions.isEmpty {
-                    if searchText.hasPrefix(firstInputWithNoNewSuggestions) {
-                        return
-                    } else {
-                        firstInputWithNoNewSuggestions = ""
-                    }
-                }
+                self.firstInputWithNoNewSuggestions = input
             }
-            
-            loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-            updateSuggestionsIfNeeded(for: searchText)
-        } else {
-            tableData = [DictionaryEntry]()
-            tableView.reloadData()
+        }
+    }
+    
+    func areWordsWithSamePrefixInTableDataPresent() -> Bool {
+        for dictionaryEntry in self.tableData {
+            if dictionaryEntry.word.hasPrefix(self.firstInputWithNoNewSuggestions) {
+                return true
+            }
         }
         
+        return false
     }
-
     // MARK: - Table view data source
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -219,12 +259,35 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell: WordTableViewCell = tableView.dequeueReusableCell(withIdentifier: "WordCell", for: indexPath) as! WordTableViewCell
-        
+            
         let entry: DictionaryEntry = self.tableData[indexPath.row]
         
         cell.wordLabel.text = entry.word
         cell.translationTextView.text = entry.translation
-
+        
+        if entry.word == wordOfTheDayDictionaryEntry?.word {
+            cell.lightbulbImage.isHidden = false
+        } else {
+            cell.lightbulbImage.isHidden = true
+            cell.translationView.isHidden = true
+            cell.isExpanded = false
+        }
+        
+        if indexPath.row == 0 && entry.word == wordOfTheDayDictionaryEntry?.word {
+            
+            // does same as did select
+            if !didVCAppearOnce || (didVCAppearOnce && feelingOldView == nil) {
+                cell.translationView.isHidden = false
+                cell.isExpanded = true
+                lastSelectedCellIndexPath = indexPath
+            }
+            
+        }
+        
+//        if lastSelectedCellIndexPath == indexPath {
+//
+//        }
+        
         //Configure the cell...
 
         return cell
@@ -239,13 +302,17 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func presentTranslationViewController(forCell cell: WordTableViewCell) {
         if let cellWord = cell.wordLabel.text {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let translationVC: TranslationViewController = storyboard.instantiateViewController(withIdentifier: "TranslationViewController") as! TranslationViewController
-            translationVC.modalPresentationStyle = .fullScreen
-            translationVC.word = cellWord
-            translationVC.translation = cell.translationTextView.text
-            self.navigationController?.pushViewController(translationVC, animated: true)
+            presentTranslationViewController(forWord: cellWord, forTranslation: cell.translationTextView.text)
         }
+    }
+    
+    func presentTranslationViewController(forWord word: String, forTranslation translation: String) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let translationVC: TranslationViewController = storyboard.instantiateViewController(withIdentifier: "TranslationViewController") as! TranslationViewController
+        translationVC.modalPresentationStyle = .fullScreen
+        translationVC.word = word
+        translationVC.translation = translation
+        self.navigationController?.pushViewController(translationVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -279,19 +346,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if self.lastSelectedCellIndexPath == indexPath {
             return selectedCellHeight
         }
+        
         return unselectedCellHeight
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "showTranslation" {
-//            if let indexPath:IndexPath = self.tableView.indexPathForSelectedRow {
-//                let translationVC: TranslationViewController = segue.destination as! TranslationViewController
-//                let entry: DictionaryEntry = self.tableData[indexPath.row]
-//                translationVC.word = entry.word
-//                translationVC.translation = entry.translation
-//            }
-//        }
-//    }
     
     /*
     // Override to support conditional editing of the table view.
