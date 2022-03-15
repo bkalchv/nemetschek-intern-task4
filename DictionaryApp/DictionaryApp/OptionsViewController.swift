@@ -31,17 +31,18 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         if  multiTapTextingSwitch.isOn {
             if !keyStorkeSwitch.isOn {
                 onKeyStrokeSwitchPress(self)
-                keyStrokeLabel.isEnabled = false
             }
             keyStorkeSwitch.isOn = true
             keyStorkeSwitch.isEnabled = false
+            keyStrokeLabel.isEnabled = false
             
             multiTapCyrillicLabel.isEnabled = true
             multiTapCyrillicSwitch.isEnabled = true
-            //multiTapCyrillicSwitch.isOn = OptionsManager.shared.multiTapCyrillic
-            
         } else {
             keyStorkeSwitch.isEnabled = true
+            keyStrokeLabel.isEnabled = true
+            multiTapCyrillicLabel.isEnabled = false
+            multiTapCyrillicSwitch.isEnabled = false
         }
         
     }
@@ -79,6 +80,10 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         OptionsManager.shared.toggleTranslateOnEachKeyStroke()
     }
     
+    @IBAction func onMultitapCyrillicSwitchPress(_ sender: Any) {
+        delegate?.toggleSearchBarMultitapLanguage()
+    }
+    
     @IBAction func onMultiTapTextingPress(_ sender: Any) {
         OptionsManager.shared.toggleMultiTapTexting()
         delegate?.toggleSearchBarInputMode()
@@ -86,23 +91,19 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         if  multiTapTextingSwitch.isOn {
             if !keyStorkeSwitch.isOn {
                 onKeyStrokeSwitchPress(self)
-                keyStrokeLabel.isEnabled = false
             }
             keyStorkeSwitch.isOn = true
             keyStorkeSwitch.isEnabled = false
+            keyStrokeLabel.isEnabled = false
             
             multiTapCyrillicLabel.isEnabled = true
             multiTapCyrillicSwitch.isEnabled = true
         } else {
             keyStorkeSwitch.isEnabled = true
-            
+            keyStrokeLabel.isEnabled = true
             multiTapCyrillicLabel.isEnabled = false
             multiTapCyrillicSwitch.isEnabled = false
         }
-    }
-    
-    @IBAction func onMultitapCyrillicSwitchPress(_ sender: Any) {
-        delegate?.toggleSearchBarMultitapLanguage()
     }
     
     /*
