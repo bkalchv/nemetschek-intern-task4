@@ -116,21 +116,23 @@ class SearchEngine {
         return nil
     }
     
-    func findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: Int, toClosestMatch closestMatch: DictionaryEntry) -> [DictionaryEntry] {
+    func findSuggestionEntries(amountOfDesiredSuggestionEntries: Int, forDictionaryEntry closestMatch: DictionaryEntry) -> [DictionaryEntry] {
         
-        if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entries = letterToEntries[firstLetterOfClosestMatch], let closestMatchIndex = entries.firstIndex(where: {return $0.word == closestMatch.word}) {
-        
-            if closestMatchIndex + amountOfFollowingEntries < entries.count {
-                return Array(entries[closestMatchIndex..<(closestMatchIndex + amountOfFollowingEntries)])
+        if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entriesForLetter = letterToEntries[firstLetterOfClosestMatch], let closestMatchIndex = entriesForLetter.firstIndex(where: {return $0.word == closestMatch.word}) {
+            
+            let amountOfAvailableSuggestionEntries: Int = entriesForLetter.count - (closestMatchIndex + 1)
+            
+            if amountOfDesiredSuggestionEntries < amountOfAvailableSuggestionEntries {
+                return Array(entriesForLetter[closestMatchIndex...(closestMatchIndex + amountOfDesiredSuggestionEntries)])
             } else {
                 
-                OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: entries.count)
+                OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: amountOfAvailableSuggestionEntries)
                 
-                if entries.count == 1 {
+                if amountOfAvailableSuggestionEntries == 1 {
                     return [closestMatch]
                 }
                 
-                return Array(entries[closestMatchIndex..<(entries.count)])
+                return Array(entriesForLetter[closestMatchIndex..<(entriesForLetter.count)])
             }
         }
         

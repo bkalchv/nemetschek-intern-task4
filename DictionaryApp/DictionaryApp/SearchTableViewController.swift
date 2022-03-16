@@ -116,17 +116,17 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         //TODO: Issue -> once searchTextField.delegate is set to delegateObject,
 
         if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didVCAppearOnce {
-            tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShownAmount, toClosestMatch: wordOfTheDayEntry)
+            tableData = searchEngine.findSuggestionEntries(amountOfDesiredSuggestionEntries: OptionsManager.shared.suggestionsToBeShownAmount, forDictionaryEntry: wordOfTheDayEntry)
             searchBar.searchTextField.text = wordOfTheDayEntry.word
         }
         
         if let searchBarText = searchBar.text, !searchBarText.isEmpty, didVCAppearOnce {
             
-            if !tableData.isEmpty && tableData.count <= OptionsManager.shared.suggestionsToBeShownAmount {
-                tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShownAmount, toClosestMatch: tableData[0])
+            if !tableData.isEmpty && OptionsManager.shared.suggestionsToBeShownAmount > tableData.count {
+                tableData = searchEngine.findSuggestionEntries(amountOfDesiredSuggestionEntries: OptionsManager.shared.suggestionsToBeShownAmount, forDictionaryEntry: tableData[0])
             }
             
-            tableData = Array(tableData[0..<OptionsManager.shared.suggestionsToBeShownAmount])
+            tableData = Array(tableData[0...OptionsManager.shared.suggestionsToBeShownAmount])
             collapsePreviouslySelectedCellIfVisible()
             //selectedCellIndexPath = nil // TODO: when uncommented - a bug appears :eek:
             tableView.reloadData()
@@ -194,7 +194,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func suggestionEntries(forInput input: String) -> [DictionaryEntry] {
         if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: input.uppercased()) {
-            let followingSuggestionEntries = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShownAmount, toClosestMatch: closestMatch)
+            let followingSuggestionEntries = searchEngine.findSuggestionEntries(amountOfDesiredSuggestionEntries: OptionsManager.shared.suggestionsToBeShownAmount, forDictionaryEntry: closestMatch)
             return followingSuggestionEntries
         } else {
             return [DictionaryEntry]()
