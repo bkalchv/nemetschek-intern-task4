@@ -126,7 +126,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 tableData = searchEngine.findSuggestionEntries(amountOfDesiredSuggestionEntries: OptionsManager.shared.suggestionsToBeShownAmount, forDictionaryEntry: tableData[0])
             }
             
-            tableData = Array(tableData[0...OptionsManager.shared.suggestionsToBeShownAmount])
+            tableData = Array(tableData[0...OptionsManager.shared.suggestionsToBeShownAmount - 1])
             collapsePreviouslySelectedCellIfVisible()
             //selectedCellIndexPath = nil // TODO: when uncommented - a bug appears :eek:
             tableView.reloadData()

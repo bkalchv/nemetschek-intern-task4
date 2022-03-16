@@ -59,7 +59,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     
     override func viewWillAppear(_ animated: Bool) {
         
-        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShownAmount, inComponent: 0, animated: false)
+        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShownAmount - 1, inComponent: 0, animated: false)
 //        multitapTextingSwitch.isOn = OptionsManager.shared.isMultitapTextingOn
         
         if  OptionsManager.shared.isMultitapTextingOn {

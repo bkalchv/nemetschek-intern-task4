@@ -123,7 +123,7 @@ class SearchEngine {
             let amountOfAvailableSuggestionEntries: Int = entriesForLetter.count - (closestMatchIndex + 1)
             
             if amountOfDesiredSuggestionEntries < amountOfAvailableSuggestionEntries {
-                return Array(entriesForLetter[closestMatchIndex...(closestMatchIndex + amountOfDesiredSuggestionEntries)])
+                return Array(entriesForLetter[closestMatchIndex..<(closestMatchIndex + amountOfDesiredSuggestionEntries)])
             } else {
                 
                 OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: amountOfAvailableSuggestionEntries)
