@@ -75,11 +75,11 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="settings_black_24pt" id="Fs8-OE-lja"/>
                     <connections>
-                        <outlet property="keystorkeSwitch" destination="koo-Cs-hsq" id="0iN-qo-vRY"/>
-                        <outlet property="keystrokeLabel" destination="ATI-16-xRG" id="3NZ-r3-tpy"/>
+                        <outlet property="keystrokeLabel" destination="ATI-16-xRG" id="QfT-CL-BlH"/>
+                        <outlet property="keystrokeSwitch" destination="koo-Cs-hsq" id="bUQ-NI-QTR"/>
                         <outlet property="multiTapCyrillicSwitch" destination="dx0-Nn-LcZ" id="V28-2o-aAP"/>
-                        <outlet property="multitapCyrillicLabel" destination="H1s-JU-lcp" id="Nbe-yD-Agp"/>
-                        <outlet property="multitapTextingSwitch" destination="bl6-mS-vMq" id="pzI-0C-sbB"/>
+                        <outlet property="multitapCyrillicLabel" destination="H1s-JU-lcp" id="JdI-bF-J5V"/>
+                        <outlet property="multitapTextingSwitch" destination="bl6-mS-vMq" id="96B-e2-wxH"/>
                         <outlet property="suggestionsAmountPicker" destination="gXp-Hq-4tY" id="Bcu-Qs-gKR"/>
                     </connections>
                 </viewController>
@@ -141,7 +141,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1115.9420289855072" y="411.83035714285711"/>
+            <point key="canvasLocation" x="962" y="412"/>
         </scene>
         <!--Translator-->
         <scene sceneID="w3e-4Z-es7">

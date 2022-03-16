@@ -10,8 +10,8 @@ import UIKit
 
 protocol FeelingOldViewDelegate: AnyObject {
     func hideFeelingOldView()
-    func toggleSearchBarInputMode()
-    func showToast(withText text: String)
+    func setStandardInput()
+    func setMultitapInput()
 }
 
 class FeelingOldView : UIView {
@@ -27,20 +27,14 @@ class FeelingOldView : UIView {
     }
     
     @IBAction func onButtonElderlyClick(_ sender: Any) {
-        if !OptionsManager.shared.isMultitapTextingOn {
-            delegate?.toggleSearchBarInputMode()
-            OptionsManager.shared.setMultiTapTexting(to: true)
-            delegate?.showToast(withText: "Setting somewhere a change!")
-        }
+        //TODO: Ask if fine
+        delegate?.setMultitapInput()
         delegate?.hideFeelingOldView()
     }
     
     @IBAction func onButtonYouthClick(_ sender: Any) {
-        if OptionsManager.shared.isMultitapTextingOn {
-            delegate?.toggleSearchBarInputMode()
-            OptionsManager.shared.setMultiTapTexting(to: false)
-            delegate?.showToast(withText: "Setting somewhere a change!")
-        }
+        //TODO: Ask if fine
+        delegate?.setStandardInput()
         delegate?.hideFeelingOldView()
     }
 }

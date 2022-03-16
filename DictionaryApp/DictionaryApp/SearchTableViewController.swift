@@ -10,8 +10,7 @@ import NumberPad
 import Toast
 
 class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FeelingOldViewDelegate, OptionsViewControllerDelegate {
-    
-    
+        
     var tableData = [DictionaryEntry]()
     var shouldShowSectionHeader = false
     let headerSectionHeight = 150.0
@@ -23,23 +22,23 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     let unselectedCellHeight = 50.0
     
     var wordOfTheDayDictionaryEntry: DictionaryEntry? = nil
-    var feelingOldView : FeelingOldView? = nil
-
+    var feelingOldView: FeelingOldView?
+    
     @IBOutlet weak var searchBar: NumberPad.CustomSearchBar!
     @IBOutlet weak var tableView: UITableView!
 
-    let generatedFeelingOldView: FeelingOldView = {
-        var viewFromNib: FeelingOldView = Bundle.main.loadNibNamed("feelingOldView", owner: self, options: nil)?.first as! FeelingOldView
+    func createFeelingOldViewFromNib() -> FeelingOldView  {
+        let viewFromNib: FeelingOldView = Bundle.main.loadNibNamed("feelingOldView", owner: self, options: nil)?.first as! FeelingOldView
         
         viewFromNib.layer.cornerRadius = 10
         viewFromNib.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         viewFromNib.heightConstraint.constant = 0
+        viewFromNib.delegate = self
         
         return viewFromNib
-    }()
+    }
     
     func setCustomSearchBarSearchButtonClickedClosure() {
-        
         self.searchBar.setDefaultSearchButtonClickedClosure(closure: {
             if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
                 
@@ -59,7 +58,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 self.tableView.reloadData()
             }
         })
-        
     }
     
     func setCustomSearchBarTextDidChangeClosure() {
@@ -92,8 +90,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         setCustomSearchBarTextDidChangeClosure()
         tableView.delegate = self
         tableView.dataSource = self
-        feelingOldView = generatedFeelingOldView
-        feelingOldView?.delegate = self
+        feelingOldView = self.createFeelingOldViewFromNib()
         wordOfTheDayDictionaryEntry = searchEngine.randomDictionaryEntry()
         shouldShowSectionHeader = true
         
@@ -144,7 +141,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             didVCAppearOnce = true
         }
     }
-    
+
     func showFeelingOldView() {
         if self.feelingOldView != nil {
             self.feelingOldView!.heightConstraint.constant = headerSectionHeight
@@ -153,7 +150,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             }, completion: nil)
         }
     }
-
+    
+//MARK: - FeelingOldViewDelegate
     func hideFeelingOldView() {
         if self.feelingOldView != nil {
             self.feelingOldView!.heightConstraint.constant = 0
@@ -170,16 +168,34 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
+    func showToast(withText text: String) {
+        self.tableView.makeToast(text)
+    }
+    
+    func setMultitapInput() {
+        if !OptionsManager.shared.isMultitapTextingOn {
+            searchBar.toggleInputMode()
+            OptionsManager.shared.setMultiTapTexting(to: true)
+            showToast(withText: "Setting somewhere a change!")
+        }
+    }
+    
+    func setStandardInput() {
+        if OptionsManager.shared.isMultitapTextingOn {
+            searchBar.toggleInputMode()
+            OptionsManager.shared.setMultiTapTexting(to: false)
+            showToast(withText: "Setting somewhere a change!")
+        }
+    }
+    
+//MARK: - OptionsViewDelegate
+    
     func toggleSearchBarInputMode() {
-        self.searchBar.toggleInputMode()
+        searchBar.toggleInputMode()
     }
     
     func toggleSearchBarMultitapLanguage() {
-        self.searchBar.toggleMultitapLanguage()
-    }
-    
-    func showToast(withText text: String) {
-        self.tableView.makeToast(text)
+        searchBar.toggleMultitapLanguage()
     }
     
     func suggestionEntries(forInput input: String) -> [DictionaryEntry] {
@@ -230,13 +246,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func areWordsWithSamePrefixInTableDataPresent() -> Bool {
-        for dictionaryEntry in self.tableData {
-            if dictionaryEntry.word.hasPrefix(self.firstInputWithNoNewSuggestions) {
-                return true
-            }
-        }
-        
-        return false
+        return self.tableData.contains { $0.word.hasPrefix(self.firstInputWithNoNewSuggestions) }
     }
     // MARK: - Table view data source
 
@@ -268,11 +278,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if indexPath.row == 0 && entry.word == wordOfTheDayDictionaryEntry?.word {
             
-            // does same as did select
             if !didVCAppearOnce {
                 cell.translationView.isHidden = false
                 cell.isExpanded = true
-                lastSelectedCellIndexPath = indexPath // Just for the cell to appear expanded
+                lastSelectedCellIndexPath = indexPath
             } else {
                 if let lastSelectedCellIndexPath = lastSelectedCellIndexPath, lastSelectedCellIndexPath == indexPath {
                     cell.translationView.isHidden = false
@@ -281,12 +290,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             }
             
         }
-        
-//        if lastSelectedCellIndexPath == indexPath {
-//
-//        }
-        
-        //Configure the cell...
 
         return cell
     }

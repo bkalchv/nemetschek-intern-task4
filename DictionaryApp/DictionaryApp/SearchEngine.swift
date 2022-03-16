@@ -27,14 +27,13 @@ class SearchEngine {
         return randomLetterUnicode
     }
     
-    func randomDictionaryEntry() -> DictionaryEntry? {
+    func randomDictionaryEntry() -> DictionaryEntry {
         let randomLanguageRange = chooseRandomLanguage()
         let randomLetterUnicode = randomLetterUnicode(from: randomLanguageRange)
-        guard let randomLetterUnicodeScalar = Unicode.Scalar(randomLetterUnicode) else { return nil }
+        let randomLetterUnicodeScalar = Unicode.Scalar(randomLetterUnicode)!
         let randomLetterUppercased = String(randomLetterUnicodeScalar)
         loadEntriesForLetterIfNeeded(letter: randomLetterUppercased)
-        guard let randomDictionaryEntry = letterToEntries[randomLetterUppercased]?.randomElement() else { return nil }
-        return randomDictionaryEntry
+        return letterToEntries[randomLetterUppercased]!.randomElement()!
     }
     
     func decodeFileForLetter(letter: String) -> [DictionaryEntry] {
