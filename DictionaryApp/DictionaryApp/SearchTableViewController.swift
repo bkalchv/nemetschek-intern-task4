@@ -76,12 +76,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                     }
                 }
                 
-//                if searchText.count == 1, self.feelingOldView != nil {
-//                    self.hideFeelingOldView()
-//                } else {
-//                      TODO: What's been standing up there was here
-//                }
-                
                 self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
                 self.updateSuggestionsIfNeeded(for: searchText)
             } else {
@@ -112,9 +106,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     override func viewWillAppear(_ animated: Bool) {
         
-        //TODO: BUG! When deleting in multiTapTexting mode before the timer has fired, shouldReplaceCharatersIn returns true -> updates searchTextField's text -> shows results
-        //TODO: Issue -> once searchTextField.delegate is set to delegateObject,
-
         if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didVCAppearOnce {
             tableData = searchEngine.findSuggestionEntries(amountOfDesiredSuggestionEntries: OptionsManager.shared.suggestionsToBeShownAmount, forDictionaryEntry: wordOfTheDayEntry)
             searchBar.searchTextField.text = wordOfTheDayEntry.word
@@ -128,7 +119,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             
             tableData = Array(tableData[0...OptionsManager.shared.suggestionsToBeShownAmount - 1])
             collapsePreviouslySelectedCellIfVisible()
-            //selectedCellIndexPath = nil // TODO: when uncommented - a bug appears :eek:
             tableView.reloadData()
             
         }
@@ -224,7 +214,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func updateSuggestionsIfNeeded(for input: String) {
-        
         if !didVCAppearOnce {
             tableData = suggestionEntries(forInput: input)
             tableView.reloadData()
@@ -275,14 +264,20 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             cell.translationView.isHidden = true
             cell.isExpanded = false
         }
+
         
         if indexPath.row == 0 && entry.word == wordOfTheDayDictionaryEntry?.word {
             
             // does same as did select
-            if !didVCAppearOnce || (didVCAppearOnce && feelingOldView == nil) {
+            if !didVCAppearOnce {
                 cell.translationView.isHidden = false
                 cell.isExpanded = true
-                lastSelectedCellIndexPath = indexPath
+                lastSelectedCellIndexPath = indexPath // Just for the cell to appear expanded
+            } else {
+                if let lastSelectedCellIndexPath = lastSelectedCellIndexPath, lastSelectedCellIndexPath == indexPath {
+                    cell.translationView.isHidden = false
+                    cell.isExpanded = true
+                }
             }
             
         }
