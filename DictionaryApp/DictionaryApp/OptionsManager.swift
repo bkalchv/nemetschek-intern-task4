@@ -14,12 +14,12 @@ class OptionsManager {
     
     var shouldTranslateOnEachKeyStroke: Bool = true
     
-    var multiTapTexting: Bool = false
+    var isMultitapTextingOn: Bool = false
     
     init(){
         suggestionsToBeShownAmount = 10
         shouldTranslateOnEachKeyStroke = true
-        multiTapTexting = false
+        isMultitapTextingOn = false
     }
     
     func changeSuggestionsAmount(toSuggestionsAmount suggestionsAmount: Int) {
@@ -31,10 +31,10 @@ class OptionsManager {
     }
     
     func toggleMultiTapTexting() {
-        multiTapTexting.toggle()
+        isMultitapTextingOn.toggle()
     }
     
     func setMultiTapTexting(to booleanValue: Bool) {
-        multiTapTexting = booleanValue
+        isMultitapTextingOn = booleanValue
     }
 }

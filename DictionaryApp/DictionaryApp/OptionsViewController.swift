@@ -18,30 +18,31 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     @IBOutlet weak var suggestionsAmountPicker: UIPickerView!
     @IBOutlet weak var keyStorkeSwitch: UISwitch!
     @IBOutlet weak var keyStrokeLabel: UILabel!
-    @IBOutlet weak var multiTapTextingSwitch: UISwitch!
-    @IBOutlet weak var multiTapCyrillicLabel: UILabel!
+    @IBOutlet weak var multitapTextingSwitch: UISwitch!
+    @IBOutlet weak var multitapCyrillicLabel: UILabel!
     @IBOutlet weak var multiTapCyrillicSwitch: UISwitch!
     
     let pickerData: [Int] = [Int](1...20)
     
     override func viewWillAppear(_ animated: Bool) {
         suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShownAmount - 1, inComponent: 0, animated: false)
-        multiTapTextingSwitch.isOn = OptionsManager.shared.multiTapTexting
+        multitapTextingSwitch.isOn = OptionsManager.shared.isMultitapTextingOn
         
-        if  multiTapTextingSwitch.isOn {
+        if  multitapTextingSwitch.isOn {
             if !keyStorkeSwitch.isOn {
                 onKeyStrokeSwitchPress(self)
+                keyStorkeSwitch.isOn = true
             }
-            keyStorkeSwitch.isOn = true
+            
             keyStorkeSwitch.isEnabled = false
             keyStrokeLabel.isEnabled = false
             
-            multiTapCyrillicLabel.isEnabled = true
+            multitapCyrillicLabel.isEnabled = true
             multiTapCyrillicSwitch.isEnabled = true
         } else {
             keyStorkeSwitch.isEnabled = true
             keyStrokeLabel.isEnabled = true
-            multiTapCyrillicLabel.isEnabled = false
+            multitapCyrillicLabel.isEnabled = false
             multiTapCyrillicSwitch.isEnabled = false
         }
         
@@ -88,20 +89,21 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         OptionsManager.shared.toggleMultiTapTexting()
         delegate?.toggleSearchBarInputMode()
         
-        if  multiTapTextingSwitch.isOn {
+        if  multitapTextingSwitch.isOn {
             if !keyStorkeSwitch.isOn {
                 onKeyStrokeSwitchPress(self)
+                keyStorkeSwitch.isOn = true
             }
-            keyStorkeSwitch.isOn = true
+            
             keyStorkeSwitch.isEnabled = false
             keyStrokeLabel.isEnabled = false
             
-            multiTapCyrillicLabel.isEnabled = true
+            multitapCyrillicLabel.isEnabled = true
             multiTapCyrillicSwitch.isEnabled = true
         } else {
             keyStorkeSwitch.isEnabled = true
             keyStrokeLabel.isEnabled = true
-            multiTapCyrillicLabel.isEnabled = false
+            multitapCyrillicLabel.isEnabled = false
             multiTapCyrillicSwitch.isEnabled = false
         }
     }

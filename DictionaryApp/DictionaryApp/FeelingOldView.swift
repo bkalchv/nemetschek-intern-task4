@@ -27,14 +27,20 @@ class FeelingOldView : UIView {
     }
     
     @IBAction func onButtonElderlyClick(_ sender: Any) {
-        OptionsManager.shared.setMultiTapTexting(to: true)
+        if !OptionsManager.shared.isMultitapTextingOn {
+            delegate?.toggleSearchBarInputMode()
+            OptionsManager.shared.setMultiTapTexting(to: true)
+            delegate?.showToast(withText: "Setting somewhere a change!")
+        }
         delegate?.hideFeelingOldView()
-        delegate?.toggleSearchBarInputMode()
-        delegate?.showToast(withText: "Setting somewhere a change!")
     }
     
     @IBAction func onButtonYouthClick(_ sender: Any) {
-        OptionsManager.shared.setMultiTapTexting(to: false)
+        if OptionsManager.shared.isMultitapTextingOn {
+            delegate?.toggleSearchBarInputMode()
+            OptionsManager.shared.setMultiTapTexting(to: false)
+            delegate?.showToast(withText: "Setting somewhere a change!")
+        }
         delegate?.hideFeelingOldView()
     }
 }
