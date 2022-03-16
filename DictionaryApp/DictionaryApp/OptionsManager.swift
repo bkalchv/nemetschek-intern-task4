@@ -10,24 +10,24 @@ class OptionsManager {
     
     static let shared = OptionsManager()
     
-    var suggestionsToBeShown: Int = 10
+    var suggestionsToBeShownAmount: Int = 10
     
-    var translateOnEachKeyStroke: Bool = true
+    var shouldTranslateOnEachKeyStroke: Bool = true
     
     var multiTapTexting: Bool = false
     
     init(){
-        suggestionsToBeShown = 10
-        translateOnEachKeyStroke = true
+        suggestionsToBeShownAmount = 10
+        shouldTranslateOnEachKeyStroke = true
         multiTapTexting = false
     }
     
     func changeSuggestionsAmount(toSuggestionsAmount suggestionsAmount: Int) {
-        suggestionsToBeShown = suggestionsAmount
+        suggestionsToBeShownAmount = suggestionsAmount
     }
     
     func toggleTranslateOnEachKeyStroke() {
-        translateOnEachKeyStroke.toggle()
+        shouldTranslateOnEachKeyStroke.toggle()
     }
     
     func toggleMultiTapTexting() {

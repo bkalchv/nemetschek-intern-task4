@@ -43,15 +43,12 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         self.searchBar.setDefaultSearchButtonClickedClosure(closure: {
             if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
                 
-                if self.feelingOldView != nil {
-                    self.hideFeelingOldView()
-                } else {
-                    if !self.firstInputWithNoNewSuggestions.isEmpty {
-                        if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
-                            return
-                        } else {
-                            self.firstInputWithNoNewSuggestions = ""
-                        }
+                
+                if !self.firstInputWithNoNewSuggestions.isEmpty {
+                    if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
+                        return
+                    } else {
+                        self.firstInputWithNoNewSuggestions = ""
                     }
                 }
             
@@ -69,19 +66,21 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchText in
                         
-            if OptionsManager.shared.translateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
+            if OptionsManager.shared.shouldTranslateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
                 
-                if searchText.count == 1, self.feelingOldView != nil {
-                    self.hideFeelingOldView()
-                } else {
-                    if !self.firstInputWithNoNewSuggestions.isEmpty {
-                        if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
-                            return
-                        } else {
-                            self.firstInputWithNoNewSuggestions = ""
-                        }
+                if !self.firstInputWithNoNewSuggestions.isEmpty {
+                    if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
+                        return
+                    } else {
+                        self.firstInputWithNoNewSuggestions = ""
                     }
                 }
+                
+//                if searchText.count == 1, self.feelingOldView != nil {
+//                    self.hideFeelingOldView()
+//                } else {
+//                      TODO: What's been standing up there was here
+//                }
                 
                 self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
                 self.updateSuggestionsIfNeeded(for: searchText)
@@ -117,17 +116,17 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         //TODO: Issue -> once searchTextField.delegate is set to delegateObject,
 
         if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didVCAppearOnce {
-            tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: wordOfTheDayEntry)
+            tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShownAmount, toClosestMatch: wordOfTheDayEntry)
             searchBar.searchTextField.text = wordOfTheDayEntry.word
         }
         
         if let searchBarText = searchBar.text, !searchBarText.isEmpty, didVCAppearOnce {
             
-            if !tableData.isEmpty && tableData.count <= OptionsManager.shared.suggestionsToBeShown {
-                tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: tableData[0])
+            if !tableData.isEmpty && tableData.count <= OptionsManager.shared.suggestionsToBeShownAmount {
+                tableData = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShownAmount, toClosestMatch: tableData[0])
             }
             
-            tableData = Array(tableData[0..<OptionsManager.shared.suggestionsToBeShown])
+            tableData = Array(tableData[0..<OptionsManager.shared.suggestionsToBeShownAmount])
             collapsePreviouslySelectedCellIfVisible()
             //selectedCellIndexPath = nil // TODO: when uncommented - a bug appears :eek:
             tableView.reloadData()
@@ -195,7 +194,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func suggestionEntries(forInput input: String) -> [DictionaryEntry] {
         if let closestMatch: DictionaryEntry = searchEngine.findClosestMatchInDictionaryEntries(toInput: input.uppercased()) {
-            let followingSuggestionEntries = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShown, toClosestMatch: closestMatch)
+            let followingSuggestionEntries = searchEngine.findFollowingEntriesInDictionaryEntries(amountOfFollowingEntries: OptionsManager.shared.suggestionsToBeShownAmount, toClosestMatch: closestMatch)
             return followingSuggestionEntries
         } else {
             return [DictionaryEntry]()

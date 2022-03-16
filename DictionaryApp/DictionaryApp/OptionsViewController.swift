@@ -25,7 +25,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     let pickerData: [Int] = [Int](1...20)
     
     override func viewWillAppear(_ animated: Bool) {
-        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
+        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShownAmount - 1, inComponent: 0, animated: false)
         multiTapTextingSwitch.isOn = OptionsManager.shared.multiTapTexting
         
         if  multiTapTextingSwitch.isOn {
@@ -57,7 +57,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         
         suggestionsAmountPicker.dataSource = self
         suggestionsAmountPicker.delegate = self
-        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShown - 1, inComponent: 0, animated: false)
+        suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShownAmount - 1, inComponent: 0, animated: false)
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
