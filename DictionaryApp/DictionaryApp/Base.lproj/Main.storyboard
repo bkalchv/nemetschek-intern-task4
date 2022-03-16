@@ -75,8 +75,8 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="settings_black_24pt" id="Fs8-OE-lja"/>
                     <connections>
-                        <outlet property="keyStorkeSwitch" destination="koo-Cs-hsq" id="0iN-qo-vRY"/>
-                        <outlet property="keyStrokeLabel" destination="ATI-16-xRG" id="3NZ-r3-tpy"/>
+                        <outlet property="keystorkeSwitch" destination="koo-Cs-hsq" id="0iN-qo-vRY"/>
+                        <outlet property="keystrokeLabel" destination="ATI-16-xRG" id="3NZ-r3-tpy"/>
                         <outlet property="multiTapCyrillicSwitch" destination="dx0-Nn-LcZ" id="V28-2o-aAP"/>
                         <outlet property="multitapCyrillicLabel" destination="H1s-JU-lcp" id="Nbe-yD-Agp"/>
                         <outlet property="multitapTextingSwitch" destination="bl6-mS-vMq" id="pzI-0C-sbB"/>

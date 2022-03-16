@@ -16,35 +16,57 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     
     weak var delegate: OptionsViewControllerDelegate?
     @IBOutlet weak var suggestionsAmountPicker: UIPickerView!
-    @IBOutlet weak var keyStorkeSwitch: UISwitch!
-    @IBOutlet weak var keyStrokeLabel: UILabel!
+    @IBOutlet weak var keystorkeSwitch: UISwitch!
+    @IBOutlet weak var keystrokeLabel: UILabel!
     @IBOutlet weak var multitapTextingSwitch: UISwitch!
     @IBOutlet weak var multitapCyrillicLabel: UILabel!
     @IBOutlet weak var multiTapCyrillicSwitch: UISwitch!
     
     let pickerData: [Int] = [Int](1...20)
     
+    
+    func enableKeystrokeIBOs() {
+        keystorkeSwitch.isEnabled = true
+        keystrokeLabel.isEnabled = true
+    }
+    
+    func disableKeystrokeIBOs() {
+        keystorkeSwitch.isEnabled = false
+        keystrokeLabel.isEnabled = false
+    }
+    
+    func enableMultitapCyrillicIBOs() {
+        multitapCyrillicLabel.isEnabled = true
+        multiTapCyrillicSwitch.isEnabled = true
+    }
+    
+    func disableMultitapCyrillicIBOs() {
+        multitapCyrillicLabel.isEnabled = false
+        multiTapCyrillicSwitch.isEnabled = false
+    }
+    
+    func handleIsMultitapTextingOn() {
+        multitapTextingSwitch.isOn = true
+        
+        if !keystorkeSwitch.isOn {
+            OptionsManager.shared.toggleTranslateOnEachKeyStroke()
+            keystorkeSwitch.isOn = true
+        }
+        
+        disableKeystrokeIBOs()
+        enableMultitapCyrillicIBOs()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         
         suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShownAmount, inComponent: 0, animated: false)
-        multitapTextingSwitch.isOn = OptionsManager.shared.isMultitapTextingOn
+//        multitapTextingSwitch.isOn = OptionsManager.shared.isMultitapTextingOn
         
-        if  multitapTextingSwitch.isOn {
-            if !keyStorkeSwitch.isOn {
-                onKeyStrokeSwitchPress(self)
-                keyStorkeSwitch.isOn = true
-            }
-            
-            keyStorkeSwitch.isEnabled = false
-            keyStrokeLabel.isEnabled = false
-            
-            multitapCyrillicLabel.isEnabled = true
-            multiTapCyrillicSwitch.isEnabled = true
+        if  OptionsManager.shared.isMultitapTextingOn {
+            handleIsMultitapTextingOn()
         } else {
-            keyStorkeSwitch.isEnabled = true
-            keyStrokeLabel.isEnabled = true
-            multitapCyrillicLabel.isEnabled = false
-            multiTapCyrillicSwitch.isEnabled = false
+            enableKeystrokeIBOs()
+            disableMultitapCyrillicIBOs()
         }
         
     }
@@ -90,22 +112,11 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         OptionsManager.shared.toggleMultiTapTexting()
         delegate?.toggleSearchBarInputMode()
         
-        if  multitapTextingSwitch.isOn {
-            if !keyStorkeSwitch.isOn {
-                onKeyStrokeSwitchPress(self)
-                keyStorkeSwitch.isOn = true
-            }
-            
-            keyStorkeSwitch.isEnabled = false
-            keyStrokeLabel.isEnabled = false
-            
-            multitapCyrillicLabel.isEnabled = true
-            multiTapCyrillicSwitch.isEnabled = true
+        if  OptionsManager.shared.isMultitapTextingOn {
+            handleIsMultitapTextingOn()
         } else {
-            keyStorkeSwitch.isEnabled = true
-            keyStrokeLabel.isEnabled = true
-            multitapCyrillicLabel.isEnabled = false
-            multiTapCyrillicSwitch.isEnabled = false
+            enableKeystrokeIBOs()
+            disableMultitapCyrillicIBOs()
         }
     }
     
