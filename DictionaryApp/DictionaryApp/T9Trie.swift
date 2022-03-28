@@ -7,9 +7,9 @@
 
 import Foundation
 
-class T9Trie {
+class T9Trie : Codable {
     
-    static let T9TRIE_ROOT_VALUE: Character = " "
+    static let T9TRIE_ROOT_VALUE: String = ""
     
     private let root: T9TrieNode
     
@@ -26,6 +26,15 @@ class T9Trie {
         if char == "P" || char == "Q" || char == "R" || char == "S" { return "7" }
         if char == "T" || char == "U" || char == "V" { return "8" }
         if char == "W" || char == "X" || char == "Y" || char == "Z" { return "9" }
+        
+        if char == "А" || char == "Б" || char == "В" || char == "Г" { return "2" }
+        if char == "Д" || char == "Е" || char == "Ж" || char == "З" { return "3" }
+        if char == "И" || char == "Й" || char == "К" || char == "Л" { return "4" }
+        if char == "М" || char == "Н" || char == "О" || char == "П" { return "5" }
+        if char == "Р" || char == "С" || char == "Т" || char == "У" { return "6" }
+        if char == "Ф" || char == "Х" || char == "Ц" || char == "Ч" { return "7" }
+        if char == "Ш" || char == "Щ" || char == "Ъ" || char == "ь" { return "8" }
+        if char == "Ь" || char == "Э" || char == "Ю" || char == "Я" { return "9" }
         
         return nil
     }
@@ -53,11 +62,11 @@ class T9Trie {
         
         if let wordAsT9String = t9String(fromString: word) {
             for keypressValue in wordAsT9String {
-                if let child = currentNode.children[keypressValue] {
+                if let child = currentNode.children[String(keypressValue)] {
                     currentNode = child
                 } else {
-                    currentNode.addToChildren(childValue: keypressValue)
-                    currentNode = currentNode.children[keypressValue]!
+                    currentNode.addToChildren(childValue: String(keypressValue))
+                    currentNode = currentNode.children[String(keypressValue)]!
                 }
             }
             currentNode.isEndOfWord = true
@@ -74,14 +83,14 @@ class T9Trie {
         
         if let wordAsT9String = t9String(fromString: word) {
             for keypressValue in wordAsT9String {
-                if let child = currentNode.children[keypressValue] {
+                if let child = currentNode.children[String(keypressValue)] {
                     currentNode = child
                 } else {
                     return false
                 }
             }
             
-            return currentNode.suggestedWords.contains(where: {$0.stringValue == word})
+            return currentNode.suggestedWords.contains(where: {$0.value == word})
         } else {
             return false
         }
@@ -92,7 +101,7 @@ class T9Trie {
         var currentNode = root
 
         for keypressValue in t9String {
-            if let child = currentNode.children[keypressValue] {
+            if let child = currentNode.children[String(keypressValue)] {
                 currentNode = child
             } else {
                 return false
@@ -107,7 +116,7 @@ class T9Trie {
         var currentNode = root
 
         for keypressValue in t9String {
-            if let child = currentNode.children[keypressValue] {
+            if let child = currentNode.children[String(keypressValue)] {
                 currentNode = child
             } else {
                 return nil

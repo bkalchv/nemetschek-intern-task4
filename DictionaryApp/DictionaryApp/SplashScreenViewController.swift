@@ -43,6 +43,28 @@ class SplashScreenViewController: UIViewController {
         return filenamesOfNonExistingHelperFiles
     }
     
+    func filenamesOfNonExistingTrieFiles() -> [String] {
+        
+        // TODO: decide on the extension
+        var filenamesOfNonExistingTrieFiles = [String]()
+        
+        // TODO: For now only for English -> Expand to Bulgarian, too
+        let trieFilenames: [String] = ["T9Trie_EN", "T9Trie_BG"]
+    
+        let fileManager = FileManager.default
+        let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
+        let cachesDirectoryUrl = urls[0]
+        
+        for trieFilename in trieFilenames {
+            let fileUrl = cachesDirectoryUrl.appendingPathComponent(trieFilename)
+            let filePath = fileUrl.path
+            if !fileManager.fileExists(atPath: filePath) { filenamesOfNonExistingTrieFiles.append(trieFilename) }
+        }
+        
+        return filenamesOfNonExistingTrieFiles
+    }
+    
+    
     func generateRandomCatchyPhraseIndexDifferentThanCurrent() -> Int {
         
         var randomCatchyPhraseIndex = Int.random(in: 0..<catchyPhrases.count)
@@ -184,7 +206,9 @@ class SplashScreenViewController: UIViewController {
         
         let nonExistingBulgarianFilenames = self.filenamesOfNonExistingHelperFiles(forLanguageUnicodeRange:  self.bulgarianAlphabetUnicodeRange)
         
-        let willHaveToBeLoadingHelperFiles = !nonExistingEnglishFilenames.isEmpty || !nonExistingBulgarianFilenames.isEmpty
+        let nonExistingTrieFilenames = self.filenamesOfNonExistingTrieFiles()
+        
+        let willHaveToBeLoadingHelperFiles = !nonExistingEnglishFilenames.isEmpty || !nonExistingBulgarianFilenames.isEmpty || !nonExistingTrieFilenames.isEmpty
         
         if willHaveToBeLoadingHelperFiles {
             
@@ -196,6 +220,8 @@ class SplashScreenViewController: UIViewController {
                 
                 if !nonExistingEnglishFilenames.isEmpty {
                     if let freader = FileReader(filename: "en_bg.dic") {
+                        // if EN trie doesn exist - create it
+                         // TODO: Shouldn't depend on wether Filenames exist or not
                         for filename in nonExistingEnglishFilenames {
                             
                             if self.catchyPhrasesDoneAnimating {
@@ -220,6 +246,27 @@ class SplashScreenViewController: UIViewController {
                             }
                             
                             freader.createFileForLetter(letter: filename)
+                        }
+                    }
+                }
+                
+                if !nonExistingTrieFilenames.isEmpty {
+                    for filename in nonExistingTrieFilenames {
+                        
+                        if self.catchyPhrasesDoneAnimating {
+                            DispatchQueue.main.async { // UI updates on main thred
+                                self.executeAnimationCycle()
+                            }
+                        }
+                        
+                        if filename == "T9Trie_EN", let freader = FileReader(filename: "en_bg.dic") {
+                            let enT9Trie = freader.createTrie()
+                            freader.encodeAndCacheTrie(t9Trie: enT9Trie, t9TrieFilename: "T9Trie_EN")
+                        }
+                        
+                        if filename == "T9Trie_BG", let freader = FileReader(filename: "bg_en.kyp") {
+                            let bgT9Trie = freader.createTrie()
+                            freader.encodeAndCacheTrie(t9Trie: bgT9Trie, t9TrieFilename: "T9Trie_BG")
                         }
                     }
                 }

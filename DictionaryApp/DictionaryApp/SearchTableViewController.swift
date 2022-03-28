@@ -52,6 +52,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 }
             
                 self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
+                //self.addWordsToTrie(forLetter: String(firstLetterOfSearchText))
                 self.updateSuggestionsIfNeeded(for: searchBarText)
             } else {
                 self.tableData = [DictionaryEntry]()
@@ -132,6 +133,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let suggestionsController = T9SuggestionsCollectionViewController()
+//        suggestionsController.searchEngineDelegate = self
+//        return suggestionsController.view
         return shouldShowSectionHeader ? self.feelingOldView : nil
     }
     

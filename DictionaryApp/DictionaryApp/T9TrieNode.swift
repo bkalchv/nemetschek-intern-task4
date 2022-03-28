@@ -9,22 +9,47 @@ import Foundation
 
 
 extension CharacterSet {
-    func containsUnicodeScalars(of character: Character) -> Bool {
-        return character.unicodeScalars.allSatisfy(contains(_:))
+    func containsUnicodeScalars(of string: String) -> Bool {
+        return string.unicodeScalars.allSatisfy(contains(_:))
     }
 }
 
-class T9TrieNode {
+class T9TrieNode : Codable {
     
-    static private let allowedCharacters = CharacterSet.init(charactersIn: "23456789#")
+    static private var allowedCharactersString = "23456789#"
+    static private var allowedCharactersSet = CharacterSet.init(charactersIn: allowedCharactersString)
     
-    var value: Character?
-    var children: [Character: T9TrieNode] = [:]
-    var isEndOfWord = false;
+    var value: String
+    var children: [String: T9TrieNode] = [:]
+    var isEndOfWord: Bool = false
     var suggestedWords: [T9TrieWord] = []
     
-    init?(value: Character? = nil) {
-        if let value = value, T9TrieNode.allowedCharacters.containsUnicodeScalars(of: value) {
+    private enum CodingKeys: String, CodingKey {
+        case value
+        case children
+        case isEndOfWord
+        case suggestedWords
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.value = try container.decode(String.self, forKey: CodingKeys.value)
+        self.children = try container.decode([String : T9TrieNode].self, forKey: CodingKeys.children)
+        self.isEndOfWord = try container.decode(Bool.self, forKey: CodingKeys.isEndOfWord)
+        self.suggestedWords = try container.decode([T9TrieWord].self, forKey: CodingKeys.suggestedWords)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.value, forKey: CodingKeys.value)
+        try container.encode(self.children, forKey: CodingKeys.children)
+        try container.encode(self.isEndOfWord, forKey: CodingKeys.isEndOfWord)
+        try container.encode(self.suggestedWords, forKey: CodingKeys.suggestedWords)
+
+    }
+    
+    init?(value: String) {
+        if T9TrieNode.allowedCharactersSet.containsUnicodeScalars(of: value) {
             self.value = value
         } else if value == T9Trie.T9TRIE_ROOT_VALUE {
             self.value = value
@@ -33,8 +58,18 @@ class T9TrieNode {
         }
     }
     
-    func addToChildren(childValue: Character) {
-        guard T9TrieNode.allowedCharacters.containsUnicodeScalars(of: childValue) else { return }
+//    required init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//
+//        children = try values.decode(, forKey: <#T##KeyedDecodingContainer<CodingKeys>.Key#>) // what would the type be tho
+//
+//        isEndOfWord = try values.decode(Bool.self, forKey: .isEndOfWord)
+//        suggestedWords = try values.decode(Array<T9TrieWord>.self, forKey: .suggestedWords)
+//
+//    }
+    
+    func addToChildren(childValue: String) {
+        guard T9TrieNode.allowedCharactersSet.containsUnicodeScalars(of: childValue) else { return }
         guard children[childValue] == nil else { return }
         children[childValue] = T9TrieNode(value: childValue)
     }
@@ -50,7 +85,7 @@ class T9TrieNode {
     }
     
     func increaseFrequenceOfUsageOfWord(ofWord word: T9TrieWord) {
-        if let suggestedWord = suggestedWords.first(where: {$0.stringValue == word.stringValue}) {
+        if let suggestedWord = suggestedWords.first(where: {$0.value == word.value}) {
             suggestedWord.frequenceOfUsage += 1
         }
     }
