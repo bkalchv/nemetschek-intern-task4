@@ -39,7 +39,7 @@ class T9Trie : Codable {
         return nil
     }
 
-    private func t9String(fromString string: String) -> String? {
+    func t9String(fromString string: String) -> String? {
         
         var t9String: String = ""
         

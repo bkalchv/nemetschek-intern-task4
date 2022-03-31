@@ -9,11 +9,16 @@ import UIKit
 import NumberPad
 import Toast
 
+protocol T9SuggestionsViewControllerDelegate: AnyObject {
+    func searchBarTextWasChanged(searchBarText: String)
+}
+
 class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FeelingOldViewDelegate, OptionsViewControllerDelegate {
-        
+    
+    weak var t9SuggestionsDelegate: T9SuggestionsViewControllerDelegate?
     var tableData = [DictionaryEntry]()
-    var shouldShowSectionHeader = false
-    let headerSectionHeight = 150.0
+    var shouldShowFeelingOldViewSectionHeader = false
+    let feelingOldViewHeaderSectionHeight = 150.0
     var searchEngine = SearchEngine()
     var didVCAppearOnce = false
     var firstInputWithNoNewSuggestions = ""
@@ -24,6 +29,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var wordOfTheDayDictionaryEntry: DictionaryEntry? = nil
     var feelingOldView: FeelingOldView?
     
+    @IBOutlet var t9SuggestionsContainerView: UIView!
     @IBOutlet weak var searchBar: NumberPad.CustomSearchBar!
     @IBOutlet weak var tableView: UITableView!
 
@@ -52,8 +58,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 }
             
                 self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-                //self.addWordsToTrie(forLetter: String(firstLetterOfSearchText))
                 self.updateSuggestionsIfNeeded(for: searchBarText)
+                self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
             } else {
                 self.tableData = [DictionaryEntry]()
                 self.tableView.reloadData()
@@ -81,9 +87,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 self.tableData = [DictionaryEntry]()
                 self.tableView.reloadData()
             }
+            
+            self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchText)
         })
     }
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,7 +100,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         tableView.dataSource = self
         feelingOldView = self.createFeelingOldViewFromNib()
         wordOfTheDayDictionaryEntry = searchEngine.randomDictionaryEntry()
-        shouldShowSectionHeader = true
+        shouldShowFeelingOldViewSectionHeader = true
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -129,14 +136,29 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return shouldShowSectionHeader ? headerSectionHeight : 0
+        
+        if shouldShowFeelingOldViewSectionHeader {
+            return feelingOldViewHeaderSectionHeight
+        }
+        
+        if !shouldShowFeelingOldViewSectionHeader && OptionsManager.shared.isMultitapTextingOn {
+            return t9SuggestionsContainerView.bounds.height
+        }
+        
+        return 0
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let suggestionsController = T9SuggestionsCollectionViewController()
-//        suggestionsController.searchEngineDelegate = self
-//        return suggestionsController.view
-        return shouldShowSectionHeader ? self.feelingOldView : nil
+        
+        if shouldShowFeelingOldViewSectionHeader {
+            return self.feelingOldView
+        }
+        
+        if !shouldShowFeelingOldViewSectionHeader && OptionsManager.shared.isMultitapTextingOn {
+            return self.t9SuggestionsContainerView
+        }
+        
+        return nil
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -148,7 +170,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
 
     func showFeelingOldView() {
         if self.feelingOldView != nil {
-            self.feelingOldView!.heightConstraint.constant = headerSectionHeight
+            self.feelingOldView!.heightConstraint.constant = feelingOldViewHeaderSectionHeight
             UIView.animate(withDuration: 0.5, delay: 0.0, options:[], animations: {
                 self.view.layoutIfNeeded()
             }, completion: nil)
@@ -164,7 +186,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             }, completion: {
                 finished in
                 if finished {
-                    self.shouldShowSectionHeader = false
+                    self.shouldShowFeelingOldViewSectionHeader = false
                     self.feelingOldView = nil
                     self.tableView.reloadData()
                 }
@@ -390,14 +412,21 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        
+        super.prepare(for: segue, sender: sender)
+        
+        if let collectionVC = segue.destination as? T9SuggestionsViewController {
+            self.t9SuggestionsDelegate = collectionVC
+        }
+        
     }
-    */
+    
 
 }

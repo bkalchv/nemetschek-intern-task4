@@ -58,16 +58,6 @@ class T9TrieNode : Codable {
         }
     }
     
-//    required init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//
-//        children = try values.decode(, forKey: <#T##KeyedDecodingContainer<CodingKeys>.Key#>) // what would the type be tho
-//
-//        isEndOfWord = try values.decode(Bool.self, forKey: .isEndOfWord)
-//        suggestedWords = try values.decode(Array<T9TrieWord>.self, forKey: .suggestedWords)
-//
-//    }
-    
     func addToChildren(childValue: String) {
         guard T9TrieNode.allowedCharactersSet.containsUnicodeScalars(of: childValue) else { return }
         guard children[childValue] == nil else { return }

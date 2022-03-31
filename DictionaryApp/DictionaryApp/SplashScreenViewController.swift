@@ -220,8 +220,6 @@ class SplashScreenViewController: UIViewController {
                 
                 if !nonExistingEnglishFilenames.isEmpty {
                     if let freader = FileReader(filename: "en_bg.dic") {
-                        // if EN trie doesn exist - create it
-                         // TODO: Shouldn't depend on wether Filenames exist or not
                         for filename in nonExistingEnglishFilenames {
                             
                             if self.catchyPhrasesDoneAnimating {
@@ -251,7 +249,7 @@ class SplashScreenViewController: UIViewController {
                 }
                 
                 if !nonExistingTrieFilenames.isEmpty {
-                    for filename in nonExistingTrieFilenames {
+                    for trieFilename in nonExistingTrieFilenames {
                         
                         if self.catchyPhrasesDoneAnimating {
                             DispatchQueue.main.async { // UI updates on main thred
@@ -259,12 +257,12 @@ class SplashScreenViewController: UIViewController {
                             }
                         }
                         
-                        if filename == "T9Trie_EN", let freader = FileReader(filename: "en_bg.dic") {
+                        if trieFilename == "T9Trie_EN", let freader = FileReader(filename: "en_bg.dic") {
                             let enT9Trie = freader.createTrie()
                             freader.encodeAndCacheTrie(t9Trie: enT9Trie, t9TrieFilename: "T9Trie_EN")
                         }
                         
-                        if filename == "T9Trie_BG", let freader = FileReader(filename: "bg_en.kyp") {
+                        if trieFilename == "T9Trie_BG", let freader = FileReader(filename: "bg_en.kyp") {
                             let bgT9Trie = freader.createTrie()
                             freader.encodeAndCacheTrie(t9Trie: bgT9Trie, t9TrieFilename: "T9Trie_BG")
                         }
