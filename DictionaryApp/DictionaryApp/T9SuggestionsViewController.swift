@@ -31,9 +31,19 @@ class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource
         collectionView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         ENt9Trie = decodeTrie(trieFilename: "T9Trie_EN")
         
-        //        let weighted = UserDefaults.standard.object(forKey: "weighted_words") as [String : Int]
-        //        t9trie?.insertWord(word: word, weighted[word])
         
+        if let weightedWords = UserDefaults.standard.object(forKey: "weighted_words_EN") as? [String : UInt] {
+            
+            weightedWords.forEach {
+                let word = $0.key
+                let frequenceOfUsage = $0.value
+                
+                ENt9Trie?.insertWord(word: word, withFrequenceOfUsage: frequenceOfUsage)
+            }
+            
+        } else {
+            UserDefaults.standard.set([String : UInt](), forKey: "weighted_words_EN")
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -41,6 +51,7 @@ class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource
             
         let t9WordSuggestionAsString = suggestions[indexPath.row]
         cell.suggestionLabel.text = t9WordSuggestionAsString
+        cell.suggestionLabel.textColor = UIColor.white
             
         return cell
     }
