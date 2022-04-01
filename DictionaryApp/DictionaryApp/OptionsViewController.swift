@@ -21,6 +21,8 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     @IBOutlet weak var multitapTextingSwitch: UISwitch!
     @IBOutlet weak var multitapCyrillicLabel: UILabel!
     @IBOutlet weak var multiTapCyrillicSwitch: UISwitch!
+    @IBOutlet weak var T9PredictiveTextingLabel: UILabel!
+    @IBOutlet weak var T9PredictiveTextingSwitch: UISwitch!
     
     let pickerData: [Int] = [Int](1...20)
     
@@ -45,6 +47,16 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         multiTapCyrillicSwitch.isEnabled = false
     }
     
+    func enableT9PredictiveTextingIBOs() {
+        T9PredictiveTextingLabel.isEnabled = true
+        T9PredictiveTextingSwitch.isEnabled = true
+    }
+    
+    func disableT9PredictiveTextingIBOs() {
+        T9PredictiveTextingLabel.isEnabled = false
+        T9PredictiveTextingSwitch.isEnabled = false
+    }
+    
     func toggleIBOsOnIsMultitapTextingOn() {
         multitapTextingSwitch.isOn = true
         
@@ -55,6 +67,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         
         disableKeystrokeIBOs()
         enableMultitapCyrillicIBOs()
+        enableT9PredictiveTextingIBOs()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,6 +79,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         } else {
             enableKeystrokeIBOs()
             disableMultitapCyrillicIBOs()
+            disableT9PredictiveTextingIBOs()
         }
         
     }
@@ -116,6 +130,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         } else {
             enableKeystrokeIBOs()
             disableMultitapCyrillicIBOs()
+            disableT9PredictiveTextingIBOs()
         }
     }
     

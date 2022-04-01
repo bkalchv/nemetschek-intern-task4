@@ -27,13 +27,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="koo-Cs-hsq">
-                                <rect key="frame" x="315" y="315" width="49" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="onKeyStrokeSwitchPress:" destination="YdP-nz-AQw" eventType="valueChanged" id="jhd-fC-NkU"/>
-                                </connections>
-                            </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Translate on each key-stroke:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ATI-16-xRG">
                                 <rect key="frame" x="20" y="317" width="279" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -49,7 +42,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="bl6-mS-vMq">
-                                <rect key="frame" x="315" y="368" width="49" height="31"/>
+                                <rect key="frame" x="314" y="368" width="49" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="onMultiTapTextingPress:" destination="YdP-nz-AQw" eventType="valueChanged" id="8nG-vr-13S"/>
@@ -63,10 +56,28 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="dx0-Nn-LcZ">
-                                <rect key="frame" x="315" y="421" width="49" height="31"/>
+                                <rect key="frame" x="314" y="421" width="49" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="onMultitapCyrillicSwitchPress:" destination="YdP-nz-AQw" eventType="valueChanged" id="RHY-GF-n1M"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="T9 Predictive texting:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v63-oP-ius">
+                                <rect key="frame" x="20" y="473" width="208" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="BVa-2D-KSV">
+                                <rect key="frame" x="314" y="471" width="49" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </switch>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="koo-Cs-hsq">
+                                <rect key="frame" x="314" y="315" width="49" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="onKeyStrokeSwitchPress:" destination="YdP-nz-AQw" eventType="valueChanged" id="jhd-fC-NkU"/>
                                 </connections>
                             </switch>
                         </subviews>
@@ -75,6 +86,8 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="settings_black_24pt" id="Fs8-OE-lja"/>
                     <connections>
+                        <outlet property="T9PredictiveTextingLabel" destination="v63-oP-ius" id="3Mo-VU-nGR"/>
+                        <outlet property="T9PredictiveTextingSwitch" destination="BVa-2D-KSV" id="Oxp-89-D9X"/>
                         <outlet property="keystrokeLabel" destination="ATI-16-xRG" id="QfT-CL-BlH"/>
                         <outlet property="keystrokeSwitch" destination="koo-Cs-hsq" id="bUQ-NI-QTR"/>
                         <outlet property="multiTapCyrillicSwitch" destination="dx0-Nn-LcZ" id="V28-2o-aAP"/>

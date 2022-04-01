@@ -40,10 +40,11 @@ class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource
                 
                 ENt9Trie?.insertWord(word: word, withFrequenceOfUsage: frequenceOfUsage)
             }
-            
-        } else {
-            UserDefaults.standard.set([String : UInt](), forKey: "weighted_words_EN")
         }
+        // TODO: Decide where to initialize and update the weighted_words dictionary in UserDefaults
+//        } else {
+//            UserDefaults.standard.set([String : UInt](), forKey: "weighted_words_EN")
+//        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
