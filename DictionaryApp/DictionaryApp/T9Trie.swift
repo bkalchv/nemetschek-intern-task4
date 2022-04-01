@@ -70,8 +70,38 @@ class T9Trie : Codable {
                 }
             }
             currentNode.isEndOfWord = true
-            let newWordSuggestionCandidate = T9TrieWord(withValue: word, withFrequenceOfUsage: 1)
-            if !currentNode.addWordSuggestionIfNotPresent(forWord: newWordSuggestionCandidate) { currentNode.increaseFrequenceOfUsageOfWord(ofWord: newWordSuggestionCandidate) }
+            let T9WordSuggestionCandidate = T9TrieWord(withValue: word)
+            
+            if currentNode.containsT9WordInSuggestions(forT9Word: T9WordSuggestionCandidate) {
+                currentNode.increaseFrequenceOfUsageOfT9Word(ofT9Word: T9WordSuggestionCandidate)
+            } else {
+                currentNode.insertT9WordInSuggestions(forT9Word: T9WordSuggestionCandidate)
+            }
+        }
+    }
+    
+    func insertWord(word: String, withFrequenceOfUsage frequenceOfUsage: UInt) {
+        guard !word.isEmpty else { return }
+        
+        var currentNode = root
+        
+        if let wordAsT9String = t9String(fromString: word) {
+            for keypressValue in wordAsT9String {
+                if let child = currentNode.children[String(keypressValue)] {
+                    currentNode = child
+                } else {
+                    currentNode.addToChildren(childValue: String(keypressValue))
+                    currentNode = currentNode.children[String(keypressValue)]!
+                }
+            }
+            currentNode.isEndOfWord = true
+            let T9WordSuggestionCandidate = T9TrieWord(withValue: word, withFrequenceOfUsage: frequenceOfUsage)
+            
+            if currentNode.containsT9WordInSuggestions(forT9Word: T9WordSuggestionCandidate) {
+                currentNode.setFrequenceOfUsageOfWord(ofWord: T9WordSuggestionCandidate, frequenceOfUsage: frequenceOfUsage)
+            } else {
+                currentNode.insertT9WordInSuggestions(forT9Word: T9WordSuggestionCandidate)
+            }
         }
     }
     
@@ -90,7 +120,7 @@ class T9Trie : Codable {
                 }
             }
             
-            return currentNode.suggestedWords.contains(where: {$0.value == word})
+            return currentNode.suggestedT9Words.contains(where: {$0.value == word})
         } else {
             return false
         }
@@ -125,6 +155,6 @@ class T9Trie : Codable {
         
         if !currentNode.isEndOfWord { return nil }
         
-        return currentNode.suggestedWords
+        return currentNode.suggestedT9Words
     }
 }

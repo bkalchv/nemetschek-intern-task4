@@ -30,9 +30,6 @@ class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource
         collectionView.layer.cornerRadius = 10
         collectionView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         ENt9Trie = decodeTrie(trieFilename: "T9Trie_EN")
-        //        if let wordSuggestions = ENt9Trie?.wordSuggestions(forT9String: "4663") {
-        //            suggestions = wordSuggestions.map { $0.value }
-        //        }
         
         //        let weighted = UserDefaults.standard.object(forKey: "weighted_words") as [String : Int]
         //        t9trie?.insertWord(word: word, weighted[word])
@@ -62,6 +59,13 @@ class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource
     }
     
     func searchBarTextWasChanged(searchBarText: String) {
+        
+        if searchBarText.isEmpty {
+            suggestions = [String]()
+            collectionView.reloadData()
+            // TODO: hide container view
+        }
+        
         if let ENt9Trie = ENt9Trie, let searchBarTextAsT9String = ENt9Trie.t9String(fromString: searchBarText), let suggestionsForSearchBarText = ENt9Trie.wordSuggestions(forT9String: searchBarTextAsT9String)  {
             suggestions = suggestionsForSearchBarText.map{ $0.value }
             collectionView.reloadData()

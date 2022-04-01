@@ -22,7 +22,7 @@ class T9TrieNode : Codable {
     var value: String
     var children: [String: T9TrieNode] = [:]
     var isEndOfWord: Bool = false
-    var suggestedWords: [T9TrieWord] = []
+    var suggestedT9Words: [T9TrieWord] = []
     
     private enum CodingKeys: String, CodingKey {
         case value
@@ -36,7 +36,7 @@ class T9TrieNode : Codable {
         self.value = try container.decode(String.self, forKey: CodingKeys.value)
         self.children = try container.decode([String : T9TrieNode].self, forKey: CodingKeys.children)
         self.isEndOfWord = try container.decode(Bool.self, forKey: CodingKeys.isEndOfWord)
-        self.suggestedWords = try container.decode([T9TrieWord].self, forKey: CodingKeys.suggestedWords)
+        self.suggestedT9Words = try container.decode([T9TrieWord].self, forKey: CodingKeys.suggestedWords)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -44,7 +44,7 @@ class T9TrieNode : Codable {
         try container.encode(self.value, forKey: CodingKeys.value)
         try container.encode(self.children, forKey: CodingKeys.children)
         try container.encode(self.isEndOfWord, forKey: CodingKeys.isEndOfWord)
-        try container.encode(self.suggestedWords, forKey: CodingKeys.suggestedWords)
+        try container.encode(self.suggestedT9Words, forKey: CodingKeys.suggestedWords)
 
     }
     
@@ -64,19 +64,25 @@ class T9TrieNode : Codable {
         children[childValue] = T9TrieNode(value: childValue)
     }
     
-    func addWordSuggestionIfNotPresent(forWord word: T9TrieWord) -> Bool {
-        if suggestedWords.contains(word) {
-           return false
-        } else {
-            suggestedWords.append(word)
-            suggestedWords.sort(by: {$0.frequenceOfUsage > $1.frequenceOfUsage}) // TODO: Maybe fix by implementing a Sorted set
-            return true
-        }
+    func containsT9WordInSuggestions(forT9Word t9Word: T9TrieWord) -> Bool {
+        return suggestedT9Words.contains(t9Word)
     }
     
-    func increaseFrequenceOfUsageOfWord(ofWord word: T9TrieWord) {
-        if let suggestedWord = suggestedWords.first(where: {$0.value == word.value}) {
+    func insertT9WordInSuggestions(forT9Word t9Word: T9TrieWord) {
+        suggestedT9Words.append(t9Word)
+        suggestedT9Words.sort(by: {$0.frequenceOfUsage > $1.frequenceOfUsage})
+    }
+    
+    func increaseFrequenceOfUsageOfT9Word(ofT9Word word: T9TrieWord) {
+        if let suggestedWord = suggestedT9Words.first(where: {$0.value == word.value}) {
             suggestedWord.frequenceOfUsage += 1
         }
     }
+    
+    func setFrequenceOfUsageOfWord(ofWord word: T9TrieWord, frequenceOfUsage: UInt) {
+        if let suggestedWord = suggestedT9Words.first(where: {$0.value == word.value}) {
+            suggestedWord.frequenceOfUsage = frequenceOfUsage
+        }
+    }
+    
 }

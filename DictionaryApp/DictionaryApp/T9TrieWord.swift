@@ -12,7 +12,7 @@ class T9TrieWord: Equatable, CustomStringConvertible, Codable {
     var value: String
     var frequenceOfUsage: UInt
     
-    init(withValue value: String, withFrequenceOfUsage frequence: UInt) {
+    init(withValue value: String, withFrequenceOfUsage frequence: UInt = 1) {
         self.value = value
         self.frequenceOfUsage = frequence
     }
