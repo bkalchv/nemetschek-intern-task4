@@ -101,6 +101,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+        
         setCustomSearchBarSearchButtonClickedClosure()
         setCustomSearchBarTextDidChangeClosure()
         tableView.delegate = self
@@ -461,5 +466,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
     }
     
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+        print("dismissKeyobard")
+    }
 
 }
