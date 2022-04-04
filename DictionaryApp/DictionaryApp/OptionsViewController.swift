@@ -10,6 +10,7 @@ import UIKit
 protocol OptionsViewControllerDelegate: AnyObject {
     func toggleSearchBarInputMode()
     func toggleSearchBarMultitapLanguage()
+    func toggleSearchBarT9PredictiveTexting()
 }
 
 class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -76,6 +77,11 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         
         if  OptionsManager.shared.isMultitapTextingOn {
             toggleIBOsOnIsMultitapTextingOn()
+            
+            if OptionsManager.shared.isT9PredictiveTextingOn {
+                T9PredictiveTextingSwitch.isOn = true
+            }
+            
         } else {
             enableKeystrokeIBOs()
             disableMultitapCyrillicIBOs()
@@ -134,6 +140,10 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         }
     }
     
+    @IBAction func onT9PredictiveTextingSwitchPress(_ sender: Any) {
+        OptionsManager.shared.toggleT9PredictiveTexting()
+        delegate?.toggleSearchBarT9PredictiveTexting()
+    }
     /*
     // MARK: - Navigation
 

@@ -16,10 +16,10 @@ protocol T9SuggestionsViewControllerDelegate: AnyObject {
 class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FeelingOldViewDelegate, OptionsViewControllerDelegate {
     
     weak var t9SuggestionsDelegate: T9SuggestionsViewControllerDelegate?
-    var tableData = [DictionaryEntry]()
-    var shouldShowFeelingOldViewSectionHeader = false
-    let feelingOldViewHeaderSectionHeight = 150.0
     var searchEngine = SearchEngine()
+    var tableData = [DictionaryEntry]()
+    var shouldShowFeelingOldViewInSectionHeader = false
+    let feelingOldViewHeaderSectionHeight = 150.0
     var didVCAppearOnce = false
     var firstInputWithNoNewSuggestions = ""
     var lastSelectedCellIndexPath: IndexPath? = nil
@@ -48,6 +48,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         self.searchBar.setDefaultSearchButtonClickedClosure(closure: {
             if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
                 
+                self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
                 
                 if !self.firstInputWithNoNewSuggestions.isEmpty {
                     if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
@@ -59,7 +60,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             
                 self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
                 self.updateSuggestionsIfNeeded(for: searchBarText)
-                self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
+                
             } else {
                 self.tableData = [DictionaryEntry]()
                 self.tableView.reloadData()
@@ -70,9 +71,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func setCustomSearchBarTextDidChangeClosure() {
         
         self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchText in
-                        
+            
+            self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchText)
+            
             if OptionsManager.shared.shouldTranslateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
-                
+                            
                 if !self.firstInputWithNoNewSuggestions.isEmpty {
                     if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
                         return
@@ -88,7 +91,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 self.tableView.reloadData()
             }
             
-            self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchText)
+            
         })
     }
     
@@ -100,7 +103,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         tableView.dataSource = self
         feelingOldView = self.createFeelingOldViewFromNib()
         wordOfTheDayDictionaryEntry = searchEngine.randomDictionaryEntry()
-        shouldShowFeelingOldViewSectionHeader = true
+        shouldShowFeelingOldViewInSectionHeader = true
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -137,11 +140,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if shouldShowFeelingOldViewSectionHeader {
+        if shouldShowFeelingOldViewInSectionHeader {
             return feelingOldViewHeaderSectionHeight
         }
         
-        if !shouldShowFeelingOldViewSectionHeader && OptionsManager.shared.isMultitapTextingOn {
+        if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isMultitapTextingOn && OptionsManager.shared.isT9PredictiveTextingOn {
             return t9SuggestionsContainerView.bounds.height
         }
         
@@ -150,11 +153,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if shouldShowFeelingOldViewSectionHeader {
+        if shouldShowFeelingOldViewInSectionHeader {
             return self.feelingOldView
         }
         
-        if !shouldShowFeelingOldViewSectionHeader && OptionsManager.shared.isMultitapTextingOn {
+        if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isMultitapTextingOn && OptionsManager.shared.isT9PredictiveTextingOn {
             return self.t9SuggestionsContainerView
         }
         
@@ -186,7 +189,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             }, completion: {
                 finished in
                 if finished {
-                    self.shouldShowFeelingOldViewSectionHeader = false
+                    self.shouldShowFeelingOldViewInSectionHeader = false
                     self.feelingOldView = nil
                     self.tableView.reloadData()
                 }
@@ -214,6 +217,12 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
     }
     
+    func setT9PredictiveText() {
+        if !OptionsManager.shared.isT9PredictiveTextingOn {
+            OptionsManager.shared.setT9PredictiveTexting(to: true)
+        }
+    }
+    
 //MARK: - OptionsViewDelegate
     
     func toggleSearchBarInputMode() {
@@ -222,6 +231,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func toggleSearchBarMultitapLanguage() {
         searchBar.toggleMultitapLanguage()
+    }
+    
+    func toggleSearchBarT9PredictiveTexting() {
+        
     }
     
     func suggestionEntries(forInput input: String) -> [DictionaryEntry] {

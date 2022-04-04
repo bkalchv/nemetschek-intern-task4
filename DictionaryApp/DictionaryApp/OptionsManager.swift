@@ -16,10 +16,13 @@ class OptionsManager {
     
     var isMultitapTextingOn: Bool = false
     
+    var isT9PredictiveTextingOn: Bool = false
+    
     init(){
         suggestionsToBeShownAmount = 10
         shouldTranslateOnEachKeyStroke = true
         isMultitapTextingOn = false
+        isT9PredictiveTextingOn = false
     }
     
     func changeSuggestionsAmount(toSuggestionsAmount suggestionsAmount: Int) {
@@ -36,5 +39,13 @@ class OptionsManager {
     
     func setMultiTapTexting(to booleanValue: Bool) {
         isMultitapTextingOn = booleanValue
+    }
+    
+    func toggleT9PredictiveTexting() {
+        isT9PredictiveTextingOn.toggle()
+    }
+    
+    func setT9PredictiveTexting(to booleanValue: Bool) {
+        isT9PredictiveTextingOn = booleanValue
     }
 }

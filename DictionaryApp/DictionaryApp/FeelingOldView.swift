@@ -11,6 +11,7 @@ import UIKit
 protocol FeelingOldViewDelegate: AnyObject {
     func hideFeelingOldView()
     func setStandardInput()
+    func setT9PredictiveText()
     func setMultitapInput()
 }
 
@@ -27,13 +28,12 @@ class FeelingOldView : UIView {
     }
     
     @IBAction func onButtonElderlyClick(_ sender: Any) {
-        //TODO: Ask if fine
         delegate?.setMultitapInput()
+        delegate?.setT9PredictiveText()
         delegate?.hideFeelingOldView()
     }
     
     @IBAction func onButtonYouthClick(_ sender: Any) {
-        //TODO: Ask if fine
         delegate?.setStandardInput()
         delegate?.hideFeelingOldView()
     }
