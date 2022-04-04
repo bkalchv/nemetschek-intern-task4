@@ -16,4 +16,13 @@ class T9CollectionViewCell: UICollectionViewCell {
     func configureSuggestionLabel(suggestion: String) {
         suggestionLabel.text = suggestion
     }
+    
+    func cellSuggestionAsString() -> String {
+        
+        if let suggestionLabelText = suggestionLabel.text {
+            return suggestionLabelText
+        }
+ 
+        return ""
+    }
 }

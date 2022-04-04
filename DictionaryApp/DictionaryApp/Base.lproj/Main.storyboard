@@ -356,7 +356,7 @@
         <!--Suggestions View Controller-->
         <scene sceneID="f5M-Vt-RP5">
             <objects>
-                <viewController storyboardIdentifier="SuggestionsCVC" id="xNL-Yo-ODR" customClass="T9SuggestionsViewController" customModule="DictionaryApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="T9SuggestionsCVC" id="xNL-Yo-ODR" customClass="T9SuggestionsViewController" customModule="DictionaryApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="l4Z-Rz-qW9">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

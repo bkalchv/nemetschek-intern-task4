@@ -17,8 +17,13 @@ extension String {
     }
 }
 
+protocol SearchTableViewControllerDelegate: AnyObject {
+    func updateSearchBarText(withText text: String)
+}
+
 class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, T9SuggestionsViewControllerDelegate {
     
+    weak var searchTableVCDelegate: SearchTableViewControllerDelegate?
     @IBOutlet weak var collectionView: UICollectionView!
     private var ENt9Trie: T9Trie? = nil
     private var suggestions: [String] = [String]()
@@ -41,7 +46,8 @@ class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource
                 ENt9Trie?.insertWord(word: word, withFrequenceOfUsage: frequenceOfUsage)
             }
         }
-        // TODO: Decide where to initialize and update the weighted_words dictionary in UserDefaults
+        
+// TODO: Decide where to initialize and update the weighted_words dictionary in UserDefaults
 //        } else {
 //            UserDefaults.standard.set([String : UInt](), forKey: "weighted_words_EN")
 //        }
@@ -68,6 +74,11 @@ class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource
         let width = currentSuggestion.width(withConstrainedHeight: 50, font: T9CollectionViewCell.suggestionLabelFont)
         
         return CGSize(width: width + 5, height: 50)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = self.collectionView(self.collectionView, cellForItemAt: indexPath) as! T9CollectionViewCell
+        searchTableVCDelegate?.updateSearchBarText(withText: cell.cellSuggestionAsString())
     }
     
     func searchBarTextWasChanged(searchBarText: String) {

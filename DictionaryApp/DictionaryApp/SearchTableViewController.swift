@@ -13,8 +13,8 @@ protocol T9SuggestionsViewControllerDelegate: AnyObject {
     func searchBarTextWasChanged(searchBarText: String)
 }
 
-class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FeelingOldViewDelegate, OptionsViewControllerDelegate {
-    
+class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FeelingOldViewDelegate, OptionsViewControllerDelegate, SearchTableViewControllerDelegate {
+      
     weak var t9SuggestionsDelegate: T9SuggestionsViewControllerDelegate?
     var searchEngine = SearchEngine()
     var tableData = [DictionaryEntry]()
@@ -48,7 +48,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         self.searchBar.setDefaultSearchButtonClickedClosure(closure: {
             if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
                 
-                self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
+                if OptionsManager.shared.isT9PredictiveTextingOn {
+                    self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
+                }
                 
                 if !self.firstInputWithNoNewSuggestions.isEmpty {
                     if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
@@ -70,22 +72,24 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func setCustomSearchBarTextDidChangeClosure() {
         
-        self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchText in
+        self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchBarText in
             
-            self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchText)
+            if OptionsManager.shared.isT9PredictiveTextingOn {
+                self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
+            }
             
-            if OptionsManager.shared.shouldTranslateOnEachKeyStroke, !searchText.isEmpty, let firstLetterOfSearchText = searchText.first, firstLetterOfSearchText.isLetter {
+            if OptionsManager.shared.shouldTranslateOnEachKeyStroke, !searchBarText.isEmpty, let firstLetterOfSearchBarText = searchBarText.first, firstLetterOfSearchBarText.isLetter {
                             
                 if !self.firstInputWithNoNewSuggestions.isEmpty {
-                    if searchText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
+                    if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
                         return
                     } else {
                         self.firstInputWithNoNewSuggestions = ""
                     }
                 }
                 
-                self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchText))
-                self.updateSuggestionsIfNeeded(for: searchText)
+                self.loadEntriesForLetterIfNeeded(letter: String(firstLetterOfSearchBarText))
+                self.updateSuggestionsIfNeeded(for: searchBarText)
             } else {
                 self.tableData = [DictionaryEntry]()
                 self.tableView.reloadData()
@@ -134,6 +138,13 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if let lastSelectedRowIndexPath = self.lastSelectedCellIndexPath, let cell = tableView.cellForRow(at: lastSelectedRowIndexPath) as? WordTableViewCell  {
             cell.translationView.isHidden = false
             cell.isExpanded = true
+        }
+        
+        
+        // TODO: Ask how to handle that better
+        if OptionsManager.shared.isT9PredictiveTextingOn {
+            setCustomSearchBarTextDidChangeClosure()
+            setCustomSearchBarSearchButtonClickedClosure()
         }
         
     }
@@ -287,6 +298,14 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func areWordsWithSamePrefixInTableDataPresent() -> Bool {
         return self.tableData.contains { $0.word.hasPrefix(self.firstInputWithNoNewSuggestions) }
     }
+    
+    // MARK: - SearchTableVCDelegate's methods
+    
+    func updateSearchBarText(withText text: String) {
+        searchBar.text = text
+        searchBar.executeDefaultSearchButtonClickedClosure()
+    }
+    
     // MARK: - Table view data source
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -437,6 +456,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if let collectionVC = segue.destination as? T9SuggestionsViewController {
             self.t9SuggestionsDelegate = collectionVC
+            collectionVC.searchTableVCDelegate = self
         }
         
     }
