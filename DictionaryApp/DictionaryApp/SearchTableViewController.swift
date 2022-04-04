@@ -34,14 +34,14 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     @IBOutlet weak var tableView: UITableView!
 
     func createFeelingOldViewFromNib() -> FeelingOldView  {
-        let viewFromNib: FeelingOldView = Bundle.main.loadNibNamed("feelingOldView", owner: self, options: nil)?.first as! FeelingOldView
+        let feelingOldViewFromNib: FeelingOldView = Bundle.main.loadNibNamed("feelingOldView", owner: self, options: nil)?.first as! FeelingOldView
         
-        viewFromNib.layer.cornerRadius = 10
-        viewFromNib.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        viewFromNib.heightConstraint.constant = 0
-        viewFromNib.delegate = self
+        feelingOldViewFromNib.layer.cornerRadius = 10
+        feelingOldViewFromNib.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        feelingOldViewFromNib.heightConstraint.constant = 0
+        feelingOldViewFromNib.delegate = self
         
-        return viewFromNib
+        return feelingOldViewFromNib
     }
     
     func setCustomSearchBarSearchButtonClickedClosure() {
@@ -138,6 +138,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             collapsePreviouslySelectedCellIfVisible()
             tableView.reloadData()
             
+            if OptionsManager.shared.isT9PredictiveTextingOn {
+                t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
+            }
+            
         }
         
         if let lastSelectedRowIndexPath = self.lastSelectedCellIndexPath, let cell = tableView.cellForRow(at: lastSelectedRowIndexPath) as? WordTableViewCell  {
@@ -174,6 +178,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
         
         if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isMultitapTextingOn && OptionsManager.shared.isT9PredictiveTextingOn {
+            
+            if let searchBarText = searchBar.text {
+                t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
+            }
+                        
             return self.t9SuggestionsContainerView
         }
         
@@ -309,6 +318,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func updateSearchBarText(withText text: String) {
         searchBar.text = text
         searchBar.executeDefaultSearchButtonClickedClosure()
+    }
+    
+    func hideT9SuggestionsContainerView() {
+        // TODO: implement
     }
     
     // MARK: - Table view data source
@@ -468,7 +481,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
-        print("dismissKeyobard")
     }
 
 }

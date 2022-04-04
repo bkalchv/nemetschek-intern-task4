@@ -19,6 +19,7 @@ extension String {
 
 protocol SearchTableViewControllerDelegate: AnyObject {
     func updateSearchBarText(withText text: String)
+    func hideT9SuggestionsContainerView()
 }
 
 class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, T9SuggestionsViewControllerDelegate {
@@ -86,6 +87,7 @@ class T9SuggestionsViewController : UIViewController, UICollectionViewDataSource
         if searchBarText.isEmpty {
             suggestions = [String]()
             collectionView.reloadData()
+            //searchTableVCDelegate?.hideT9SuggestionsView()
             // TODO: hide container view
         }
         

@@ -406,6 +406,7 @@
                             <constraint firstItem="8gH-da-E0l" firstAttribute="height" secondItem="l4Z-Rz-qW9" secondAttribute="height" id="593-cc-KXc"/>
                             <constraint firstItem="8gH-da-E0l" firstAttribute="leading" secondItem="3XZ-Dz-kwC" secondAttribute="leading" constant="7" id="bpp-Gc-gLM"/>
                             <constraint firstItem="8gH-da-E0l" firstAttribute="centerY" secondItem="3XZ-Dz-kwC" secondAttribute="centerY" constant="-22" id="cvg-TG-h01"/>
+                            <constraint firstItem="8gH-da-E0l" firstAttribute="width" secondItem="l4Z-Rz-qW9" secondAttribute="width" multiplier="0.966184" id="nWU-vj-xMf"/>
                         </constraints>
                     </view>
                     <connections>
