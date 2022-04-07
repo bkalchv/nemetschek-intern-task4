@@ -21,7 +21,7 @@ extension String {
 protocol SearchTableViewControllerDelegate: AnyObject {
     func updateSearchBarText(withText text: String) //TODO delete
     func hideT9SuggestionsContainerView()
-    var  t9String: String { get }
+    var  searchBarTextAsT9String: String { get }
 }
 
 private let reuseIdentifier = "T9CollectionViewCell"
@@ -30,18 +30,21 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
     
     weak var searchTableVCDelegate: SearchTableViewControllerDelegate?
     
+    
+    func setupCollectionView() {
+        collectionView.backgroundColor = UIColor.tintColor
+        collectionView.layer.cornerRadius = 10
+        collectionView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        //self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        collectionView.backgroundColor = UIColor.tintColor
-        collectionView.layer.cornerRadius = 10
-        collectionView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+    
         // Do any additional setup after loading the view.
+        setupCollectionView()
     }
 
     /*
@@ -64,14 +67,14 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        let t9WordStrings = CustomSearchBar.T9SuggestionsDataSourceEN(forT9String: self.searchTableVCDelegate!.t9String)
+        let t9WordStrings = CustomSearchBar.T9SuggestionsDataSourceEN(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
         return t9WordStrings.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! T9CollectionViewCell
         
-        let t9WordStrings = CustomSearchBar.T9SuggestionsDataSourceEN(forT9String: self.searchTableVCDelegate!.t9String)
+        let t9WordStrings = CustomSearchBar.T9SuggestionsDataSourceEN(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
         let suggestedString = t9WordStrings[indexPath.row]
         cell.suggestionLabel.text = suggestedString
         cell.suggestionLabel.textColor = UIColor.white
@@ -94,7 +97,7 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let t9WordStrings =  CustomSearchBar.T9SuggestionsDataSourceEN(forT9String: self.searchTableVCDelegate!.t9String)
+        let t9WordStrings =  CustomSearchBar.T9SuggestionsDataSourceEN(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
         
         let currentSuggestion = t9WordStrings[indexPath.row]
         

@@ -25,9 +25,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var lastSelectedCellIndexPath: IndexPath? = nil
     let selectedCellHeight = 200.0
     let unselectedCellHeight = 50.0
-    var t9String: String {
+    var searchBarTextAsT9String: String {
         get {
-            if let searchBarText = searchBar.text, OptionsManager.shared.isT9PredictiveTextingOn { return T9Trie.t9Stringify(text: searchBarText) }
+            if let searchBarText = searchBar.text, OptionsManager.shared.isT9PredictiveTextingOn {
+                return T9Trie.t9Stringify(text: searchBarText)
+            }
             return ""
         }
     }
@@ -54,6 +56,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         self.searchBar.setDefaultSearchButtonClickedClosure(closure: {
             if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
                 
+                if OptionsManager.shared.isT9PredictiveTextingOn { self.t9SuggestionsDelegate?.searchBarTextWasChanged() }
+                
                 if !self.firstInputWithNoNewSuggestions.isEmpty {
                     if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
                         return
@@ -77,7 +81,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchBarText in
             
             if OptionsManager.shared.shouldTranslateOnEachKeyStroke, !searchBarText.isEmpty, let firstLetterOfSearchBarText = searchBarText.first, firstLetterOfSearchBarText.isLetter {
-                            
+                
+                if OptionsManager.shared.isT9PredictiveTextingOn { self.t9SuggestionsDelegate?.searchBarTextWasChanged() }
+                
                 if !self.firstInputWithNoNewSuggestions.isEmpty {
                     if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) && !self.areWordsWithSamePrefixInTableDataPresent() {
                         return
@@ -115,13 +121,17 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         view.addGestureRecognizer(tap)
     }
     
+    func updateCustomSearchBarClosures() {
+        setCustomSearchBarSearchButtonClickedClosure()
+        setCustomSearchBarTextDidChangeClosure()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         setupWordOfTheDay()
         setupTapGestureDismissingKeyboard()
-        setCustomSearchBarSearchButtonClickedClosure()
-        setCustomSearchBarTextDidChangeClosure()
+        updateCustomSearchBarClosures()
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -129,6 +139,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+    
+
     
     override func viewWillAppear(_ animated: Bool) {
         
@@ -150,10 +162,12 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             if shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
                 hideFeelingOldView()
                 tableView.reloadData()
+                updateCustomSearchBarClosures()
             }
             
             if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
                 t9SuggestionsDelegate?.searchBarTextWasChanged()
+                updateCustomSearchBarClosures()
             }
             
         }
@@ -186,7 +200,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
             
-            t9SuggestionsDelegate?.searchBarTextWasChanged()
+            if searchBar.text != nil && searchBar.text!.isEmpty { t9SuggestionsDelegate?.searchBarTextWasChanged() }
                         
             return self.t9SuggestionsContainerView
         }
@@ -323,6 +337,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func updateSearchBarText(withText text: String) {
         searchBar.text = text
         searchBar.executeDefaultSearchButtonClickedClosure()
+        
     }
     
     func hideT9SuggestionsContainerView() {
