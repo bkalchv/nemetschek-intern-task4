@@ -10,11 +10,11 @@ import NumberPad
 import Toast
 
 protocol T9SuggestionsViewControllerDelegate: AnyObject {
-    func searchBarTextWasChanged(searchBarText: String)
+    func searchBarTextWasChanged()
 }
 
 class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FeelingOldViewDelegate, OptionsViewControllerDelegate, SearchTableViewControllerDelegate {
-      
+       
     weak var t9SuggestionsDelegate: T9SuggestionsViewControllerDelegate?
     var searchEngine = SearchEngine()
     var tableData = [DictionaryEntry]()
@@ -25,6 +25,12 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var lastSelectedCellIndexPath: IndexPath? = nil
     let selectedCellHeight = 200.0
     let unselectedCellHeight = 50.0
+    var t9String: String {
+        get {
+            if let searchBarText = searchBar.text, OptionsManager.shared.isT9PredictiveTextingOn { return T9Trie.t9Stringify(text: searchBarText) }
+            return ""
+        }
+    }
     
     var wordOfTheDayDictionaryEntry: DictionaryEntry? = nil
     var feelingOldView: FeelingOldView?
@@ -48,10 +54,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         self.searchBar.setDefaultSearchButtonClickedClosure(closure: {
             if let searchBarText = self.searchBar.text, !searchBarText.isEmpty, let firstLetterOfSearchText = searchBarText.first, firstLetterOfSearchText.isLetter {
                 
-                if OptionsManager.shared.isT9PredictiveTextingOn {
-                    self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
-                }
-                
                 if !self.firstInputWithNoNewSuggestions.isEmpty {
                     if searchBarText.hasPrefix(self.firstInputWithNoNewSuggestions) {
                         return
@@ -70,13 +72,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         })
     }
     
-    func setCustomSearchBarTextDidChangeClosure() {
+    func setCustomSearchBarTextDidChangeClosure() { 
         
         self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchBarText in
-            
-            if OptionsManager.shared.isT9PredictiveTextingOn {
-                self.t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
-            }
             
             if OptionsManager.shared.shouldTranslateOnEachKeyStroke, !searchBarText.isEmpty, let firstLetterOfSearchBarText = searchBarText.first, firstLetterOfSearchBarText.isLetter {
                             
@@ -99,20 +97,31 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         })
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-        
-        setCustomSearchBarSearchButtonClickedClosure()
-        setCustomSearchBarTextDidChangeClosure()
+    func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.sectionHeaderTopPadding = 0
+    }
+    
+    func setupWordOfTheDay() {
         feelingOldView = self.createFeelingOldViewFromNib()
         wordOfTheDayDictionaryEntry = searchEngine.randomDictionaryEntry()
         shouldShowFeelingOldViewInSectionHeader = true
+    }
+    
+    func setupTapGestureDismissingKeyboard() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupTableView()
+        setupWordOfTheDay()
+        setupTapGestureDismissingKeyboard()
+        setCustomSearchBarSearchButtonClickedClosure()
+        setCustomSearchBarTextDidChangeClosure()
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -138,8 +147,13 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             collapsePreviouslySelectedCellIfVisible()
             tableView.reloadData()
             
-            if OptionsManager.shared.isT9PredictiveTextingOn {
-                t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
+            if shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
+                hideFeelingOldView()
+                tableView.reloadData()
+            }
+            
+            if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
+                t9SuggestionsDelegate?.searchBarTextWasChanged()
             }
             
         }
@@ -147,13 +161,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if let lastSelectedRowIndexPath = self.lastSelectedCellIndexPath, let cell = tableView.cellForRow(at: lastSelectedRowIndexPath) as? WordTableViewCell  {
             cell.translationView.isHidden = false
             cell.isExpanded = true
-        }
-        
-        
-        // TODO: Ask how to handle that better
-        if OptionsManager.shared.isT9PredictiveTextingOn {
-            setCustomSearchBarTextDidChangeClosure()
-            setCustomSearchBarSearchButtonClickedClosure()
         }
         
     }
@@ -164,7 +171,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             return feelingOldViewHeaderSectionHeight
         }
         
-        if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isMultitapTextingOn && OptionsManager.shared.isT9PredictiveTextingOn {
+        if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn && searchBar.text != nil && !searchBar.text!.isEmpty {
             return t9SuggestionsContainerView.bounds.height
         }
         
@@ -177,11 +184,9 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             return self.feelingOldView
         }
         
-        if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isMultitapTextingOn && OptionsManager.shared.isT9PredictiveTextingOn {
+        if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
             
-            if let searchBarText = searchBar.text {
-                t9SuggestionsDelegate?.searchBarTextWasChanged(searchBarText: searchBarText)
-            }
+            t9SuggestionsDelegate?.searchBarTextWasChanged()
                         
             return self.t9SuggestionsContainerView
         }
@@ -228,38 +233,38 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func setMultitapInput() {
         if !OptionsManager.shared.isMultitapTextingOn {
-            searchBar.toggleInputMode()
+            searchBar.changeInputMode(toInputMode: NumpadDelegateObject.SearchBarInputMode.multiTap)
             OptionsManager.shared.setMultiTapTexting(to: true)
+            OptionsManager.shared.setT9PredictiveTexting(to: false)
             showToast(withText: "Setting somewhere a change!")
         }
     }
     
     func setStandardInput() {
         if OptionsManager.shared.isMultitapTextingOn {
-            searchBar.toggleInputMode()
+            searchBar.changeInputMode(toInputMode: NumpadDelegateObject.SearchBarInputMode.normal)
             OptionsManager.shared.setMultiTapTexting(to: false)
+            OptionsManager.shared.setT9PredictiveTexting(to: false)
             showToast(withText: "Setting somewhere a change!")
         }
     }
     
     func setT9PredictiveText() {
         if !OptionsManager.shared.isT9PredictiveTextingOn {
+            searchBar.changeInputMode(toInputMode: NumpadDelegateObject.SearchBarInputMode.t9PredictiveTexting)
             OptionsManager.shared.setT9PredictiveTexting(to: true)
+            OptionsManager.shared.setMultiTapTexting(to: false)
         }
     }
     
 //MARK: - OptionsViewDelegate
     
-    func toggleSearchBarInputMode() {
-        searchBar.toggleInputMode()
-    }
-    
     func toggleSearchBarMultitapLanguage() {
         searchBar.toggleMultitapLanguage()
     }
-    
-    func toggleSearchBarT9PredictiveTexting() {
-        
+
+    func setSearchBarInputMode(toMode mode: NumpadDelegateObject.SearchBarInputMode) {
+        searchBar.changeInputMode(toInputMode: mode)
     }
     
     func suggestionEntries(forInput input: String) -> [DictionaryEntry] {
@@ -472,7 +477,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         super.prepare(for: segue, sender: sender)
         
-        if let collectionVC = segue.destination as? T9SuggestionsViewController {
+        if let collectionVC = segue.destination as? T9SuggestionsCollectionViewController {
             self.t9SuggestionsDelegate = collectionVC
             collectionVC.searchTableVCDelegate = self
         }

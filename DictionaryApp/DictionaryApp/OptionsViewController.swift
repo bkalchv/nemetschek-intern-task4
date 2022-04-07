@@ -6,11 +6,11 @@
 //
 
 import UIKit
+import NumberPad
 
 protocol OptionsViewControllerDelegate: AnyObject {
-    func toggleSearchBarInputMode()
+    func setSearchBarInputMode(toMode mode: NumpadDelegateObject.SearchBarInputMode)
     func toggleSearchBarMultitapLanguage()
-    func toggleSearchBarT9PredictiveTexting()
 }
 
 class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -37,7 +37,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         keystrokeSwitch.isEnabled = false
         keystrokeLabel.isEnabled = false
     }
-    
+
     func enableMultitapCyrillicIBOs() {
         multitapCyrillicLabel.isEnabled = true
         multiTapCyrillicSwitch.isEnabled = true
@@ -48,44 +48,50 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         multiTapCyrillicSwitch.isEnabled = false
     }
     
-    func enableT9PredictiveTextingIBOs() {
-        T9PredictiveTextingLabel.isEnabled = true
-        T9PredictiveTextingSwitch.isEnabled = true
-    }
-    
-    func disableT9PredictiveTextingIBOs() {
-        T9PredictiveTextingLabel.isEnabled = false
-        T9PredictiveTextingSwitch.isEnabled = false
-    }
-    
     func toggleIBOsOnIsMultitapTextingOn() {
-        multitapTextingSwitch.isOn = true
+        multitapTextingSwitch.setOn(true, animated: true)
         
-        if !keystrokeSwitch.isOn {
+        if !OptionsManager.shared.shouldTranslateOnEachKeyStroke && !keystrokeSwitch.isOn {
             OptionsManager.shared.toggleTranslateOnEachKeyStroke()
-            keystrokeSwitch.isOn = true
+            keystrokeSwitch.setOn(true, animated: true)
+        }
+        
+        if T9PredictiveTextingSwitch.isOn {
+            T9PredictiveTextingSwitch.setOn(false, animated: true)
         }
         
         disableKeystrokeIBOs()
         enableMultitapCyrillicIBOs()
-        enableT9PredictiveTextingIBOs()
     }
+    
+    func toggleIBOsOnIsT9PredictiveTextingOn() {
+        T9PredictiveTextingSwitch.isOn = true
+        
+        if !OptionsManager.shared.shouldTranslateOnEachKeyStroke && !keystrokeSwitch.isOn {
+            OptionsManager.shared.toggleTranslateOnEachKeyStroke()
+            keystrokeSwitch.setOn(true, animated: true)
+        }
+        
+        if multitapTextingSwitch.isOn {
+            multitapTextingSwitch.setOn(false, animated: true)
+        }
+        
+        disableKeystrokeIBOs()
+        disableMultitapCyrillicIBOs()
+    }
+
     
     override func viewWillAppear(_ animated: Bool) {
         
         suggestionsAmountPicker.selectRow(OptionsManager.shared.suggestionsToBeShownAmount - 1, inComponent: 0, animated: false)
         
-        if  OptionsManager.shared.isMultitapTextingOn {
+        //TODO: Rework
+        if OptionsManager.shared.isMultitapTextingOn {
             toggleIBOsOnIsMultitapTextingOn()
-            
-            if OptionsManager.shared.isT9PredictiveTextingOn {
-                T9PredictiveTextingSwitch.isOn = true
-            }
-            
+        } else if OptionsManager.shared.isT9PredictiveTextingOn {
+            toggleIBOsOnIsT9PredictiveTextingOn()
         } else {
-            enableKeystrokeIBOs()
-            disableMultitapCyrillicIBOs()
-            disableT9PredictiveTextingIBOs()
+                        
         }
         
     }
@@ -129,20 +135,34 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     
     @IBAction func onMultiTapTextingPress(_ sender: Any) {
         OptionsManager.shared.toggleMultiTapTexting()
-        delegate?.toggleSearchBarInputMode()
         
-        if  OptionsManager.shared.isMultitapTextingOn {
+        if OptionsManager.shared.isMultitapTextingOn {
+            delegate?.setSearchBarInputMode(toMode: NumpadDelegateObject.SearchBarInputMode.multiTap)
+            OptionsManager.shared.setT9PredictiveTexting(to: false)
             toggleIBOsOnIsMultitapTextingOn()
         } else {
+            if !OptionsManager.shared.isT9PredictiveTextingOn && !T9PredictiveTextingSwitch.isOn {
+                delegate?.setSearchBarInputMode(toMode: NumpadDelegateObject.SearchBarInputMode.normal)
+            }
             enableKeystrokeIBOs()
             disableMultitapCyrillicIBOs()
-            disableT9PredictiveTextingIBOs()
         }
     }
     
     @IBAction func onT9PredictiveTextingSwitchPress(_ sender: Any) {
         OptionsManager.shared.toggleT9PredictiveTexting()
-        delegate?.toggleSearchBarT9PredictiveTexting()
+        
+        if OptionsManager.shared.isT9PredictiveTextingOn {
+            delegate?.setSearchBarInputMode(toMode: NumpadDelegateObject.SearchBarInputMode.t9PredictiveTexting)
+            OptionsManager.shared.setMultiTapTexting(to: false)
+            toggleIBOsOnIsT9PredictiveTextingOn()
+        } else {
+            if !OptionsManager.shared.isMultitapTextingOn && !multitapTextingSwitch.isOn {
+                delegate?.setSearchBarInputMode(toMode: NumpadDelegateObject.SearchBarInputMode.normal)
+            }
+            enableKeystrokeIBOs()
+            disableMultitapCyrillicIBOs()
+        }
     }
     /*
     // MARK: - Navigation

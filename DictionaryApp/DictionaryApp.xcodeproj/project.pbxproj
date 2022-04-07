@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4207640F27F4B49B003F8D5E /* T9SuggestionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4207640E27F4B49B003F8D5E /* T9SuggestionsViewController.swift */; };
 		4219D37D27BFF86F00D1059B /* feelingOldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4219D37C27BFF86F00D1059B /* feelingOldView.xib */; };
 		4219D37F27BFFAAB00D1059B /* FeelingOldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4219D37E27BFFAAB00D1059B /* FeelingOldView.swift */; };
 		422A557D27A2E8B000B24B80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422A557C27A2E8B000B24B80 /* AppDelegate.swift */; };
@@ -19,8 +18,6 @@
 		42309A3427B56B00002967F9 /* WordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42309A3327B56B00002967F9 /* WordTableViewCell.swift */; };
 		42309A3627B59F67002967F9 /* OptionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42309A3527B59F67002967F9 /* OptionsManager.swift */; };
 		42309A3827B5A2FD002967F9 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42309A3727B5A2FD002967F9 /* OptionsViewController.swift */; };
-		424148B827E8D5D9007CB18F /* T9TrieNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424148B727E8D5D9007CB18F /* T9TrieNode.swift */; };
-		424148BA27E8DCAC007CB18F /* T9Trie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424148B927E8DCAC007CB18F /* T9Trie.swift */; };
 		424FB81427D8E69100F76A83 /* NumberPad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 424FB81327D8E69100F76A83 /* NumberPad.framework */; platformFilter = ios; };
 		4250E55627B2B75F009E74AD /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4250E55527B2B75F009E74AD /* SearchEngine.swift */; };
 		42539D0527AAC22600E74B53 /* en_bg.dic in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0327AAC22600E74B53 /* en_bg.dic */; };
@@ -28,12 +25,12 @@
 		42539D0A27AACD9900E74B53 /* smallerEnBg.dic in Resources */ = {isa = PBXBuildFile; fileRef = 42539D0927AACD9900E74B53 /* smallerEnBg.dic */; };
 		4257C7C427DF987100E19A9D /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 4257C7C327DF987100E19A9D /* Toast */; };
 		425D572B27B3FE84008EC553 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 425D572A27B3FE84008EC553 /* Assets.xcassets */; };
-		425FE35027EB6AA000AF3D98 /* T9TrieWord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425FE34F27EB6AA000AF3D98 /* T9TrieWord.swift */; };
 		42BAC0D027B6931200387E9D /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BAC0CF27B6931200387E9D /* SplashScreenViewController.swift */; };
 		42BAC0D227B6995500387E9D /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BAC0D127B6995500387E9D /* TabBarViewController.swift */; };
 		42CC5BF727F3221000A2FDDF /* T9CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CC5BF627F3221000A2FDDF /* T9CollectionViewCell.swift */; };
 		42CCDB7E27B1522100BB4647 /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CCDB7D27B1522100BB4647 /* FileReader.swift */; };
 		42CCDB8027B1525A00BB4647 /* DictionaryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CCDB7F27B1525A00BB4647 /* DictionaryEntry.swift */; };
+		42F2D11527FED5DE00045A77 /* T9SuggestionsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F2D11427FED5DE00045A77 /* T9SuggestionsCollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,7 +47,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4207640E27F4B49B003F8D5E /* T9SuggestionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9SuggestionsViewController.swift; sourceTree = "<group>"; };
 		4219D37C27BFF86F00D1059B /* feelingOldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = feelingOldView.xib; sourceTree = "<group>"; };
 		4219D37E27BFFAAB00D1059B /* FeelingOldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingOldView.swift; sourceTree = "<group>"; };
 		422A557C27A2E8B000B24B80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -63,8 +59,6 @@
 		42309A3327B56B00002967F9 /* WordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordTableViewCell.swift; sourceTree = "<group>"; };
 		42309A3527B59F67002967F9 /* OptionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsManager.swift; sourceTree = "<group>"; };
 		42309A3727B5A2FD002967F9 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
-		424148B727E8D5D9007CB18F /* T9TrieNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9TrieNode.swift; sourceTree = "<group>"; };
-		424148B927E8DCAC007CB18F /* T9Trie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9Trie.swift; sourceTree = "<group>"; };
 		424FB81327D8E69100F76A83 /* NumberPad.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NumberPad.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/NumberPad-bkvjkotdarqqpjagniheaecycjfo/Build/Products/Debug-iphonesimulator/NumberPad.framework"; sourceTree = "<group>"; };
 		4250E55527B2B75F009E74AD /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
 		42539D0327AAC22600E74B53 /* en_bg.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = en_bg.dic; sourceTree = "<group>"; };
@@ -72,12 +66,12 @@
 		42539D0927AACD9900E74B53 /* smallerEnBg.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = smallerEnBg.dic; path = ../../../../../../Documents/smallerEnBg.dic; sourceTree = "<group>"; };
 		425B1F9D27DF93BE00466DC6 /* DictionaryApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DictionaryApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		425D572A27B3FE84008EC553 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../../.Trash/Assets.xcassets; sourceTree = "<group>"; };
-		425FE34F27EB6AA000AF3D98 /* T9TrieWord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9TrieWord.swift; sourceTree = "<group>"; };
 		42BAC0CF27B6931200387E9D /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		42BAC0D127B6995500387E9D /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		42CC5BF627F3221000A2FDDF /* T9CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9CollectionViewCell.swift; sourceTree = "<group>"; };
 		42CCDB7D27B1522100BB4647 /* FileReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileReader.swift; sourceTree = "<group>"; };
 		42CCDB7F27B1525A00BB4647 /* DictionaryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryEntry.swift; sourceTree = "<group>"; };
+		42F2D11427FED5DE00045A77 /* T9SuggestionsCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9SuggestionsCollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,7 +109,7 @@
 				422A558027A2E8B000B24B80 /* TranslationViewController.swift */,
 				42309A3727B5A2FD002967F9 /* OptionsViewController.swift */,
 				42309A3327B56B00002967F9 /* WordTableViewCell.swift */,
-				4207640E27F4B49B003F8D5E /* T9SuggestionsViewController.swift */,
+				42F2D11427FED5DE00045A77 /* T9SuggestionsCollectionViewController.swift */,
 				42CC5BF627F3221000A2FDDF /* T9CollectionViewCell.swift */,
 				422A558727A2E8B100B24B80 /* LaunchScreen.storyboard */,
 				422A558A27A2E8B100B24B80 /* Info.plist */,
@@ -126,9 +120,6 @@
 				42CCDB7D27B1522100BB4647 /* FileReader.swift */,
 				4250E55527B2B75F009E74AD /* SearchEngine.swift */,
 				42309A3527B59F67002967F9 /* OptionsManager.swift */,
-				425FE34F27EB6AA000AF3D98 /* T9TrieWord.swift */,
-				424148B727E8D5D9007CB18F /* T9TrieNode.swift */,
-				424148B927E8DCAC007CB18F /* T9Trie.swift */,
 			);
 			path = DictionaryApp;
 			sourceTree = "<group>";
@@ -233,18 +224,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				424148BA27E8DCAC007CB18F /* T9Trie.swift in Sources */,
 				4219D37F27BFFAAB00D1059B /* FeelingOldView.swift in Sources */,
 				42309A3627B59F67002967F9 /* OptionsManager.swift in Sources */,
 				42CCDB8027B1525A00BB4647 /* DictionaryEntry.swift in Sources */,
-				424148B827E8D5D9007CB18F /* T9TrieNode.swift in Sources */,
-				4207640F27F4B49B003F8D5E /* T9SuggestionsViewController.swift in Sources */,
 				42309A3427B56B00002967F9 /* WordTableViewCell.swift in Sources */,
 				422A558127A2E8B000B24B80 /* TranslationViewController.swift in Sources */,
 				42CC5BF727F3221000A2FDDF /* T9CollectionViewCell.swift in Sources */,
 				42BAC0D227B6995500387E9D /* TabBarViewController.swift in Sources */,
-				425FE35027EB6AA000AF3D98 /* T9TrieWord.swift in Sources */,
 				422A557D27A2E8B000B24B80 /* AppDelegate.swift in Sources */,
+				42F2D11527FED5DE00045A77 /* T9SuggestionsCollectionViewController.swift in Sources */,
 				42BAC0D027B6931200387E9D /* SplashScreenViewController.swift in Sources */,
 				4250E55627B2B75F009E74AD /* SearchEngine.swift in Sources */,
 				42CCDB7E27B1522100BB4647 /* FileReader.swift in Sources */,

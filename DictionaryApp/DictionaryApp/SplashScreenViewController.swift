@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import NumberPad
 
 class SplashScreenViewController: UIViewController {
     
@@ -188,6 +189,12 @@ class SplashScreenViewController: UIViewController {
         })
     }
     
+    func initializeWeighteWordsENIfNotPresent(){
+        if UserDefaults.standard.object(forKey: "weighted_words_EN") == nil {
+            UserDefaults.standard.set([String : UInt](), forKey: "weighted_words_EN")
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -209,7 +216,7 @@ class SplashScreenViewController: UIViewController {
         let nonExistingTrieFilenames = self.filenamesOfNonExistingTrieFiles()
         
         let willHaveToBeLoadingHelperFiles = !nonExistingEnglishFilenames.isEmpty || !nonExistingBulgarianFilenames.isEmpty || !nonExistingTrieFilenames.isEmpty
-        
+            
         if willHaveToBeLoadingHelperFiles {
             
             executeAnimationCycle()
@@ -259,15 +266,22 @@ class SplashScreenViewController: UIViewController {
                         
                         if trieFilename == "T9Trie_EN", let freader = FileReader(filename: "en_bg.dic") {
                             let enT9Trie = freader.createTrie()
+                            CustomSearchBar.preloadWords(forLanguage: Language.EN, withWords: freader.words)
                             freader.encodeAndCacheTrie(t9Trie: enT9Trie, t9TrieFilename: "T9Trie_EN")
                         }
                         
                         if trieFilename == "T9Trie_BG", let freader = FileReader(filename: "bg_en.kyp") {
                             let bgT9Trie = freader.createTrie()
+                            CustomSearchBar.preloadWords(forLanguage: Language.BG, withWords: freader.words)
                             freader.encodeAndCacheTrie(t9Trie: bgT9Trie, t9TrieFilename: "T9Trie_BG")
                         }
                     }
                 }
+                
+                // TODO: Ask if init here okay
+                self.initializeWeighteWordsENIfNotPresent()
+                // TODO: Add weightedWordsBG
+                //initializeWeightedWordsBGIfNotPresent()
                 
                 DispatchQueue.main.async { [weak self] in
                    // UI updates must be on main thread
