@@ -84,12 +84,28 @@
                                     <action selector="onKeyStrokeSwitchPress:" destination="YdP-nz-AQw" eventType="valueChanged" id="jhd-fC-NkU"/>
                                 </connections>
                             </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="T9 Predictive texting Cyrillic:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HQ9-Bt-C93">
+                                <rect key="frame" x="20" y="523" width="270" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="JKZ-lf-PYq">
+                                <rect key="frame" x="314" y="521" width="49" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="onT9CyrillicSwitchPress:" destination="YdP-nz-AQw" eventType="valueChanged" id="C0H-AX-NsX"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Gmk-g2-QKX"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="settings_black_24pt" id="Fs8-OE-lja"/>
                     <connections>
+                        <outlet property="T9CyrillicLabel" destination="HQ9-Bt-C93" id="6vL-31-KB6"/>
+                        <outlet property="T9CyrillicSwitch" destination="JKZ-lf-PYq" id="Wma-Uj-fRd"/>
                         <outlet property="T9PredictiveTextingLabel" destination="v63-oP-ius" id="3Mo-VU-nGR"/>
                         <outlet property="T9PredictiveTextingSwitch" destination="BVa-2D-KSV" id="Oxp-89-D9X"/>
                         <outlet property="keystrokeLabel" destination="ATI-16-xRG" id="QfT-CL-BlH"/>

@@ -11,6 +11,7 @@ import NumberPad
 protocol OptionsViewControllerDelegate: AnyObject {
     func setSearchBarInputMode(toMode mode: NumpadDelegateObject.SearchBarInputMode)
     func toggleSearchBarMultitapLanguage()
+    func toggleSearchBarT9PredictiveTextingLanguage()
 }
 
 class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -24,6 +25,8 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     @IBOutlet weak var multiTapCyrillicSwitch: UISwitch!
     @IBOutlet weak var T9PredictiveTextingLabel: UILabel!
     @IBOutlet weak var T9PredictiveTextingSwitch: UISwitch!
+    @IBOutlet weak var T9CyrillicLabel: UILabel!
+    @IBOutlet weak var T9CyrillicSwitch: UISwitch!
     
     let pickerData: [Int] = [Int](1...20)
     
@@ -48,6 +51,16 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         multiTapCyrillicSwitch.isEnabled = false
     }
     
+    func enableT9CyrillicIBOs() {
+        T9CyrillicLabel.isEnabled = true
+        T9CyrillicSwitch.isEnabled = true
+    }
+    
+    func disableT9CyrillicIBOs() {
+        T9CyrillicLabel.isEnabled = false
+        T9CyrillicSwitch.isEnabled = false
+    }
+    
     func toggleIBOsOnIsMultitapTextingOn() {
         multitapTextingSwitch.setOn(true, animated: true)
         
@@ -61,6 +74,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         }
         
         disableKeystrokeIBOs()
+        disableT9CyrillicIBOs()
         enableMultitapCyrillicIBOs()
     }
     
@@ -78,6 +92,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         
         disableKeystrokeIBOs()
         disableMultitapCyrillicIBOs()
+        enableT9CyrillicIBOs()
     }
 
     
@@ -149,6 +164,10 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         }
     }
     
+    @IBAction func onT9CyrillicSwitchPress(_ sender: Any) {
+        delegate?.toggleSearchBarT9PredictiveTextingLanguage()
+    }
+    
     @IBAction func onT9PredictiveTextingSwitchPress(_ sender: Any) {
         OptionsManager.shared.toggleT9PredictiveTexting()
         
@@ -161,7 +180,7 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                 delegate?.setSearchBarInputMode(toMode: NumpadDelegateObject.SearchBarInputMode.normal)
             }
             enableKeystrokeIBOs()
-            disableMultitapCyrillicIBOs()
+            disableT9CyrillicIBOs()
         }
     }
     /*

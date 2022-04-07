@@ -277,6 +277,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func toggleSearchBarMultitapLanguage() {
         searchBar.toggleMultitapLanguage()
     }
+    
+    func toggleSearchBarT9PredictiveTextingLanguage() {
+        CustomSearchBar.toggleCurrentT9TrieLanguage()
+    }
 
     func setSearchBarInputMode(toMode mode: NumpadDelegateObject.SearchBarInputMode) {
         searchBar.changeInputMode(toInputMode: mode)

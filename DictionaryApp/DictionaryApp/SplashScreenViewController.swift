@@ -272,13 +272,13 @@ class SplashScreenViewController: UIViewController {
                         
                         if trieFilename == "T9Trie_EN", let freader = FileReader(filename: "en_bg.dic") {
                             let enT9Trie = freader.createTrie()
-                            CustomSearchBar.preloadWords(forLanguage: Language.EN, withWords: freader.words)
+                            CustomSearchBar.preloadWords(forLanguage: T9TrieLanguage.EN, withWords: freader.words)
                             freader.encodeAndCacheTrie(t9Trie: enT9Trie, t9TrieFilename: "T9Trie_EN")
                         }
                         
                         if trieFilename == "T9Trie_BG", let freader = FileReader(filename: "bg_en.kyp") {
                             let bgT9Trie = freader.createTrie()
-                            CustomSearchBar.preloadWords(forLanguage: Language.BG, withWords: freader.words)
+                            CustomSearchBar.preloadWords(forLanguage: T9TrieLanguage.BG, withWords: freader.words)
                             freader.encodeAndCacheTrie(t9Trie: bgT9Trie, t9TrieFilename: "T9Trie_BG")
                         }
                     }

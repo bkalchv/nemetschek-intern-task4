@@ -67,14 +67,14 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        let t9WordStrings = CustomSearchBar.T9SuggestionsDataSourceEN(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
+        let t9WordStrings = CustomSearchBar.T9SuggestionsDataSource(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
         return t9WordStrings.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! T9CollectionViewCell
         
-        let t9WordStrings = CustomSearchBar.T9SuggestionsDataSourceEN(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
+        let t9WordStrings = CustomSearchBar.T9SuggestionsDataSource(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
         let suggestedString = t9WordStrings[indexPath.row]
         cell.suggestionLabel.text = suggestedString
         cell.suggestionLabel.textColor = UIColor.white
@@ -90,20 +90,20 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
         
         CustomSearchBar.updateWeight(forWord: wordSuggestionInCell)
         
-        // TODO: How to rework this?
         searchTableVCDelegate?.updateSearchBarText(withText: wordSuggestionInCell)
         collectionView.reloadData()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let t9WordStrings =  CustomSearchBar.T9SuggestionsDataSourceEN(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
         
+        let t9WordStrings = CustomSearchBar.T9SuggestionsDataSource(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
         let currentSuggestion = t9WordStrings[indexPath.row]
         
         let width = currentSuggestion.width(withConstrainedHeight: 50, font: T9CollectionViewCell.suggestionLabelFont)
         
         return CGSize(width: width + 5, height: 50)
+            
     }
     
     func searchBarTextWasChanged() {
