@@ -189,9 +189,15 @@ class SplashScreenViewController: UIViewController {
         })
     }
     
-    func initializeWeighteWordsENIfNotPresent(){
+    func initializeWeightedWordsENIfNotPresent(){
         if UserDefaults.standard.object(forKey: "weighted_words_EN") == nil {
             UserDefaults.standard.set([String : UInt](), forKey: "weighted_words_EN")
+        }
+    }
+    
+    func initializeWeightedWordsBGIfNotPresent(){
+        if UserDefaults.standard.object(forKey: "weighted_words_BG") == nil {
+            UserDefaults.standard.set([String : UInt](), forKey: "weighted_words_BG")
         }
     }
     
@@ -278,10 +284,9 @@ class SplashScreenViewController: UIViewController {
                     }
                 }
                 
-                // TODO: Ask if init here okay
-                self.initializeWeighteWordsENIfNotPresent()
-                // TODO: Add weightedWordsBG
-                //initializeWeightedWordsBGIfNotPresent()
+                
+                self.initializeWeightedWordsENIfNotPresent()
+                self.initializeWeightedWordsBGIfNotPresent()
                 
                 DispatchQueue.main.async { [weak self] in
                    // UI updates must be on main thread

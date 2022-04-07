@@ -81,7 +81,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         self.searchBar.setDefaultSearchBarTextDidChangeClosure(closure: { searchBarText in
             
             if OptionsManager.shared.shouldTranslateOnEachKeyStroke, !searchBarText.isEmpty, let firstLetterOfSearchBarText = searchBarText.first, firstLetterOfSearchBarText.isLetter {
-                
+                // TODO: Ask if updating closures like that if fine.
                 if OptionsManager.shared.isT9PredictiveTextingOn { self.t9SuggestionsDelegate?.searchBarTextWasChanged() }
                 
                 if !self.firstInputWithNoNewSuggestions.isEmpty {
@@ -121,6 +121,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         view.addGestureRecognizer(tap)
     }
     
+    // TODO: Ask if updating closures like that if fine.
     func updateCustomSearchBarClosures() {
         setCustomSearchBarSearchButtonClickedClosure()
         setCustomSearchBarTextDidChangeClosure()
@@ -131,7 +132,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         setupTableView()
         setupWordOfTheDay()
         setupTapGestureDismissingKeyboard()
-        updateCustomSearchBarClosures()
+        updateCustomSearchBarClosures() // TODO: Ask if updating closures like that if fine.
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
