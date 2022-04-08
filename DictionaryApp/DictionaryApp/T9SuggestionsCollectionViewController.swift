@@ -19,8 +19,9 @@ extension String {
 }
 
 protocol SearchTableViewControllerDelegate: AnyObject {
-    func updateSearchBarText(withText text: String) //TODO delete
+    func updateSearchBarText(withText text: String)
     func hideT9SuggestionsContainerView()
+    func showT9SuggestionsContainerView()
     var  searchBarTextAsT9String: String { get }
 }
 
@@ -96,11 +97,6 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        if collectionView.collectionViewLayout.collectionViewContentSize.height == 0 {
-            return CGSize(width: 0.0, height: 0.0)
-        }
-        
-        
         let t9WordStrings = CustomSearchBar.T9SuggestionsDataSource(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
         let currentSuggestion = t9WordStrings[indexPath.row]
         
@@ -112,6 +108,17 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
     
     func searchBarTextWasChanged() {
         collectionView.reloadData()
+        
+        if let searchTableVCDelegate = self.searchTableVCDelegate {
+            let searchBarTextAsT9String = searchTableVCDelegate.searchBarTextAsT9String
+            if searchBarTextAsT9String.isEmpty {
+                searchTableVCDelegate.hideT9SuggestionsContainerView()
+            } else if searchBarTextAsT9String.count == 1 {
+                searchTableVCDelegate.showT9SuggestionsContainerView()
+            }
+                        
+        }
+        
     }
 
     // MARK: UICollectionViewDelegate
