@@ -20,7 +20,8 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var tableData = [DictionaryEntry]()
     var shouldShowFeelingOldViewInSectionHeader = false
     let feelingOldViewHeaderSectionHeight = 150.0
-    var didVCAppearOnce = false
+    let t9SuggestionsContainerViewHeight = 100.0
+    var didSearchTableVCAppearOnce = false
     var firstInputWithNoNewSuggestions = ""
     var lastSelectedCellIndexPath: IndexPath? = nil
     let selectedCellHeight = 200.0
@@ -133,7 +134,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         setupWordOfTheDay()
         setupTapGestureDismissingKeyboard()
         updateCustomSearchBarClosures() // TODO: Ask if updating closures like that if fine.
-        
+        self.t9SuggestionsContainerView.frame.size.height = 0
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -145,29 +146,28 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     override func viewWillAppear(_ animated: Bool) {
         
-        if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didVCAppearOnce {
+        if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didSearchTableVCAppearOnce {
             tableData = searchEngine.findSuggestionEntries(amountOfDesiredSuggestionEntries: OptionsManager.shared.suggestionsToBeShownAmount, forDictionaryEntry: wordOfTheDayEntry)
             searchBar.searchTextField.text = wordOfTheDayEntry.word
         }
         
-        if let searchBarText = searchBar.text, !searchBarText.isEmpty, didVCAppearOnce {
+        if let searchBarText = searchBar.text, !searchBarText.isEmpty, didSearchTableVCAppearOnce {
             
             if !tableData.isEmpty && OptionsManager.shared.suggestionsToBeShownAmount > tableData.count {
                 tableData = searchEngine.findSuggestionEntries(amountOfDesiredSuggestionEntries: OptionsManager.shared.suggestionsToBeShownAmount, forDictionaryEntry: tableData[0])
             }
             
             tableData = Array(tableData[0...OptionsManager.shared.suggestionsToBeShownAmount - 1])
+    
             collapsePreviouslySelectedCellIfVisible()
             tableView.reloadData()
             
             if shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
-                hideFeelingOldView()
-                tableView.reloadData()
                 updateCustomSearchBarClosures()
             }
             
             if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
-                t9SuggestionsDelegate?.searchBarTextWasChanged()
+                //t9SuggestionsDelegate?.searchBarTextWasChanged()
                 updateCustomSearchBarClosures()
             }
             
@@ -186,9 +186,23 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             return feelingOldViewHeaderSectionHeight
         }
         
-        if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn && searchBar.text != nil && !searchBar.text!.isEmpty {
-            return t9SuggestionsContainerView.bounds.height
+        if OptionsManager.shared.isT9PredictiveTextingOn && searchBar.text != nil && !searchBar.text!.isEmpty {
+            
+            if t9SuggestionsContainerView.frame.size.height == 0 {
+                showT9SuggestionsContainerView()
+            }
+            
+            return t9SuggestionsContainerViewHeight
         }
+        
+        // TODO: Ask why does the app crash when finished block added?
+//        if !OptionsManager.shared.isT9PredictiveTextingOn {
+//
+//            if t9SuggestionsContainerView.frame.size.height != 0 {
+//                hideT9SuggestionsContainerView()
+//            }
+//
+//        }
         
         return 0
     }
@@ -199,10 +213,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             return self.feelingOldView
         }
         
-        if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
-            
-            if searchBar.text != nil && searchBar.text!.isEmpty { t9SuggestionsDelegate?.searchBarTextWasChanged() }
-                        
+        if OptionsManager.shared.isT9PredictiveTextingOn {
+            if searchBar.text != nil && searchBar.text!.isEmpty {
+                t9SuggestionsDelegate?.searchBarTextWasChanged()
+            }
+    
             return self.t9SuggestionsContainerView
         }
         
@@ -210,10 +225,41 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if !didVCAppearOnce {
+        if !didSearchTableVCAppearOnce {
             showFeelingOldView()
-            didVCAppearOnce = true
+            didSearchTableVCAppearOnce = true
         }
+        
+        if shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
+            hideFeelingOldView()
+        }
+
+    }
+    
+    func showT9SuggestionsContainerView() {
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: [], animations: {
+            self.t9SuggestionsContainerView.frame.size.height = self.t9SuggestionsContainerViewHeight
+            self.view.layoutIfNeeded()
+        }, completion: {
+            finished in
+            if finished {
+                self.tableView.reloadData()
+            }
+        })
+    }
+    
+    func hideT9SuggestionsContainerView() {
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: [], animations: {
+            self.t9SuggestionsContainerView.frame.size.height = 0
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+        // TODO: Ask why does the app crash when finished block added?
+//        {
+//            finished in
+//            if finished {
+//                self.tableView.reloadData()
+//            }
+//        })
     }
 
     func showFeelingOldView() {
@@ -229,13 +275,18 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     func hideFeelingOldView() {
         if self.feelingOldView != nil {
             self.feelingOldView!.heightConstraint.constant = 0
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.5, delay: 0.25, options:[], animations: {
                 self.view.layoutIfNeeded()
             }, completion: {
                 finished in
                 if finished {
                     self.shouldShowFeelingOldViewInSectionHeader = false
                     self.feelingOldView = nil
+                    
+                    if OptionsManager.shared.isT9PredictiveTextingOn {
+                        self.showT9SuggestionsContainerView()
+                    }
+                    
                     self.tableView.reloadData()
                 }
             })
@@ -256,12 +307,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func setStandardInput() {
-        if OptionsManager.shared.isMultitapTextingOn {
-            searchBar.changeInputMode(toInputMode: NumpadDelegateObject.SearchBarInputMode.normal)
-            OptionsManager.shared.setMultiTapTexting(to: false)
-            OptionsManager.shared.setT9PredictiveTexting(to: false)
-            showToast(withText: "Setting somewhere a change!")
-        }
+        searchBar.changeInputMode(toInputMode: NumpadDelegateObject.SearchBarInputMode.normal)
+        OptionsManager.shared.setMultiTapTexting(to: false)
+        OptionsManager.shared.setT9PredictiveTexting(to: false)
+        showToast(withText: "Setting somewhere a change!")
     }
     
     func setT9PredictiveText() {
@@ -318,7 +367,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func updateSuggestionsIfNeeded(for input: String) {
-        if !didVCAppearOnce {
+        if !didSearchTableVCAppearOnce {
             tableData = suggestionEntries(forInput: input)
             tableView.reloadData()
         } else {
@@ -343,10 +392,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         searchBar.text = text
         searchBar.executeDefaultSearchButtonClickedClosure()
         
-    }
-    
-    func hideT9SuggestionsContainerView() {
-        // TODO: implement
     }
     
     // MARK: - Table view data source
@@ -379,7 +424,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         
         if indexPath.row == 0 && entry.word == wordOfTheDayDictionaryEntry?.word {
             
-            if !didVCAppearOnce {
+            if !didSearchTableVCAppearOnce {
                 cell.translationView.isHidden = false
                 cell.isExpanded = true
                 lastSelectedCellIndexPath = indexPath

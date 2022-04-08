@@ -96,6 +96,10 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
+        if collectionView.collectionViewLayout.collectionViewContentSize.height == 0 {
+            return CGSize(width: 0.0, height: 0.0)
+        }
+        
         
         let t9WordStrings = CustomSearchBar.T9SuggestionsDataSource(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
         let currentSuggestion = t9WordStrings[indexPath.row]

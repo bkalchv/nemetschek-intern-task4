@@ -119,18 +119,15 @@ class SearchEngine {
         
         if let firstLetterOfClosestMatch = closestMatch.word.first?.uppercased(), let entriesForLetter = letterToEntries[firstLetterOfClosestMatch], let closestMatchIndex = entriesForLetter.firstIndex(where: {return $0.word == closestMatch.word}) {
             
-            let amountOfAvailableSuggestionEntries: Int = entriesForLetter.count - (closestMatchIndex + 1)
+            //Suggestion entries including closestMatch
+            let amountOfAvailableSuggestionEntries: Int = entriesForLetter.count - closestMatchIndex
             
             if amountOfDesiredSuggestionEntries < amountOfAvailableSuggestionEntries {
                 return Array(entriesForLetter[closestMatchIndex..<(closestMatchIndex + amountOfDesiredSuggestionEntries)])
             } else {
                 
                 OptionsManager.shared.changeSuggestionsAmount(toSuggestionsAmount: amountOfAvailableSuggestionEntries)
-                
-                if amountOfAvailableSuggestionEntries == 1 {
-                    return [closestMatch]
-                }
-                
+                      
                 return Array(entriesForLetter[closestMatchIndex..<(entriesForLetter.count)])
             }
         }

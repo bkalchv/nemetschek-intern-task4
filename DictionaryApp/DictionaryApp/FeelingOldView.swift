@@ -29,7 +29,7 @@ class FeelingOldView : UIView {
     
     @IBAction func onButtonElderlyClick(_ sender: Any) {
         delegate?.setMultitapInput()
-        delegate?.setT9PredictiveText()
+        //delegate?.setT9PredictiveText()
         delegate?.hideFeelingOldView()
     }
     
@@ -37,4 +37,6 @@ class FeelingOldView : UIView {
         delegate?.setStandardInput()
         delegate?.hideFeelingOldView()
     }
+    
+    //TODO: Maybe add a t9 button
 }
