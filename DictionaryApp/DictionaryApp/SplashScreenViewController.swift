@@ -50,7 +50,7 @@ class SplashScreenViewController: UIViewController {
         var filenamesOfNonExistingTrieFiles = [String]()
         
         // TODO: For now only for English -> Expand to Bulgarian, too
-        let trieFilenames: [String] = ["T9Trie_EN", "T9Trie_BG"]
+        let trieFilenames: [String] = [T9_TRIE_EN_FILENAME, T9_TRIE_BG_FILENAME]
     
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
@@ -270,16 +270,12 @@ class SplashScreenViewController: UIViewController {
                             }
                         }
                         
-                        if trieFilename == "T9Trie_EN", let freader = FileReader(filename: "en_bg.dic") {
-                            let enT9Trie = freader.createTrie()
+                        if trieFilename == T9_TRIE_EN_FILENAME, let freader = FileReader(filename: "en_bg.dic") {
                             CustomSearchBar.preloadWords(forLanguage: T9TrieLanguage.EN, withWords: freader.words)
-                            freader.encodeAndCacheTrie(t9Trie: enT9Trie, t9TrieFilename: "T9Trie_EN")
                         }
                         
-                        if trieFilename == "T9Trie_BG", let freader = FileReader(filename: "bg_en.kyp") {
-                            let bgT9Trie = freader.createTrie()
+                        if trieFilename == T9_TRIE_BG_FILENAME, let freader = FileReader(filename: "bg_en.kyp") {
                             CustomSearchBar.preloadWords(forLanguage: T9TrieLanguage.BG, withWords: freader.words)
-                            freader.encodeAndCacheTrie(t9Trie: bgT9Trie, t9TrieFilename: "T9Trie_BG")
                         }
                     }
                 }

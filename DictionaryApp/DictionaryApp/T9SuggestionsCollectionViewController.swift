@@ -98,6 +98,9 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let t9WordStrings = CustomSearchBar.T9SuggestionsDataSource(forT9String: self.searchTableVCDelegate!.searchBarTextAsT9String)
+        guard !t9WordStrings.isEmpty else {
+            return CGSize.zero
+        }
         let currentSuggestion = t9WordStrings[indexPath.row]
         
         let width = currentSuggestion.width(withConstrainedHeight: 50, font: T9CollectionViewCell.suggestionLabelFont)
@@ -111,7 +114,7 @@ class T9SuggestionsCollectionViewController: UICollectionViewController, UIColle
         
         if let searchTableVCDelegate = self.searchTableVCDelegate {
             let searchBarTextAsT9String = searchTableVCDelegate.searchBarTextAsT9String
-            if searchBarTextAsT9String.isEmpty {
+            if searchBarTextAsT9String == "" {
                 searchTableVCDelegate.hideT9SuggestionsContainerView()
             } else if searchBarTextAsT9String.count == 1 {
                 searchTableVCDelegate.showT9SuggestionsContainerView()

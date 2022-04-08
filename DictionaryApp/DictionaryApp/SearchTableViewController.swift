@@ -134,7 +134,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         setupWordOfTheDay()
         setupTapGestureDismissingKeyboard()
         updateCustomSearchBarClosures() // TODO: Ask if updating closures like that if fine.
-        self.t9SuggestionsContainerView.frame.size.height = 0
+        self.t9SuggestionsContainerView.frame.size.height = 0 // TODO: Ask how to do these animations otherwise
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -153,7 +153,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             if wordOfTheDayEntry.isBulgarianEntry() {
                 setSearchBarT9PredictiveTextingLanguage(to: .BG)
             }
-            
+
         }
         
         if let searchBarText = searchBar.text, !searchBarText.isEmpty, didSearchTableVCAppearOnce {
@@ -166,16 +166,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             
             collapsePreviouslySelectedCellIfVisible()
             tableView.reloadData()
-            
-            if shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
-                updateCustomSearchBarClosures()
-            }
-            
-            if !shouldShowFeelingOldViewInSectionHeader && OptionsManager.shared.isT9PredictiveTextingOn {
-                //t9SuggestionsDelegate?.searchBarTextWasChanged()
-                updateCustomSearchBarClosures()
-            }
-            
         }
         
         if let lastSelectedRowIndexPath = self.lastSelectedCellIndexPath, let cell = tableView.cellForRow(at: lastSelectedRowIndexPath) as? WordTableViewCell  {
@@ -200,14 +190,22 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             return t9SuggestionsContainerViewHeight
         }
         
-        // TODO: Ask why does the app crash when finished block added?
-//        if !OptionsManager.shared.isT9PredictiveTextingOn {
-//
-//            if t9SuggestionsContainerView.frame.size.height != 0 {
-//                hideT9SuggestionsContainerView()
-//            }
-//
-//        }
+        if OptionsManager.shared.isT9PredictiveTextingOn && searchBar.text != nil && searchBar.text!.isEmpty {
+            
+            if t9SuggestionsContainerView.frame.size.height == t9SuggestionsContainerViewHeight {
+                hideT9SuggestionsContainerView()
+            }
+            
+            return 0
+        }
+    
+        if !OptionsManager.shared.isT9PredictiveTextingOn {
+
+            if t9SuggestionsContainerView.frame.size.height != 0 {
+                hideT9SuggestionsContainerView()
+            }
+
+        }
         
         return 0
     }
@@ -219,6 +217,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         }
         
         if OptionsManager.shared.isT9PredictiveTextingOn {
+            
             if searchBar.text != nil && searchBar.text!.isEmpty {
                 t9SuggestionsDelegate?.searchBarTextWasChanged()
             }
@@ -255,9 +254,14 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func hideT9SuggestionsContainerView() {
         UIView.animate(withDuration: 0.5, delay: 0.0, options: [], animations: {
-            self.t9SuggestionsContainerView.frame.size.height = 0
+            self.t9SuggestionsContainerView.frame.size.height = 0.0
             self.view.layoutIfNeeded()
-        }, completion: nil)
+        }, completion: {
+            finished in
+            if finished {
+                print("Hello, it me")
+            }
+        })
         // TODO: Ask why does the app crash when finished block added?
 //        {
 //            finished in
@@ -287,11 +291,6 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
                 if finished {
                     self.shouldShowFeelingOldViewInSectionHeader = false
                     self.feelingOldView = nil
-                    
-                    if OptionsManager.shared.isT9PredictiveTextingOn {
-                        self.showT9SuggestionsContainerView()
-                    }
-                    
                     self.tableView.reloadData()
                 }
             })

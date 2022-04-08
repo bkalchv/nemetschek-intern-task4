@@ -105,8 +105,13 @@ class OptionsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
             toggleIBOsOnIsMultitapTextingOn()
         } else if OptionsManager.shared.isT9PredictiveTextingOn {
             toggleIBOsOnIsT9PredictiveTextingOn()
-        } else {
-                        
+        }
+        
+        switch CustomSearchBar.getCurrentT9TrieLanguage() {
+        case .EN:
+            T9CyrillicSwitch.isOn = false
+        case .BG:
+            T9CyrillicSwitch.isOn = true
         }
         
     }
