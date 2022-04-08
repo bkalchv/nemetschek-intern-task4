@@ -149,6 +149,11 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         if let wordOfTheDayEntry = wordOfTheDayDictionaryEntry, !didSearchTableVCAppearOnce {
             tableData = searchEngine.findSuggestionEntries(amountOfDesiredSuggestionEntries: OptionsManager.shared.suggestionsToBeShownAmount, forDictionaryEntry: wordOfTheDayEntry)
             searchBar.searchTextField.text = wordOfTheDayEntry.word
+                        
+            if wordOfTheDayEntry.isBulgarianEntry() {
+                setSearchBarT9PredictiveTextingLanguage(to: .BG)
+            }
+            
         }
         
         if let searchBarText = searchBar.text, !searchBarText.isEmpty, didSearchTableVCAppearOnce {
@@ -158,7 +163,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
             }
             
             tableData = Array(tableData[0...OptionsManager.shared.suggestionsToBeShownAmount - 1])
-    
+            
             collapsePreviouslySelectedCellIfVisible()
             tableView.reloadData()
             
@@ -325,6 +330,10 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func toggleSearchBarMultitapLanguage() {
         searchBar.toggleMultitapLanguage()
+    }
+    
+    func setSearchBarT9PredictiveTextingLanguage(to language: T9TrieLanguage) {
+        CustomSearchBar.changeCurrentT9TrieLanguage(to: language)
     }
     
     func toggleSearchBarT9PredictiveTextingLanguage() {

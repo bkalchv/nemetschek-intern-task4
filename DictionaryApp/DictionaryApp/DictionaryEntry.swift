@@ -42,4 +42,41 @@ class DictionaryEntry : CustomStringConvertible, Codable {
         word = readWord
         translation = readTranslation
     }
+    
+    private func isBulgarianLetter(letter: String) -> Bool {
+        guard let uniCode = UnicodeScalar(letter) else { return false }
+        
+        switch uniCode {
+        case "А" ... "Я":
+            return true
+        default:
+            return false
+        }
+    }
+    
+    private func isEnglishLetter(letter: String) -> Bool {
+        guard let uniCode = UnicodeScalar(letter) else { return false }
+        
+        switch uniCode {
+        case "A" ... "Z":
+            return true
+        default:
+            return false
+        }
+    }
+    
+    public func isEnglishEntry() -> Bool {
+        if let firstLetterOfWord = word.first, firstLetterOfWord.isLetter {
+            return isEnglishLetter(letter: String(firstLetterOfWord))
+        }
+        return false
+    }
+    
+    public func isBulgarianEntry() -> Bool {
+        if let firstLetterOfWord = word.first, firstLetterOfWord.isLetter {
+            return isBulgarianLetter(letter: String(firstLetterOfWord))
+        }
+        return false
+    }
+    
 }
