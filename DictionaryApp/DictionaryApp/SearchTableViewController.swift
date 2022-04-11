@@ -29,7 +29,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
     var searchBarTextAsT9String: String {
         get {
             if let searchBarText = searchBar.text, OptionsManager.shared.isT9PredictiveTextingOn {
-                return T9Trie.t9Stringify(text: searchBarText)
+                return CustomSearchBar.t9Stringify(text: searchBarText)
             }
             return ""
         }
@@ -256,19 +256,7 @@ class SearchTableViewController: UIViewController, UISearchBarDelegate, UITableV
         UIView.animate(withDuration: 0.5, delay: 0.0, options: [], animations: {
             self.t9SuggestionsContainerView.frame.size.height = 0.0
             self.view.layoutIfNeeded()
-        }, completion: {
-            finished in
-            if finished {
-                print("Hello, it me")
-            }
-        })
-        // TODO: Ask why does the app crash when finished block added?
-//        {
-//            finished in
-//            if finished {
-//                self.tableView.reloadData()
-//            }
-//        })
+        }, completion: nil)
     }
 
     func showFeelingOldView() {
